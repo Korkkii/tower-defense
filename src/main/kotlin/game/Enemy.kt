@@ -4,27 +4,30 @@ import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
-class Enemy(val gameBoard: GameBoard) : Circle(10.0), GameEntity {
+class Enemy(val gameBoard: GameBoard) : MovingEntity {
     private var target: PathSquare
-    private val velocity = 35
+    override lateinit var targetPosition: Vector
+    val radius = 10.0
+    override val velocity = 35.0
+    override lateinit var position: Vector
+    private val movementComponent = MovementComponent(this)
 
     init {
         val path = gameBoard.path
         val start = path[0]
         target = path[1]
-        centerX = start.x + 0.5 * start.width
-        centerY = start.y + 0.5 * start.height
+        targetPosition = target.waypoint.center()
+        val centerX = start.x + 0.5 * start.width
+        val centerY = start.y + 0.5 * start.height
+        position = Vector(centerX, centerY)
     }
 
-    private fun waypointCollisionCircle() = Circle(centerX, centerY, 1.4)
+    private fun waypointCollisionCircle() = Circle(position.x, position.y, 1.4)
 
     override fun update(currentState: GameState, delta: Double) {
-        val waypoint = target.waypoint
-        val direction = (waypoint.center() - this.center()).unitVector()
-        centerX += velocity * direction.x * delta
-        centerY += velocity * direction.y * delta
+        movementComponent.update(currentState, delta)
 
-        if (waypointCollisionCircle().intersects(waypoint.boundsInLocal)) {
+        if (waypointCollisionCircle().intersects(target.waypoint.boundsInLocal)) {
             nextTarget()
         }
     }
@@ -34,11 +37,14 @@ class Enemy(val gameBoard: GameBoard) : Circle(10.0), GameEntity {
         val nextIndex = path.indexOf(target) + 1
         val nextTarget = path.getOrNull(nextIndex)
 
-        nextTarget?.let { target = it }
+        nextTarget?.let {
+            target = it
+            targetPosition = target.waypoint.center()
+        }
     }
 
     override fun draw(graphics: GraphicsContext) {
         graphics.fill = Color.RED
-        graphics.fillCircle(this)
+        graphics.fillCircle(Circle(position.x, position.y, radius))
     }
 }

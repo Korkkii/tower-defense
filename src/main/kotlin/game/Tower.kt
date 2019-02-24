@@ -17,6 +17,7 @@ class Tower(val square: BuildAreaSquare): GameEntity {
 
         enemies.forEach {
             if (withinRange(it) && canFire) {
+                currentState.projectiles += Projectile(this, it)
                 val secondsUntilNext = 1 / fireRate
                 firingCooldown = secondsUntilNext
             }
@@ -25,7 +26,7 @@ class Tower(val square: BuildAreaSquare): GameEntity {
 
     private fun withinRange(enemy: Enemy): Boolean {
         val collisionBoundary  = rangeCircle.radius + enemy.radius
-        val distance = (rangeCircle.center() - enemy.center()).length
+        val distance = (rangeCircle.center() - enemy.position).length
         return distance < collisionBoundary
     }
 

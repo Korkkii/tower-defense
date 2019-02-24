@@ -17,9 +17,11 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, private
         board.update(gameState, inSeconds)
         gameState.enemies.forEach { it.update(gameState, inSeconds) }
         gameState.towers.forEach { it.update(gameState, inSeconds) }
+        gameState.projectiles.forEach { it.update(gameState, inSeconds) }
         board.draw(canvas.graphicsContext2D)
         gameState.enemies.forEach { it.draw(canvas.graphicsContext2D) }
         gameState.towers.forEach { it.draw(canvas.graphicsContext2D) }
+        gameState.projectiles.forEach { it.draw(canvas.graphicsContext2D) }
 
         previousCall = now
     }

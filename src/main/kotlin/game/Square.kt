@@ -16,7 +16,7 @@ open class BoardSquare(x: Double, y: Double, width: Double, height: Double, colo
 }
 
 open class PathSquare(x: Double, y: Double, width: Double, height: Double) : BoardSquare(x, y, width, height, Color.BEIGE) {
-    val waypoint: Circle = Circle(x + 0.5 * width, y + 0.5 * height, 5.0)
+    val waypoint: Circle = Circle(x + 0.5 * width, y + 0.5 * height, 0.05)
 }
 class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) : BoardSquare(x, y, width, height, Color.GREEN)
 class StartSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height)

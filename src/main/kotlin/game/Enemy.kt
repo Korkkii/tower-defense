@@ -5,7 +5,7 @@ import javafx.scene.shape.Circle
 
 class Enemy(val gameBoard: GameBoard) : Circle(10.0), UpdatableEntity {
     private lateinit var target: PathSquare
-    private val velocity = 0.01
+    private val velocity = 0.5
 
     init {
         val path = gameBoard.path
@@ -16,14 +16,15 @@ class Enemy(val gameBoard: GameBoard) : Circle(10.0), UpdatableEntity {
         this.fill = Color.RED
     }
 
+    fun waypointCollisionCircle() = Circle(centerX, centerY, 1.4)
+
     override fun update() {
         val waypoint = target.waypoint
-        val xdiff = (waypoint.centerX - this.centerX)
-        val ydiff = (waypoint.centerY - this.centerY)
-        this.centerX += velocity * xdiff
-        this.centerY += velocity * ydiff
+        val direction = (waypoint.center() - this.center()).unitVector()
+        centerX += velocity * direction.x
+        centerY += velocity * direction.y
 
-        if (this.intersects(waypoint.boundsInLocal)) {
+        if (waypointCollisionCircle().intersects(waypoint.boundsInLocal)) {
             nextTarget()
         }
     }

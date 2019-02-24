@@ -2,7 +2,9 @@ package game
 
 import javafx.scene.paint.Color
 import javafx.application.Application
+import javafx.scene.Group
 import javafx.scene.Scene
+import javafx.scene.canvas.Canvas
 import javafx.stage.Stage
 
 class Main : Application() {
@@ -12,12 +14,14 @@ class Main : Application() {
         val width = 600.0
         val boardWidth = 400.0
         val height = 400.0
-        val group = GameBoard(boardWidth, height)
+        val group = Group()
+        val board = GameBoard(boardWidth, height)
+        val canvas = Canvas(boardWidth, height)
 
-        val scene = Scene(group, width, height, Color.GRAY)
-
+        val scene = Scene(group)
+        group.children.add(canvas)
         primaryStage?.scene = scene
-        val gameLoop = GameLoop(group)
+        val gameLoop = GameLoop(board, canvas)
         gameLoop.start()
         primaryStage?.show()
     }

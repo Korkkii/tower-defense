@@ -14,3 +14,6 @@ fun <T, U> List<List<U>>.flatMap(mappingFunction: (x: Int, y: Int, cellValue: U)
 }
 
 fun Circle.center(): Vector = Vector(this.centerX, this.centerY)
+
+fun GraphicsContext.fillCircle(circle: Circle) =
+    this.fillOval(circle.centerX - circle.radius, circle.centerY - circle.radius, 2 * circle.radius, 2 * circle.radius)

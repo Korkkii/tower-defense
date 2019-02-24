@@ -1,8 +1,9 @@
 package game
 
-import javafx.scene.Group
+import javafx.scene.canvas.GraphicsContext
 
-class GameBoard(width: Double, height: Double) : Group(), UpdatableEntity {
+class GameBoard(val width: Double, val height: Double) : GameEntity {
+    private val children = mutableListOf<GameEntity>()
     private val rawBoard = listOf(
         listOf(".","s",".",".","."),
         listOf(".","x",".",".","."),
@@ -24,16 +25,21 @@ class GameBoard(width: Double, height: Double) : Group(), UpdatableEntity {
             }
         }
         val flattened = board.flatten()
-        this.children.addAll(flattened)
+        children.addAll(flattened)
         val start = flattened.find { it is StartSquare } as? StartSquare ?: throw Error("No start square found")
         path = generatePath(board, start)
 
         val enemy = Enemy(this)
-        this.children.add(enemy)
+        children.add(enemy)
     }
 
     override fun update() {
-        this.children.filter { it is UpdatableEntity }.map { it as UpdatableEntity }.forEach { it.update() }
+        children.forEach { it.update() }
+    }
+
+    override fun draw(graphics: GraphicsContext) {
+        graphics.fillRect(0.0, 0.0, width, height)
+        children.forEach { it.draw(graphics) }
     }
 
     private fun getNeighbours(x: Int, y: Int): List<BoardSquare> {

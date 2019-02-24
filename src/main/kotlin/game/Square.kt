@@ -22,12 +22,6 @@ open class BoardSquare(x: Double, y: Double, width: Double, height: Double, val 
 
 open class PathSquare(x: Double, y: Double, width: Double, height: Double) : BoardSquare(x, y, width, height, Color.BEIGE) {
     val waypoint: Circle = Circle(x + 0.5 * width, y + 0.5 * height, 1.4)
-
-    override fun draw(graphics: GraphicsContext) {
-        super.draw(graphics)
-        graphics.fill = Color.BLUE
-        graphics.fillCircle(waypoint)
-    }
 }
 class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) : BoardSquare(x, y, width, height, Color.GREEN) {
     val center = Vector(x + 0.5 * width, y + 0.5 * height)

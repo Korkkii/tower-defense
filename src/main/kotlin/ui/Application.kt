@@ -1,6 +1,6 @@
-package game
+package ui
 
-import javafx.scene.paint.Color
+import game.Game
 import javafx.application.Application
 import javafx.scene.Group
 import javafx.scene.Scene
@@ -15,15 +15,13 @@ class Main : Application() {
         val boardWidth = 400.0
         val height = 400.0
         val group = Group()
-        val gameState = GameState()
-        val board = GameBoard(boardWidth, height, gameState)
         val canvas = Canvas(boardWidth, height)
         val scene = Scene(group)
+        val game = Game(boardWidth, height, canvas)
 
         group.children.add(canvas)
         primaryStage?.scene = scene
-        val gameLoop = GameLoop(board, canvas, gameState)
-        gameLoop.start()
+        game.start()
         primaryStage?.show()
     }
 }

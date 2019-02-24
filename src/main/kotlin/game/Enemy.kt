@@ -5,12 +5,13 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
 class Enemy(val gameBoard: GameBoard) : MovingEntity {
+    private val movementComponent = MovementComponent(this)
     private var target: PathSquare
     override lateinit var targetPosition: Vector
     val radius = 10.0
+    var health = 10.0
     override val velocity = 35.0
     override lateinit var position: Vector
-    private val movementComponent = MovementComponent(this)
 
     init {
         val path = gameBoard.path

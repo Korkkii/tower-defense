@@ -4,6 +4,8 @@ import java.lang.Math.pow
 import kotlin.math.sqrt
 
 data class Vector(val x: Double, val y: Double) {
+    val length = sqrt(pow(x, 2.0) + pow(y, 2.0))
+
     operator fun plus(other: Vector): Vector {
         return Vector(this.x + other.x, this.y + other.y)
     }
@@ -26,9 +28,7 @@ data class Vector(val x: Double, val y: Double) {
 
     operator fun unaryMinus(): Vector = Vector(-this.x, -this.y)
 
-    private fun length(): Double = sqrt(pow(this.x, 2.0) + pow(this.y, 2.0))
-
-    fun unitVector(): Vector = this / this.length()
+    fun unitVector(): Vector = this / this.length
 }
 
 operator fun Double.times(vector: Vector) = vector * this

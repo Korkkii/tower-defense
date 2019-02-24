@@ -12,7 +12,7 @@ open class BoardSquare(x: Double, y: Double, width: Double, height: Double, val 
         return "${this.javaClass.name}(${(this.x / this.width).toInt()}, ${(this.y / this.height).toInt()})"
     }
 
-    override fun update() {}
+    override fun update(currentState: GameState, delta: Double) {}
 
     override fun draw(graphics: GraphicsContext) {
         graphics.fill = color
@@ -29,6 +29,8 @@ open class PathSquare(x: Double, y: Double, width: Double, height: Double) : Boa
         graphics.fillCircle(waypoint)
     }
 }
-class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) : BoardSquare(x, y, width, height, Color.GREEN)
+class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) : BoardSquare(x, y, width, height, Color.GREEN) {
+    val center = Vector(x + 0.5 * width, y + 0.5 * height)
+}
 class StartSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height)
 class EndSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height)

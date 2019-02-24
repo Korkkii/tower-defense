@@ -2,8 +2,8 @@ package game
 
 import javafx.scene.canvas.GraphicsContext
 
-class GameBoard(val width: Double, val height: Double) : GameEntity {
-    private val children = mutableListOf<GameEntity>()
+class GameBoard(private val width: Double, private val height: Double, private val gameState: GameState) : GameEntity {
+    private val children = mutableListOf<BoardSquare>()
     private val rawBoard = listOf(
         listOf(".","s",".",".","."),
         listOf(".","x",".",".","."),
@@ -30,12 +30,14 @@ class GameBoard(val width: Double, val height: Double) : GameEntity {
         path = generatePath(board, start)
 
         val enemy = Enemy(this)
-        children.add(enemy)
+        gameState.enemies.add(enemy)
+        val towerPlace = board[3][2] as? BuildAreaSquare
+        val tower = towerPlace?.let { Tower(it) }
+
+        tower?.let { gameState.towers.add(it) }
     }
 
-    override fun update() {
-        children.forEach { it.update() }
-    }
+    override fun update(currentState: GameState, delta: Double) {}
 
     override fun draw(graphics: GraphicsContext) {
         graphics.fillRect(0.0, 0.0, width, height)

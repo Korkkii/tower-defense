@@ -13,14 +13,20 @@ class Game(width: Double, height: Double, canvas: Canvas) {
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED, gameState.mouseHandler)
         canvas.setOnMouseClicked {
             val square = board.squareAtPosition(it.position())
+            val placingTower = gameState.state is PlacingTower
             val buildAreaSquare = square as? BuildAreaSquare
-            val isBuildSquare = buildAreaSquare != null
-            val hasNoTower = buildAreaSquare?.tower == null
+            val squareHasTower = buildAreaSquare?.tower != null ?: false
 
-            if (isBuildSquare && hasNoTower) {
-                buildAreaSquare?.let { gameState.onNotify(PlaceTowerEvent(it)) }
+            if (placingTower) {
+                val isBuildSquare = buildAreaSquare != null
+                val hasNoTower = buildAreaSquare?.tower == null
+
+                if (isBuildSquare && hasNoTower) {
+                    buildAreaSquare?.let { gameState.onNotify(PlaceTowerEvent(it)) }
+                }
+            } else if (squareHasTower) {
+                buildAreaSquare?.tower?.let { gameState.onNotify(SelectTowerEvent(it)) }
             }
-
         }
     }
 

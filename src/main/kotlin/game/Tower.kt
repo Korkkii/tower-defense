@@ -40,6 +40,7 @@ class Tower(val square: BuildAreaSquare): GameEntity {
             square.y + 0.5 * square.height - 0.5 * size,
             size,
             size)
-        graphics.strokeCircle(rangeCircle)
+        val stateT = state.state
+        if (stateT is SelectedTower && stateT.tower == this) graphics.strokeCircle(rangeCircle)
     }
 }

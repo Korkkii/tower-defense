@@ -13,12 +13,13 @@ class GameState : Observer {
 
     override fun onNotify(event: Event) {
         when(event) {
-            PlacingTowerEvent -> if (state == Idle) state = PlacingTower
+            PlacingTowerEvent -> state = PlacingTower
             is PlaceTowerEvent -> if (state == PlacingTower) {
                 val tower = Tower(event.square)
                 towers += tower
                 state = Idle
             }
+            is SelectTowerEvent -> state = SelectedTower(event.tower)
             else -> {}
         }
     }
@@ -34,3 +35,4 @@ class GameState : Observer {
 sealed class State
 object Idle : State()
 object PlacingTower : State()
+data class SelectedTower(val tower: Tower) : State()

@@ -12,7 +12,7 @@ import javafx.scene.paint.Color
 class Sidebar :
     VBox() {
     init {
-        val button = Button("Hello")
+        val button = Button("Place tower")
         button.setOnMouseClicked { GameState.notify(PlacingTowerEvent) }
         this.background = Background(BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY))
         this.children.addAll(listOf(button))

@@ -1,7 +1,6 @@
 package game
 
 import javafx.scene.canvas.GraphicsContext
-import ui.MouseHandler
 
 class GameBoard(private val width: Double, private val height: Double, private val gameState: GameState) : GameEntity {
     private val children = mutableListOf<BoardSquare>()
@@ -28,7 +27,8 @@ class GameBoard(private val width: Double, private val height: Double, private v
         val flattened = board.flatten()
         children.addAll(flattened)
         val start = flattened.find { it is StartSquare } as? StartSquare ?: throw Error("No start square found")
-        path = generatePath(board, start)
+        val generatedPath = generatePath(board, start)
+        path = listOf(PathSquare(80.0, -80.0, rectangleWidth, rectangleHeight)) + generatedPath + PathSquare(240.0, 400.0, rectangleWidth, rectangleHeight)
 
         val enemy = Enemy(this)
         gameState.enemies.add(enemy)
@@ -59,11 +59,12 @@ class GameBoard(private val width: Double, private val height: Double, private v
     private fun isOnBoard(x: Int, y: Int) = x >= 0 && y >= 0 && x < board.size && y < board.size
 
     private fun generatePath(board: List<List<BoardSquare>>, startSquare: StartSquare): List<PathSquare> {
+        val flattenedBoard = board.flatten()
         val resultPath = mutableListOf<PathSquare>(startSquare)
         var last: PathSquare = startSquare
 
         while (last !is EndSquare) {
-            val lastIndex = board.flatten().indexOf(last)
+            val lastIndex = flattenedBoard.indexOf(last)
             val x = lastIndex % board.size
             val y = lastIndex / board.size
             val neighbours = getNeighbours(x, y)

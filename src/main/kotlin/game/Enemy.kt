@@ -9,9 +9,10 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
     private var target: PathSquare
     override lateinit var targetPosition: Vector
     val radius = 10.0
-    var health = 10.0
+    var health = 20.0
     override val velocity = 35.0
     override lateinit var position: Vector
+    private var deletable = false
 
     init {
         val path = gameBoard.path
@@ -37,10 +38,16 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
         val path = gameBoard.path
         val nextIndex = path.indexOf(target) + 1
         val nextTarget = path.getOrNull(nextIndex)
+        val hasNextTarget = nextTarget != null
 
-        nextTarget?.let {
-            target = it
-            targetPosition = target.waypoint.center()
+        if (hasNextTarget) {
+            nextTarget?.let {
+                target = it
+                targetPosition = target.waypoint.center()
+            }
+        } else {
+            deletable = true
+            GameState.notify(EnemyReachedEndEvent(this))
         }
     }
 
@@ -48,4 +55,6 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
         graphics.fill = Color.RED
         graphics.fillCircle(Circle(position.x, position.y, radius))
     }
+
+    fun canDelete(): Boolean = deletable
 }

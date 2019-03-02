@@ -44,7 +44,7 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
         }
     }
 
-    override fun draw(graphics: GraphicsContext) {
+    override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fill = Color.RED
         graphics.fillCircle(Circle(position.x, position.y, radius))
     }

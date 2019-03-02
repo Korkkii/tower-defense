@@ -14,7 +14,7 @@ open class BoardSquare(x: Double, y: Double, width: Double, height: Double, val 
 
     override fun update(currentState: GameState, delta: Double) {}
 
-    override fun draw(graphics: GraphicsContext) {
+    override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fill = color
         graphics.fillRect(x, y, width, height)
     }

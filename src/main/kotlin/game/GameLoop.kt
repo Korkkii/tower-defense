@@ -13,6 +13,7 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, private
 
         val differenceInNanoseconds = now - previousCall
         val inSeconds = differenceInNanoseconds / 1000000000.0
+        val gameState = GameState.instance
 
         board.update(gameState, inSeconds)
         gameState.enemies.forEach { it.update(gameState, inSeconds) }
@@ -22,10 +23,10 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, private
         }
         gameState.projectiles.removeAll { it.canDelete() }
         gameState.enemies.removeAll { it.health <= 0.0 }
-        board.draw(canvas.graphicsContext2D)
-        gameState.enemies.forEach { it.draw(canvas.graphicsContext2D) }
-        gameState.towers.forEach { it.draw(canvas.graphicsContext2D) }
-        gameState.projectiles.forEach { it.draw(canvas.graphicsContext2D) }
+        board.draw(canvas.graphicsContext2D, gameState)
+        gameState.enemies.forEach { it.draw(canvas.graphicsContext2D, gameState) }
+        gameState.towers.forEach { it.draw(canvas.graphicsContext2D, gameState) }
+        gameState.projectiles.forEach { it.draw(canvas.graphicsContext2D, gameState) }
 
         previousCall = now
     }

@@ -27,7 +27,7 @@ class Projectile(private val tower: Tower, private val target: Enemy): MovingEnt
         }
     }
 
-    override fun draw(graphics: GraphicsContext) {
+    override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fill = if (hasHit) Color.CRIMSON else Color.WHITE
         graphics.fillCircle(Circle(position.x, position.y, radius))
     }

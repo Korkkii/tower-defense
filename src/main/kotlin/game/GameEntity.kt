@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext
 interface GameEntity {
     fun update(currentState: GameState, delta: Double)
 
-    fun draw(graphics: GraphicsContext)
+    fun draw(graphics: GraphicsContext, state: GameState)
 }
 
 interface MovingEntity: GameEntity {

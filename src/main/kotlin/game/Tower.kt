@@ -30,7 +30,7 @@ class Tower(val square: BuildAreaSquare): GameEntity {
         return distance < collisionBoundary
     }
 
-    override fun draw(graphics: GraphicsContext) {
+    override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fill = Color.AQUAMARINE
         graphics.fillOval(square.x + 0.5 * square.width - 0.5 * size,
             square.y + 0.5 * square.height - 0.5 * size,

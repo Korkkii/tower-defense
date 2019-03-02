@@ -39,9 +39,9 @@ class GameBoard(private val width: Double, private val height: Double, private v
 
     override fun update(currentState: GameState, delta: Double) {}
 
-    override fun draw(graphics: GraphicsContext) {
+    override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fillRect(0.0, 0.0, width, height)
-        children.forEach { it.draw(graphics) }
+        children.forEach { it.draw(graphics, state) }
     }
 
     private fun getNeighbours(x: Int, y: Int): List<BoardSquare> {

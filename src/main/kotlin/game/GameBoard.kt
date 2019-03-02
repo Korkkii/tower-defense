@@ -1,6 +1,7 @@
 package game
 
 import javafx.scene.canvas.GraphicsContext
+import ui.MouseHandler
 
 class GameBoard(private val width: Double, private val height: Double, private val gameState: GameState) : GameEntity {
     private val children = mutableListOf<BoardSquare>()
@@ -74,5 +75,9 @@ class GameBoard(private val width: Double, private val height: Double, private v
         }
 
         return resultPath
+    }
+
+    fun squareAtPosition(position: Vector): BoardSquare? {
+        return board.flatten().find { it.contains(position.x, position.y) }
     }
 }

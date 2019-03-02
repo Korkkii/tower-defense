@@ -10,6 +10,10 @@ class Tower(val square: BuildAreaSquare): GameEntity {
     private val fireRate = 1.0 // Rate per second
     private var firingCooldown = 0.0
 
+    init {
+        square.tower = this
+    }
+
     override fun update(currentState: GameState, delta: Double) {
         val enemies = currentState.enemies
         firingCooldown -= delta

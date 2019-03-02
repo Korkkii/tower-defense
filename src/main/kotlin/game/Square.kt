@@ -2,9 +2,9 @@ package game
 
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
-import javafx.scene.paint.Paint
 import javafx.scene.shape.Circle
 import javafx.scene.shape.Rectangle
+import javafx.scene.text.Font
 
 
 open class BoardSquare(x: Double, y: Double, width: Double, height: Double, val color: Color) : Rectangle(x, y, width, height), GameEntity {
@@ -25,6 +25,24 @@ open class PathSquare(x: Double, y: Double, width: Double, height: Double) : Boa
 }
 class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) : BoardSquare(x, y, width, height, Color.GREEN) {
     val center = Vector(x + 0.5 * width, y + 0.5 * height)
+    var tower: Tower? = null
+
+    fun withinArea(position: Vector): Boolean {
+        return this.contains(position.x, position.y)
+    }
+
+    override fun draw(graphics: GraphicsContext, state: GameState) {
+        super.draw(graphics, state)
+        graphics.fill = color.brighter().brighter()
+        if (state.state is PlacingTower && withinArea(state.mousePosition())) {
+            graphics.fillRect(x, y, width, height)
+            if (tower != null) {
+                graphics.font = Font(90.0)
+                graphics.fill = Color.RED
+                graphics.fillText("X", x + 0.1 * width, y + 0.9 * height)
+            }
+        }
+    }
 }
 class StartSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height)
 class EndSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height)

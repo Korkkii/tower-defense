@@ -1,10 +1,17 @@
 package ui
 
 import game.Game
+import game.Vector
 import javafx.application.Application
+import javafx.event.EventHandler
+import javafx.event.EventType
 import javafx.scene.Group
+import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
+import javafx.scene.input.MouseEvent
+import javafx.scene.layout.HBox
+import javafx.scene.layout.Priority
 import javafx.stage.Stage
 
 class Main : Application() {
@@ -14,12 +21,17 @@ class Main : Application() {
         val width = 600.0
         val boardWidth = 400.0
         val height = 400.0
-        val group = Group()
-        val canvas = Canvas(boardWidth, height)
-        val scene = Scene(group)
-        val game = Game(boardWidth, height, canvas)
 
-        group.children.add(canvas)
+        val canvas = Canvas(boardWidth, height)
+        val game = Game(boardWidth, height, canvas)
+        val sidebar = Sidebar()
+
+        val children = arrayOf(canvas, sidebar)
+        val group = HBox(*children)
+        HBox.setHgrow(sidebar, Priority.ALWAYS)
+        group.prefWidth = width
+
+        val scene = Scene(group)
         primaryStage?.scene = scene
         game.start()
         primaryStage?.show()

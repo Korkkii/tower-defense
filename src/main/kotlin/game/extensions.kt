@@ -1,6 +1,7 @@
 package game
 
 import javafx.scene.canvas.GraphicsContext
+import javafx.scene.input.MouseEvent
 import javafx.scene.shape.Circle
 
 fun <T, U> List<List<U>>.map(mappingFunction: (x: Int, y: Int, cellValue: U) -> T ): List<List<T>> {
@@ -22,3 +23,5 @@ fun GraphicsContext.fillCircle(circle: Circle) =
 
 fun GraphicsContext.strokeCircle(circle: Circle) =
     this.strokeOval(circle.centerX - circle.radius, circle.centerY - circle.radius, 2 * circle.radius, 2 * circle.radius)
+
+fun MouseEvent.position() = Vector(this.sceneX, this.sceneY)

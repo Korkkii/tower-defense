@@ -21,6 +21,7 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, private
         gameState.projectiles.forEach {
             it.update(gameState, inSeconds)
         }
+        gameState.currentWave?.update(gameState, inSeconds)
         gameState.projectiles.removeAll { it.canDelete() }
         gameState.enemies.removeAll { it.health <= 0.0 || it.canDelete() }
         board.draw(canvas.graphicsContext2D, gameState)

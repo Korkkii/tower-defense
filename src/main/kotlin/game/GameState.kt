@@ -7,6 +7,7 @@ class GameState : Observer {
     val towers = mutableListOf<Tower>()
     val projectiles = mutableListOf<Projectile>()
     val mouseHandler = MouseHandler()
+    var currentWave: Wave? = null
 
     var playerLives = 3
         private set
@@ -23,6 +24,7 @@ class GameState : Observer {
             }
             is SelectTowerEvent -> state = SelectedTower(event.tower)
             is EnemyReachedEndEvent -> playerLives -= 1
+            is NewEnemyEvent -> enemies += event.enemy
             else -> {}
         }
     }

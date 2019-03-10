@@ -30,8 +30,7 @@ class GameBoard(private val width: Double, private val height: Double, private v
         val generatedPath = generatePath(board, start)
         path = listOf(PathSquare(80.0, -80.0, rectangleWidth, rectangleHeight)) + generatedPath + PathSquare(240.0, 400.0, rectangleWidth, rectangleHeight)
 
-        val enemy = Enemy(this)
-        gameState.enemies.add(enemy)
+        gameState.currentWave = Wave(1, this)
         val towerPlace = board[3][2] as? BuildAreaSquare
         val tower = towerPlace?.let { Tower(it) }
 

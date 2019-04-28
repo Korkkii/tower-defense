@@ -16,17 +16,23 @@ class Tower(val square: BuildAreaSquare): GameEntity {
 
     override fun update(currentState: GameState, delta: Double) {
         val enemies = currentState.enemies
+        if (enemies.isEmpty()) return
+
         firingCooldown -= delta
         val canFire = firingCooldown <= 0.0
+        val closestEnemy = enemies.reduce { currentClosest, nextEnemy ->
+            if (distanceToEnemy(currentClosest) > distanceToEnemy(nextEnemy)) nextEnemy
+            else currentClosest
+        }
 
-        enemies.forEach {
-            if (withinRange(it) && canFire) {
-                currentState.projectiles += Projectile(this, it)
-                val secondsUntilNext = 1 / fireRate
-                firingCooldown = secondsUntilNext
-            }
+        if (withinRange(closestEnemy) && canFire) {
+            currentState.projectiles += Projectile(this, closestEnemy)
+            val secondsUntilNext = 1 / fireRate
+            firingCooldown = secondsUntilNext
         }
     }
+
+    private fun distanceToEnemy(enemy: Enemy): Double = (rangeCircle.center() - enemy.position).length
 
     private fun withinRange(enemy: Enemy): Boolean {
         val collisionBoundary  = rangeCircle.radius + enemy.radius

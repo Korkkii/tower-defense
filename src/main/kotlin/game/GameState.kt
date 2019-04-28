@@ -8,6 +8,7 @@ class GameState : Observer {
     val projectiles = mutableListOf<Projectile>()
     val mouseHandler = MouseHandler()
     var currentWave: Wave? = null
+    private val publisher = Publisher()
 
     var playerLives = 3
         private set
@@ -23,7 +24,10 @@ class GameState : Observer {
                 state = Idle
             }
             is SelectTowerEvent -> state = SelectedTower(event.tower)
-            is EnemyReachedEndEvent -> playerLives -= 1
+            is EnemyReachedEndEvent -> {
+                playerLives -= 1
+                publisher.publish(GameStateChanged)
+            }
             is NewEnemyEvent -> enemies += event.enemy
             else -> {}
         }
@@ -34,6 +38,9 @@ class GameState : Observer {
     companion object {
         val instance = GameState()
         fun notify(event: Event) = instance.onNotify(event)
+        fun subscribe(observer: Observer) {
+            instance.publisher.subscribers += observer
+        }
     }
 }
 

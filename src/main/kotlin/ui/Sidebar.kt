@@ -24,7 +24,7 @@ class Sidebar :
         this.background = Background(BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY))
 
         this.children.addAll(listOf(button, lives))
-        GameState.subscribe(this)
+        GameState.subscribe(GameStateChanged, this)
     }
 
     override fun onNotify(event: Event) {

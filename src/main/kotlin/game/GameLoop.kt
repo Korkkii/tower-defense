@@ -3,9 +3,21 @@ package game
 import javafx.animation.AnimationTimer
 import javafx.scene.canvas.Canvas
 
-class GameLoop(private val board: GameBoard, private val canvas: Canvas, private val gameState: GameState) : AnimationTimer() {
+class GameLoop(private val board: GameBoard, private val canvas: Canvas, private val gameState: GameState) : AnimationTimer(), Observer {
     private var previousCall: Long = 0L
+    private var paused = false
+
+    init {
+        gameState.publisher.subscribeToEvent(GameEnded, this)
+    }
+
+    override fun onNotify(event: Event) {
+        paused = true
+    }
+
     override fun handle(now: Long) {
+        if (paused) return
+
         if (previousCall == 0L) {
             previousCall = now
             return

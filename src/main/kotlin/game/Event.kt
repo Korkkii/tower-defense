@@ -7,3 +7,4 @@ data class SelectTowerEvent(val tower: Tower) : Event
 data class EnemyReachedEndEvent(val enemy: Enemy) : Event
 data class NewEnemyEvent(val enemy: Enemy) : Event
 object GameStateChanged : Event
+object GameEnded : Event

@@ -9,6 +9,7 @@ class GameState : Observer {
     val mouseHandler = MouseHandler()
     var currentWave: Wave? = null
     val publisher = Publisher()
+    var playerMoney = 50
 
     var playerLives = 3
         private set
@@ -19,9 +20,16 @@ class GameState : Observer {
         when(event) {
             PlacingTowerEvent -> state = PlacingTower
             is PlaceTowerEvent -> if (state == PlacingTower) {
-                val tower = Tower(event.square)
-                towers += tower
                 state = Idle
+                val tower = Tower(event.square)
+
+                // TODO create UI error message for "not enough money"
+                // Or maybe prevent trying to place in the first place?
+                if (playerMoney < tower.cost) return
+
+                playerMoney -= tower.cost
+                towers += tower
+                publisher.publish(GameStateChanged)
             }
             is SelectTowerEvent -> state = SelectedTower(event.tower)
             is EnemyReachedEndEvent -> {

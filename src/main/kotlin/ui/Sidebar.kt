@@ -17,19 +17,23 @@ import javafx.scene.text.Text
 class Sidebar :
     VBox(), Observer {
     val lives = Text("Player lives ${GameState.instance.playerLives}")
+    val money = Text("Player money ${GameState.instance.playerMoney}")
 
     init {
         val button = Button("Place tower")
         button.setOnMouseClicked { GameState.notify(PlacingTowerEvent) }
         this.background = Background(BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY))
 
-        this.children.addAll(listOf(button, lives))
+        this.children.addAll(listOf(button, lives, money))
         GameState.subscribe(GameStateChanged, this)
     }
 
     override fun onNotify(event: Event) {
         when (event) {
-            GameStateChanged -> lives.text = "Player lives ${GameState.instance.playerLives}"
+            GameStateChanged -> {
+                lives.text = "Player lives ${GameState.instance.playerLives}"
+                money.text = "Player money ${GameState.instance.playerMoney}"
+            }
         }
     }
 }

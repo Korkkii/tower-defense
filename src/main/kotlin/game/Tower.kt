@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 
 class Tower(val square: BuildAreaSquare): GameEntity {
+    val cost = 30
     private val size = 30.0
     private val range = 75.0
     private val rangeCircle = Circle(square.center, range)

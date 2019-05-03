@@ -1,5 +1,6 @@
 package game
 
+import game.towers.Tower
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle

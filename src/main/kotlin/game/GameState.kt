@@ -1,5 +1,6 @@
 package game
 
+import game.towers.Tower
 import ui.MouseHandler
 
 class GameState : Observer {

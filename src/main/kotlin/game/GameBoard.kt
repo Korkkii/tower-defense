@@ -1,5 +1,6 @@
 package game
 
+import game.towers.Tower
 import javafx.scene.canvas.GraphicsContext
 
 class GameBoard(private val width: Double, private val height: Double, private val gameState: GameState) : GameEntity {

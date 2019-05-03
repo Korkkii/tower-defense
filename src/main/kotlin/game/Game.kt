@@ -2,7 +2,6 @@ package game
 
 import javafx.scene.canvas.Canvas
 import javafx.scene.input.MouseEvent
-import ui.MouseHandler
 
 class Game(width: Double, height: Double, canvas: Canvas) {
     private val gameState = GameState.instance

@@ -1,5 +1,7 @@
 package game
 
+import game.towers.Tower
+
 interface Event
 object PlacingTowerEvent : Event
 data class PlaceTowerEvent(val square: BuildAreaSquare) : Event

@@ -1,5 +1,6 @@
 package game
 
+import game.towers.SingleTower
 import game.towers.Tower
 import ui.MouseHandler
 
@@ -22,7 +23,7 @@ class GameState : Observer {
             PlacingTowerEvent -> state = PlacingTower
             is PlaceTowerEvent -> if (state == PlacingTower) {
                 state = Idle
-                val tower = Tower(event.square)
+                val tower = SingleTower(event.square)
 
                 // TODO create UI error message for "not enough money"
                 // Or maybe prevent trying to place in the first place?

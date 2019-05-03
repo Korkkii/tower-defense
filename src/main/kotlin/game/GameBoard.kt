@@ -1,5 +1,6 @@
 package game
 
+import game.towers.SingleTower
 import game.towers.Tower
 import javafx.scene.canvas.GraphicsContext
 
@@ -33,7 +34,7 @@ class GameBoard(private val width: Double, private val height: Double, private v
 
         gameState.currentWave = Wave(1, this)
         val towerPlace = board[3][2] as? BuildAreaSquare
-        val tower = towerPlace?.let { Tower(it) }
+        val tower = towerPlace?.let { SingleTower(it) }
 
         tower?.let { gameState.towers.add(it) }
     }

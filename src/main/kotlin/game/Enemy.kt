@@ -9,7 +9,8 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
     private var target: PathSquare
     override lateinit var targetPosition: Vector
     val radius = 10.0
-    var health = 20.0
+    private val maxHealth = 20.0
+    var health = maxHealth
     override val velocity = 35.0
     override lateinit var position: Vector
     private var deletable = false
@@ -54,6 +55,15 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
     override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fill = Color.RED
         graphics.fillCircle(Circle(position.x, position.y, radius))
+
+        val healthBarWidth = 50
+        val healthBarHeight = 10
+        graphics.fill = Color.RED
+        graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 2 * healthBarHeight, healthBarWidth.toDouble(), healthBarHeight.toDouble())
+
+        val healthRemainingWidth = health / maxHealth * healthBarWidth
+        graphics.fill = Color.GREEN
+        graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 2 * healthBarHeight, healthRemainingWidth, healthBarHeight.toDouble())
     }
 
     fun canDelete(): Boolean = deletable

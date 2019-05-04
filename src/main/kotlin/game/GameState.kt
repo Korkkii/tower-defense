@@ -30,13 +30,14 @@ class GameState : Observer {
 
                 val tower = currentState.constructor(event.square)
 
-                // TODO: This creates link to square thus bugs out that you can't
-                // new tower after failing payment --> don't create before has money
                 state = Idle
 
                 // TODO create UI error message for "not enough money"
                 // Or maybe prevent trying to place in the first place?
-                if (playerMoney < tower.cost) return
+                if (playerMoney < tower.cost) {
+                    tower.deleteTower()
+                    return
+                }
 
                 playerMoney -= tower.cost
                 towers += tower

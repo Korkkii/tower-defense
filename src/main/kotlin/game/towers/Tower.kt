@@ -16,4 +16,8 @@ abstract class Tower(val square: BuildAreaSquare) : GameEntity {
     init {
         square.tower = this
     }
+
+    fun deleteTower() {
+        square.tower = null
+    }
 }

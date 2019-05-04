@@ -21,9 +21,7 @@ class SingleHitProjectile(tower: Tower, override val target: Enemy): Projectile(
     override fun update(currentState: GameState, delta: Double) {
         movementComponent.update(this, currentState, delta)
 
-        if (hasHit) {
-            target.health -= damage
-        }
+        if (hasHit) target.takeDamage(damage)
     }
 
     override fun draw(graphics: GraphicsContext, state: GameState) {

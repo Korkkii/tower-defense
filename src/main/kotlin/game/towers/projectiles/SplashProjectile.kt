@@ -25,7 +25,7 @@ class SplashProjectile(tower: Tower, override val target: Enemy) : Projectile() 
 
         if (hasHit) {
             val splashedEnemies = enemiesWithinSplashRange(currentState.enemies, position)
-            splashedEnemies.forEach { it.health -= damage }
+            splashedEnemies.forEach { it.takeDamage(damage) }
         }
     }
 

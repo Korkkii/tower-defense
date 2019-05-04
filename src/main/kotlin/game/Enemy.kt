@@ -11,9 +11,12 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
     val radius = 10.0
     private val maxHealth = 20.0
     var health = maxHealth
+        private set
     override val velocity = 35.0
     override lateinit var position: Vector
-    private var deletable = false
+    var canBeDeleted = false
+        private set
+    val enemyPrice = 5
 
     init {
         val path = gameBoard.path
@@ -46,7 +49,7 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
                 target = it
             }
         } else {
-            deletable = true
+            canBeDeleted = true
             GameState.notify(EnemyReachedEndEvent(this))
         }
     }
@@ -65,5 +68,12 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
         graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 2 * healthBarHeight, healthRemainingWidth, healthBarHeight.toDouble())
     }
 
-    fun canDelete(): Boolean = deletable
+    fun takeDamage(damage: Double) {
+        health -= damage
+
+        if (health <= 0.0) {
+            canBeDeleted = true
+            GameState.notify(EnemyDefeated(this))
+        }
+    }
 }

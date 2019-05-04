@@ -18,13 +18,17 @@ class GameState : Observer {
     var state: State = Idle
         private set
 
+    init {
+        publisher.subscribeToAll(this)
+    }
+
     override fun onNotify(event: Event) {
         when(event) {
             is PlacingTowerEvent<*> -> state = PlacingTower(event.towerConstructor)
             is PlaceTowerEvent -> {
                 val currentState = state as? PlacingTower<*> ?: return
 
-                val tower = currentState.constructor.invoke(event.square)
+                val tower = currentState.constructor(event.square)
 
                 // TODO: This creates link to square thus bugs out that you can't
                 // new tower after failing payment --> don't create before has money
@@ -45,6 +49,10 @@ class GameState : Observer {
                 publisher.publish(stateEvent)
             }
             is NewEnemyEvent -> enemies += event.enemy
+            is EnemyDefeated -> {
+                playerMoney += event.enemy.enemyPrice
+                publisher.publish(GameStateChanged)
+            }
             else -> {}
         }
     }
@@ -53,7 +61,7 @@ class GameState : Observer {
 
     companion object {
         val instance = GameState()
-        fun notify(event: Event) = instance.onNotify(event)
+        fun notify(event: Event) = instance.publisher.publish(event)
         fun subscribe(event: Event, observer: Observer) = instance.publisher.subscribeToEvent(event, observer)
     }
 }

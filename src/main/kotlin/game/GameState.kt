@@ -20,10 +20,15 @@ class GameState : Observer {
 
     override fun onNotify(event: Event) {
         when(event) {
-            PlacingTowerEvent -> state = PlacingTower
-            is PlaceTowerEvent -> if (state == PlacingTower) {
+            is PlacingTowerEvent<*> -> state = PlacingTower(event.towerConstructor)
+            is PlaceTowerEvent -> {
+                val currentState = state as? PlacingTower<*> ?: return
+
+                val tower = currentState.constructor.invoke(event.square)
+
+                // TODO: This creates link to square thus bugs out that you can't
+                // new tower after failing payment --> don't create before has money
                 state = Idle
-                val tower = SingleTower(event.square)
 
                 // TODO create UI error message for "not enough money"
                 // Or maybe prevent trying to place in the first place?
@@ -55,5 +60,5 @@ class GameState : Observer {
 
 sealed class State
 object Idle : State()
-object PlacingTower : State()
+data class PlacingTower<T : Tower>(val constructor: (square: BuildAreaSquare) -> T) : State()
 data class SelectedTower(val tower: Tower) : State()

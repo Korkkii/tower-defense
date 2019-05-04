@@ -35,7 +35,10 @@ class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) : Boa
     override fun draw(graphics: GraphicsContext, state: GameState) {
         super.draw(graphics, state)
         graphics.fill = color.brighter().brighter()
-        if (state.state is PlacingTower && withinArea(state.mousePosition())) {
+
+        // TODO: Remove this and make area highlight drawing in tower?
+        // To get rid of double link that is blocking currently
+        if (state.state is PlacingTower<*> && withinArea(state.mousePosition())) {
             graphics.fillRect(x, y, width, height)
             if (tower != null) {
                 graphics.font = Font(90.0)

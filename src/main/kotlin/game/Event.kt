@@ -3,7 +3,7 @@ package game
 import game.towers.Tower
 
 interface Event
-object PlacingTowerEvent : Event
+data class PlacingTowerEvent<T : Tower>(val towerConstructor: (square: BuildAreaSquare) -> T) : Event
 data class PlaceTowerEvent(val square: BuildAreaSquare) : Event
 data class SelectTowerEvent(val tower: Tower) : Event
 data class EnemyReachedEndEvent(val enemy: Enemy) : Event

@@ -12,7 +12,7 @@ class Game(width: Double, height: Double, canvas: Canvas) {
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED, gameState.mouseHandler)
         canvas.setOnMouseClicked {
             val square = board.squareAtPosition(it.position())
-            val placingTower = gameState.state is PlacingTower
+            val placingTower = gameState.state is PlacingTower<*>
             val buildAreaSquare = square as? BuildAreaSquare
             val squareHasTower = buildAreaSquare?.tower != null ?: false
 

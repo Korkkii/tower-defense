@@ -5,6 +5,8 @@ import game.GameState
 import game.GameStateChanged
 import game.Observer
 import game.PlacingTowerEvent
+import game.towers.SingleTower
+import game.towers.SplashTower
 import javafx.geometry.Insets
 import javafx.scene.control.Button
 import javafx.scene.layout.Background
@@ -20,11 +22,13 @@ class Sidebar :
     val money = Text("Player money ${GameState.instance.playerMoney}")
 
     init {
-        val button = Button("Place tower")
-        button.setOnMouseClicked { GameState.notify(PlacingTowerEvent) }
+        val singleHitTowerButton = Button("Single hit tower")
+        val splashTowerButton = Button("Splash tower")
+        singleHitTowerButton.setOnMouseClicked { GameState.notify(PlacingTowerEvent(::SingleTower)) }
+        splashTowerButton.setOnMouseClicked { GameState.notify(PlacingTowerEvent(::SplashTower)) }
         this.background = Background(BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY))
 
-        this.children.addAll(listOf(button, lives, money))
+        this.children.addAll(listOf(singleHitTowerButton, splashTowerButton, lives, money))
         GameState.subscribe(GameStateChanged, this)
     }
 

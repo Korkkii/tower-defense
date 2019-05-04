@@ -12,25 +12,18 @@ import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
-class SplashProjectile(tower: Tower, private val target: Enemy) : Projectile() {
+class SplashProjectile(tower: Tower, override val target: Enemy) : Projectile() {
     override val velocity: Double = 200.0
-    private val radius = 2.0
+    override val radius = 2.0
     private val damage = 3.0
     private val splashRange = 100.0
-    private val movementComponent = MovementComponent(this)
+    override val movementComponent = ProjectileMovementComponent()
     override var position: Vector = tower.square.center
-    override var targetPosition: Vector = target.position
 
     override fun update(currentState: GameState, delta: Double) {
-        if (hasHit) return
-        targetPosition = target.position
-        movementComponent.update(currentState, delta)
-        val collisionBoundary = radius + target.radius
-        val distance = (position - targetPosition).length
-        val isHit = distance < collisionBoundary
-        hasHit = isHit
+        movementComponent.update(this, currentState, delta)
 
-        if (isHit) {
+        if (hasHit) {
             val splashedEnemies = enemiesWithinSplashRange(currentState.enemies, position)
             splashedEnemies.forEach { it.health -= damage }
         }

@@ -5,9 +5,9 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
 class Enemy(val gameBoard: GameBoard) : MovingEntity {
-    private val movementComponent = MovementComponent(this)
-    private var target: PathSquare
-    override lateinit var targetPosition: Vector
+    override val movementComponent = EnemyMovementComponent()
+    var target: PathSquare
+        private set
     val radius = 10.0
     private val maxHealth = 20.0
     var health = maxHealth
@@ -19,7 +19,7 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
         val path = gameBoard.path
         val start = path[0]
         target = path[1]
-        targetPosition = target.waypoint.center()
+
         val centerX = start.x + 0.5 * start.width
         val centerY = start.y + 0.5 * start.height
         position = Vector(centerX, centerY)
@@ -28,7 +28,7 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
     private fun waypointCollisionCircle() = Circle(position.x, position.y, 1.4)
 
     override fun update(currentState: GameState, delta: Double) {
-        movementComponent.update(currentState, delta)
+        movementComponent.update(this, currentState, delta)
 
         if (waypointCollisionCircle().intersects(target.waypoint.boundsInLocal)) {
             nextTarget()
@@ -44,7 +44,6 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
         if (hasNextTarget) {
             nextTarget?.let {
                 target = it
-                targetPosition = target.waypoint.center()
             }
         } else {
             deletable = true

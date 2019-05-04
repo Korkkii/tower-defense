@@ -15,5 +15,5 @@ interface DrawableEntity {
 interface MovingEntity: GameEntity {
     val velocity: Double
     var position: Vector
-    var targetPosition: Vector
+    val movementComponent: MovementComponent<*>
 }

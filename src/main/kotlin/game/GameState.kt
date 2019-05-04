@@ -1,7 +1,7 @@
 package game
 
-import game.towers.SingleTower
 import game.towers.Tower
+import game.towers.projectiles.Projectile
 import ui.MouseHandler
 
 class GameState : Observer {

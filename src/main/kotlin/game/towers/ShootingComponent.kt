@@ -2,7 +2,6 @@ package game.towers
 
 import game.Enemy
 import game.GameState
-import game.Projectile
 import game.center
 
 class ShootingComponent {
@@ -20,7 +19,7 @@ class ShootingComponent {
         }
 
         if (withinRange(tower, closestEnemy) && canFire) {
-            currentState.projectiles += Projectile(tower, closestEnemy)
+            currentState.projectiles += tower.projectileConstructor(tower, closestEnemy)
             val secondsUntilNext = 1 / tower.fireRate
             firingCooldown = secondsUntilNext
         }

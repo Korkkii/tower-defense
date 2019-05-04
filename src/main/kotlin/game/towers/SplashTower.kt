@@ -1,9 +1,12 @@
 package game.towers
 
 import game.BuildAreaSquare
+import game.Enemy
 import game.GameState
 import game.SelectedTower
 import game.strokeCircle
+import game.towers.projectiles.Projectile
+import game.towers.projectiles.SplashProjectile
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 
@@ -12,6 +15,7 @@ class SplashTower(square: BuildAreaSquare) : Tower(square) {
     private val size = 30.0
     override val range = 75.0
     override val fireRate = 1.0
+    override val projectileConstructor: (Tower, Enemy) -> Projectile = ::SplashProjectile
     private val shootingComponent = ShootingComponent()
 
     override fun draw(graphics: GraphicsContext, state: GameState) {
@@ -27,7 +31,6 @@ class SplashTower(square: BuildAreaSquare) : Tower(square) {
     }
 
     override fun update(currentState: GameState, delta: Double) {
-        // TODO: Add generalize shooting component and make splash component
         shootingComponent.update(this, currentState, delta)
     }
 }

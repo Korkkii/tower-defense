@@ -1,9 +1,12 @@
 package game.towers
 
 import game.BuildAreaSquare
+import game.Enemy
 import game.GameState
 import game.SelectedTower
 import game.strokeCircle
+import game.towers.projectiles.Projectile
+import game.towers.projectiles.SingleHitProjectile
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 
@@ -13,6 +16,8 @@ class SingleTower(square: BuildAreaSquare) : Tower(square) {
     override val range = 75.0
     override val fireRate = 1.0
     private val shootingComponent = ShootingComponent()
+
+    override val projectileConstructor: (Tower, Enemy) -> Projectile = ::SingleHitProjectile
 
     override fun update(currentState: GameState, delta: Double) {
         shootingComponent.update(this, currentState, delta)

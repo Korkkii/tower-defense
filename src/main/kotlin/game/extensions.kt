@@ -18,6 +18,8 @@ fun Circle.center(): Vector = Vector(this.centerX, this.centerY)
 
 fun Circle(center: Vector, radius: Double) = Circle(center.x, center.y, radius)
 
+fun Circle.contains(position: Vector) = this.contains(position.x, position.y)
+
 fun GraphicsContext.fillCircle(circle: Circle) =
     this.fillOval(circle.centerX - circle.radius, circle.centerY - circle.radius, 2 * circle.radius, 2 * circle.radius)
 

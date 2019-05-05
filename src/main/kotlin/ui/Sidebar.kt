@@ -1,6 +1,7 @@
 package ui
 
 import game.Event
+import game.GameEnded
 import game.GameState
 import game.GameStateChanged
 import game.Observer
@@ -18,8 +19,9 @@ import javafx.scene.text.Text
 
 class Sidebar :
     VBox(), Observer {
-    val lives = Text("Player lives ${GameState.instance.playerLives}")
-    val money = Text("Player money ${GameState.instance.playerMoney}")
+    private val gameState = GameState.instance
+    private val money = Text("Player money ${gameState.playerMoney}")
+    private val enemies = Text("Enemies on the run ${gameState.enemies.count()}")
 
     init {
         val singleHitTowerButton = Button("Single hit tower")
@@ -28,15 +30,16 @@ class Sidebar :
         splashTowerButton.setOnMouseClicked { GameState.notify(PlacingTowerEvent(::SplashTower)) }
         this.background = Background(BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY))
 
-        this.children.addAll(listOf(singleHitTowerButton, splashTowerButton, lives, money))
-        GameState.subscribe(GameStateChanged, this)
+        this.children.addAll(listOf(singleHitTowerButton, splashTowerButton, money, enemies))
+
+        GameState.subscribe(GameStateChanged::class.java, this)
     }
 
     override fun onNotify(event: Event) {
         when (event) {
-            GameStateChanged -> {
-                lives.text = "Player lives ${GameState.instance.playerLives}"
-                money.text = "Player money ${GameState.instance.playerMoney}"
+            is GameStateChanged -> {
+                money.text = "Player money ${gameState.playerMoney}"
+                enemies.text = "Enemies on the run ${gameState.enemies.count()}"
             }
         }
     }

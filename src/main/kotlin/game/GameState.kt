@@ -11,10 +11,9 @@ class GameState : Observer {
     val mouseHandler = MouseHandler()
     var currentWave: Wave? = null
     val publisher = Publisher()
+    val maxEnemies = 20
     var playerMoney = 50
 
-    var playerLives = 3
-        private set
     var state: State = Idle
         private set
 
@@ -41,29 +40,31 @@ class GameState : Observer {
 
                 playerMoney -= tower.cost
                 towers += tower
-                publisher.publish(GameStateChanged)
+                publisher.publish(createStateEvent())
             }
             is SelectTowerEvent -> state = SelectedTower(event.tower)
-            is EnemyReachedEndEvent -> {
-                playerLives -= 1
-                val stateEvent = if (playerLives >= 1) GameStateChanged else GameEnded
-                publisher.publish(stateEvent)
+            is NewEnemyEvent -> {
+                enemies += event.enemy
+                publisher.publish(createStateEvent())
+                if (enemies.count { !it.canBeDeleted } > maxEnemies) publisher.publish(GameEnded)
             }
-            is NewEnemyEvent -> enemies += event.enemy
             is EnemyDefeated -> {
                 playerMoney += event.enemy.enemyPrice
-                publisher.publish(GameStateChanged)
+                publisher.publish(createStateEvent(enemyCount = enemies.count { !it.canBeDeleted }))
             }
             else -> {}
         }
     }
+
+    private fun createStateEvent(enemyCount: Int, money: Int = playerMoney) = GameStateChanged(money, enemyCount)
+    private fun createStateEvent() = createStateEvent(enemyCount = enemies.count())
 
     fun mousePosition() = mouseHandler.mousePosition
 
     companion object {
         val instance = GameState()
         fun notify(event: Event) = instance.publisher.publish(event)
-        fun subscribe(event: Event, observer: Observer) = instance.publisher.subscribeToEvent(event, observer)
+        fun <T : Event> subscribe(event: Class<T>, observer: Observer) = instance.publisher.subscribeToEvent(event, observer)
     }
 }
 

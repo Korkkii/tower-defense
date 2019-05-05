@@ -18,6 +18,8 @@ open class BoardSquare(x: Double, y: Double, width: Double, height: Double, val 
     override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fill = color
         graphics.fillRect(x, y, width, height)
+        graphics.stroke = Color.RED
+        graphics.strokeRect(x, y, width, height)
     }
 }
 

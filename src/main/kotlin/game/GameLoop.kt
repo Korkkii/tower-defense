@@ -8,7 +8,7 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, private
     private var paused = false
 
     init {
-        gameState.publisher.subscribeToEvent(GameEnded, this)
+        gameState.publisher.subscribeToEvent(GameEnded::class.java, this)
     }
 
     override fun onNotify(event: Event) {

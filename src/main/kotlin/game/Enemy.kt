@@ -49,8 +49,7 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
                 target = it
             }
         } else {
-            canBeDeleted = true
-            GameState.notify(EnemyReachedEndEvent(this))
+            target = path[0]
         }
     }
 

@@ -21,8 +21,10 @@ open class BoardSquare(x: Double, y: Double, width: Double, height: Double, val 
     }
 }
 
-open class PathSquare(x: Double, y: Double, width: Double, height: Double) : BoardSquare(x, y, width, height, Color.BEIGE) {
+abstract class PathSquare(x: Double, y: Double, width: Double, height: Double) : BoardSquare(x, y, width, height, Color.BEIGE) {
     val waypoint: Circle = Circle(x + 0.5 * width, y + 0.5 * height, 1.4)
+
+    abstract val nextDirection: Direction
 }
 class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) : BoardSquare(x, y, width, height, Color.GREEN) {
     val center = Vector(x + 0.5 * width, y + 0.5 * height)
@@ -48,5 +50,18 @@ class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) : Boa
         }
     }
 }
-class StartSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height)
-class EndSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height)
+class StartSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height) {
+    override val nextDirection: Direction = Right
+}
+class RightSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height) {
+    override val nextDirection: Direction = Right
+}
+class LeftSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height) {
+    override val nextDirection: Direction = Left
+}
+class UpSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height) {
+    override val nextDirection: Direction = Up
+}
+class DownSquare(x: Double, y: Double, width: Double, height: Double) : PathSquare(x, y, width, height) {
+    override val nextDirection: Direction = Down
+}

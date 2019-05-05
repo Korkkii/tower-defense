@@ -1,28 +1,26 @@
 package game
 
 import game.towers.SingleTower
-import game.towers.Tower
 import javafx.scene.canvas.GraphicsContext
+import java.io.File
 
 class GameBoard(private val width: Double, private val height: Double, private val gameState: GameState) : GameEntity {
     private val children = mutableListOf<BoardSquare>()
-    private val rawBoard = listOf(
-        listOf(".","s",".",".","."),
-        listOf(".","x",".",".","."),
-        listOf(".","x","x","x","."),
-        listOf(".",".",".","x","."),
-        listOf(".",".",".","e","."))
-    val board: List<List<BoardSquare>>
+    private val lines = File("src/main/resources/map.txt").readLines()
+    private val rawBoard = lines.map { it.toCharArray().asList() }
+    private val board: List<List<BoardSquare>>
     val path: List<PathSquare>
 
     init {
-        val rectangleWidth = width / rawBoard[0].size
-        val rectangleHeight = height / rawBoard.size
+        val rectangleWidth = 16.0
+        val rectangleHeight = 16.0
         board = rawBoard.map { x, y, cellValue ->
-            when(cellValue) {
-                "e" -> EndSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
-                "x" -> PathSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
-                "s" -> StartSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
+            when (cellValue) {
+                'u' -> UpSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
+                'd' -> DownSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
+                'l' -> LeftSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
+                'r' -> RightSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
+                's' -> StartSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
                 else -> BuildAreaSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
             }
         }
@@ -30,10 +28,10 @@ class GameBoard(private val width: Double, private val height: Double, private v
         children.addAll(flattened)
         val start = flattened.find { it is StartSquare } as? StartSquare ?: throw Error("No start square found")
         val generatedPath = generatePath(board, start)
-        path = listOf(PathSquare(80.0, -80.0, rectangleWidth, rectangleHeight)) + generatedPath + PathSquare(240.0, 400.0, rectangleWidth, rectangleHeight)
 
+        path = generatedPath
         gameState.currentWave = Wave(1, this)
-        val towerPlace = board[3][2] as? BuildAreaSquare
+        val towerPlace = board[3][3] as BuildAreaSquare
         val tower = towerPlace?.let { SingleTower(it) }
 
         tower?.let { gameState.towers.add(it) }
@@ -46,34 +44,28 @@ class GameBoard(private val width: Double, private val height: Double, private v
         children.forEach { it.draw(graphics, state) }
     }
 
-    private fun getNeighbours(x: Int, y: Int): List<BoardSquare> {
-        val result = mutableListOf<BoardSquare>()
-        for (direction in directions) {
-            val i = x + direction.x
-            val j = y + direction.y
-            if (isOnBoard(i, j)) result += board[j][i]
-        }
-
-        return result
-    }
-
-    private fun isOnBoard(x: Int, y: Int) = x >= 0 && y >= 0 && x < board.size && y < board.size
-
     private fun generatePath(board: List<List<BoardSquare>>, startSquare: StartSquare): List<PathSquare> {
         val flattenedBoard = board.flatten()
-        val resultPath = mutableListOf<PathSquare>(startSquare)
+        val resultPath = mutableListOf<PathSquare>()
         var last: PathSquare = startSquare
+        var loopComplete = false
 
-        while (last !is EndSquare) {
+        while (!loopComplete) {
             val lastIndex = flattenedBoard.indexOf(last)
-            val x = lastIndex % board.size
+            val x = lastIndex % board[0].size
             val y = lastIndex / board.size
-            val neighbours = getNeighbours(x, y)
-            val next = neighbours.find { it is PathSquare && !resultPath.contains(it) } as? PathSquare
-                ?: throw Error("Can't find proper path")
+            val nextX = x + last.nextDirection.x
+            val nextY = y + last.nextDirection.y
 
-            resultPath += next
-            last = next
+            val nextSquare = board[nextY][nextX] as PathSquare
+
+            if (!resultPath.contains(nextSquare)) {
+                resultPath += nextSquare
+            } else {
+                loopComplete = true
+            }
+
+            last = nextSquare
         }
 
         return resultPath

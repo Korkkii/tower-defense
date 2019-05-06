@@ -3,12 +3,14 @@ package game
 import javafx.animation.AnimationTimer
 import javafx.scene.canvas.Canvas
 
-class GameLoop(private val board: GameBoard, private val canvas: Canvas, private val gameState: GameState) : AnimationTimer(), Observer {
+class GameLoop(private val board: GameBoard, private val canvas: Canvas, gameState: GameState, scaleRatio: Double) : AnimationTimer(), Observer {
     private var previousCall: Long = 0L
     private var paused = false
+    private val graphicsContext = canvas.graphicsContext2D
 
     init {
         gameState.publisher.subscribeToEvent(GameEnded::class.java, this)
+        graphicsContext.scale(scaleRatio, scaleRatio)
     }
 
     override fun onNotify(event: Event) {
@@ -36,7 +38,7 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, private
         gameState.currentWave?.update(gameState, inSeconds)
         gameState.projectiles.removeAll { it.canDelete() }
         gameState.enemies.removeAll { it.canBeDeleted }
-        board.draw(canvas.graphicsContext2D, gameState)
+        board.draw(graphicsContext, gameState)
         gameState.enemies.forEach { it.draw(canvas.graphicsContext2D, gameState) }
         gameState.towers.forEach { it.draw(canvas.graphicsContext2D, gameState) }
         gameState.projectiles.forEach { it.draw(canvas.graphicsContext2D, gameState) }

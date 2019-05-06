@@ -70,5 +70,5 @@ class GameState : Observer {
 
 sealed class State
 object Idle : State()
-data class PlacingTower<T : Tower>(val constructor: (square: BuildAreaSquare) -> T) : State()
+data class PlacingTower<T : Tower>(val constructor: (BuildAreaSquare) -> T) : State()
 data class SelectedTower(val tower: Tower) : State()

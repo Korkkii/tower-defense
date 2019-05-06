@@ -8,7 +8,7 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
     override val movementComponent = EnemyMovementComponent()
     var target: PathSquare
         private set
-    val radius = 10.0
+    val radius = 5.0
     private val maxHealth = 20.0
     var health = maxHealth
         private set
@@ -57,14 +57,14 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
         graphics.fill = Color.RED
         graphics.fillCircle(Circle(position.x, position.y, radius))
 
-        val healthBarWidth = 50
-        val healthBarHeight = 10
+        val healthBarWidth = 20
+        val healthBarHeight = 3
         graphics.fill = Color.RED
-        graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 2 * healthBarHeight, healthBarWidth.toDouble(), healthBarHeight.toDouble())
+        graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 3 * healthBarHeight, healthBarWidth.toDouble(), healthBarHeight.toDouble())
 
         val healthRemainingWidth = health / maxHealth * healthBarWidth
         graphics.fill = Color.GREEN
-        graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 2 * healthBarHeight, healthRemainingWidth, healthBarHeight.toDouble())
+        graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 3 * healthBarHeight, healthRemainingWidth, healthBarHeight.toDouble())
     }
 
     fun takeDamage(damage: Double) {

@@ -3,26 +3,35 @@ package game
 import game.towers.SingleTower
 import javafx.scene.canvas.GraphicsContext
 import java.io.File
+import kotlin.math.roundToInt
 
 class GameBoard(private val width: Double, private val height: Double, private val gameState: GameState) : GameEntity {
     private val children = mutableListOf<BoardSquare>()
     private val lines = File("src/main/resources/map.txt").readLines()
     private val rawBoard = lines.map { it.toCharArray().asList() }
     private val board: List<List<BoardSquare>>
+    private val rectangleWidth = 16.0
+    private val rectangleHeight = 16.0
+    val ratio = (width / rectangleWidth / rawBoard.size)
     val path: List<PathSquare>
 
     init {
-        val rectangleWidth = 16.0
-        val rectangleHeight = 16.0
         board = rawBoard.map { x, y, cellValue ->
-            when (cellValue) {
-                'u' -> UpSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
-                'd' -> DownSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
-                'l' -> LeftSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
-                'r' -> RightSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
-                's' -> StartSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
-                else -> BuildAreaSquare(x * rectangleWidth, y * rectangleHeight, rectangleWidth, rectangleHeight)
+            val constructor = when (cellValue) {
+                'u' -> ::UpSquare
+                'd' -> ::DownSquare
+                'l' -> ::LeftSquare
+                'r' -> ::RightSquare
+                's' -> ::StartSquare
+                else -> ::BuildAreaSquare
             }
+
+            constructor(
+                x * rectangleWidth,
+                y * rectangleHeight,
+                rectangleWidth,
+                rectangleHeight
+            )
         }
         val flattened = board.flatten()
         children.addAll(flattened)

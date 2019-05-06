@@ -19,7 +19,7 @@ class Main : Application() {
     override fun start(primaryStage: Stage?) {
         primaryStage?.title = "Hello World"
         val width = 1200.0
-        val boardWidth = 1000.0
+        val boardWidth = 900.0
         val height = 900.0
 
         val canvas = Canvas(boardWidth, height)

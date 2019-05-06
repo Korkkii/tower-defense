@@ -6,7 +6,7 @@ import javafx.scene.input.MouseEvent
 class Game(width: Double, height: Double, canvas: Canvas) {
     private val gameState = GameState.instance
     private val board = GameBoard(width, height, gameState)
-    private val gameLoop = GameLoop(board, canvas, gameState)
+    private val gameLoop = GameLoop(board, canvas, gameState, board.ratio)
 
     init {
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED, gameState.mouseHandler)

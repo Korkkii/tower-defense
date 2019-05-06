@@ -12,7 +12,7 @@ import javafx.scene.paint.Color
 
 class SingleTower(square: BuildAreaSquare) : Tower(square) {
     override val cost = 30
-    private val size = 30.0
+    private val size = 10.0
     override val range = 75.0
     override val fireRate = 1.0
     private val shootingComponent = ShootingComponent()

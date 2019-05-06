@@ -1,5 +1,7 @@
 package game
 
+// TODO: Refactor this into global object and subscriptions to take callback function instead of class
+// Remove observer class at that point
 class Publisher {
     private val eventSubscribers = mutableMapOf<Class<*>, MutableList<Observer>>()
     private val subscribersToAll = mutableListOf<Observer>()

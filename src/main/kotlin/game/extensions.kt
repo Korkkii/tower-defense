@@ -3,6 +3,7 @@ package game
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.input.MouseEvent
 import javafx.scene.shape.Circle
+import javafx.scene.transform.Affine
 
 fun <T, U> List<List<U>>.map(mappingFunction: (x: Int, y: Int, cellValue: U) -> T ): List<List<T>> {
     return this.mapIndexed { columnIndex, cells ->
@@ -27,3 +28,7 @@ fun GraphicsContext.strokeCircle(circle: Circle) =
     this.strokeOval(circle.centerX - circle.radius, circle.centerY - circle.radius, 2 * circle.radius, 2 * circle.radius)
 
 fun MouseEvent.position() = Vector(this.sceneX, this.sceneY)
+
+fun Affine.inverseTransform(point: Vector): Vector {
+    return this.inverseTransform(point.toPoint2D()).toVector()
+}

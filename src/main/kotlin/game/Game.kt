@@ -3,7 +3,7 @@ package game
 import javafx.scene.canvas.Canvas
 import javafx.scene.input.MouseEvent
 
-class Game(width: Double, height: Double, canvas: Canvas) {
+class Game(width: Double, height: Double, val canvas: Canvas) {
     private val gameState = GameState.instance
     private val board = GameBoard(width, height, gameState)
     private val gameLoop = GameLoop(board, canvas, gameState, board.ratio)
@@ -11,7 +11,9 @@ class Game(width: Double, height: Double, canvas: Canvas) {
     init {
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED, gameState.mouseHandler)
         canvas.setOnMouseClicked {
-            val square = board.squareAtPosition(it.position())
+            val graphicsContext = canvas.graphicsContext2D
+            val inWorldCoords = graphicsContext.transform.inverseTransform(it.position())
+            val square = board.squareAtPosition(inWorldCoords)
             val placingTower = gameState.state is PlacingTower<*>
             val buildAreaSquare = square as? BuildAreaSquare
             val squareHasTower = buildAreaSquare?.tower != null ?: false

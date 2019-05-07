@@ -1,5 +1,6 @@
 package game
 
+import javafx.geometry.Point2D
 import java.lang.Math.pow
 import kotlin.math.sqrt
 
@@ -29,6 +30,10 @@ data class Vector(val x: Double, val y: Double) {
     operator fun unaryMinus(): Vector = Vector(-this.x, -this.y)
 
     fun unitVector(): Vector = this / this.length
+
+    fun toPoint2D(): Point2D = Point2D(x, y)
 }
+
+fun Point2D.toVector(): Vector = Vector(this.x, this.y)
 
 operator fun Double.times(vector: Vector) = vector * this

@@ -18,8 +18,6 @@ open class BoardSquare(x: Double, y: Double, width: Double, height: Double, val 
     override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fill = color
         graphics.fillRect(x, y, width, height)
-        graphics.stroke = Color.RED
-        graphics.strokeRect(x, y, width, height)
     }
 }
 
@@ -42,7 +40,9 @@ class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) : Boa
 
         // TODO: Remove this and make area highlight drawing in tower?
         // To get rid of double link that is blocking currently
-        if (state.state is PlacingTower<*> && withinArea(state.mousePosition())) {
+        val mousePosition = graphics.transform.inverseTransform(state.mousePosition())
+
+        if (state.state is PlacingTower<*> && withinArea(mousePosition)) {
             graphics.fillRect(x, y, width, height)
             if (tower != null) {
                 graphics.font = Font(90.0)

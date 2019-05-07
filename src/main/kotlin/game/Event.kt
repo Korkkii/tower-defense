@@ -9,4 +9,6 @@ data class SelectTowerEvent(val tower: Tower) : Event
 data class NewEnemyEvent(val enemy: Enemy) : Event
 data class EnemyDefeated(val enemy: Enemy) : Event
 data class GameStateChanged(val money: Int, val enemyCount: Int) : Event
+data class NewWave(val wave: Wave) : Event
+object WaveComplete : Event
 object GameEnded : Event

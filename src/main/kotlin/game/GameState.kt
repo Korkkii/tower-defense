@@ -10,9 +10,11 @@ class GameState : Observer {
     val projectiles = mutableListOf<Projectile>()
     val mouseHandler = MouseHandler()
     var currentWave: Wave? = null
+        private set
     val publisher = Publisher()
     val maxEnemies = 20
     var playerMoney = 50
+        private set
 
     var state: State = Idle
         private set
@@ -52,6 +54,7 @@ class GameState : Observer {
                 playerMoney += event.enemy.enemyPrice
                 publisher.publish(createStateEvent(enemyCount = enemies.count { !it.canBeDeleted }))
             }
+            is NewWave -> currentWave = event.wave
             else -> {}
         }
     }

@@ -11,10 +11,10 @@ import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
-class SingleHitProjectile(tower: Tower, override val target: Enemy): Projectile() {
-    override val velocity: Double = 100.0
-    override val radius = 2.0
-    private val damage = 3.0
+class LightProjectile(tower: Tower, override val target: Enemy): Projectile() {
+    override val velocity: Double = 400.0
+    override val radius = 0.5
+    private val damage = 0.5
     override val movementComponent = ProjectileMovementComponent()
     override var position: Vector = tower.square.center
 

@@ -20,4 +20,12 @@ abstract class Tower(val square: BuildAreaSquare) : GameEntity {
     fun deleteTower() {
         square.tower = null
     }
+
+    companion object {
+        val allTowers = listOf(
+            (::SingleTower to "Single hit tower"),
+            (::SplashTower to "Splash tower"),
+            (::LightTower to "Light tower")
+        )
+    }
 }

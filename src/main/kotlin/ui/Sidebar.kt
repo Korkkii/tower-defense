@@ -10,10 +10,13 @@ import game.towers.SingleTower
 import game.towers.SplashTower
 import game.towers.Tower
 import javafx.geometry.Insets
+import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
+import javafx.scene.layout.Border
 import javafx.scene.layout.CornerRadii
+import javafx.scene.layout.FlowPane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.text.Text
@@ -23,16 +26,11 @@ class Sidebar :
     private val gameState = GameState.instance
     private val money = Text("Player money ${gameState.playerMoney}")
     private val enemies = Text("Enemies on the run ${gameState.enemies.count()}")
+    private val towerButtons = TowerButtons()
 
     init {
-        val towerButtons = Tower.allTowers.map {
-            val (constructor, name) = it
-            val button = Button(name)
-            button.setOnMouseClicked { GameState.notify(PlacingTowerEvent(constructor)) }
-            button
-        }
         this.background = Background(BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY))
-        val children = towerButtons + money + enemies
+        val children = listOf(money, enemies, towerButtons)
         this.children.addAll(children)
 
         GameState.subscribe(GameStateChanged::class.java, this)

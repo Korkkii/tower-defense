@@ -44,7 +44,10 @@ class GameState : Observer {
                 towers += tower
                 publisher.publish(createStateEvent())
             }
-            is SelectTowerEvent -> state = SelectedTower(event.tower)
+            is SelectTowerEvent -> {
+                state = TowerSelected(event.tower)
+                publisher.publish(createStateEvent())
+            }
             is NewEnemyEvent -> {
                 enemies += event.enemy
                 publisher.publish(createStateEvent())
@@ -55,11 +58,18 @@ class GameState : Observer {
                 publisher.publish(createStateEvent(enemyCount = enemies.count { !it.canBeDeleted }))
             }
             is NewWave -> currentWave = event.wave
+            is EmptyClick -> {
+                state = Idle
+                publisher.publish(createStateEvent())
+            }
             else -> {}
         }
     }
 
-    private fun createStateEvent(enemyCount: Int, money: Int = playerMoney) = GameStateChanged(money, enemyCount)
+    private fun createStateEvent(enemyCount: Int, money: Int = playerMoney): GameStateChanged {
+        val selectedTower = (state as? TowerSelected)?.tower
+        return GameStateChanged(money, enemyCount, selectedTower)
+    }
     private fun createStateEvent() = createStateEvent(enemyCount = enemies.count())
 
     fun mousePosition() = mouseHandler.mousePosition
@@ -84,4 +94,4 @@ fun MutableList<Enemy>.withinRangeOf(tower: Tower): List<Enemy> {
 sealed class State
 object Idle : State()
 data class PlacingTower<T : Tower>(val constructor: (BuildAreaSquare) -> T) : State()
-data class SelectedTower(val tower: Tower) : State()
+data class TowerSelected(val tower: Tower) : State()

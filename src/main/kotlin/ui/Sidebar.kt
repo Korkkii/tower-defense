@@ -27,11 +27,14 @@ class Sidebar :
     private val money = Text("Player money ${gameState.playerMoney}")
     private val enemies = Text("Enemies on the run ${gameState.enemies.count()}")
     private val towerButtons = TowerButtons()
+    private val towerInfo = TowerInfo()
 
     init {
         this.background = Background(BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY))
-        val children = listOf(money, enemies, towerButtons)
+        val children = listOf(money, enemies, towerInfo, towerButtons)
         this.children.addAll(children)
+        this.isFillWidth = true
+        this.padding = Insets(10.0)
 
         GameState.subscribe(GameStateChanged::class.java, this)
     }

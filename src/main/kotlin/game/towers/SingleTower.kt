@@ -3,8 +3,6 @@ package game.towers
 import game.BuildAreaSquare
 import game.Enemy
 import game.GameState
-import game.SelectedTower
-import game.strokeCircle
 import game.towers.projectiles.Projectile
 import game.towers.projectiles.SingleHitProjectile
 import javafx.scene.canvas.GraphicsContext

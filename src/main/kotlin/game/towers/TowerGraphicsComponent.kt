@@ -2,7 +2,7 @@ package game.towers
 
 import game.GameState
 import game.GraphicsComponent
-import game.SelectedTower
+import game.TowerSelected
 import game.strokeCircle
 import javafx.scene.canvas.GraphicsContext
 
@@ -19,7 +19,7 @@ class TowerGraphicsComponent : GraphicsComponent<Tower> {
         )
         val stateT = state.state
 
-        if (stateT is SelectedTower && stateT.tower == tower)
+        if (stateT is TowerSelected && stateT.tower == tower)
             graphics.strokeCircle(tower.rangeCircle)
     }
 }

@@ -10,7 +10,7 @@ import game.towers.projectiles.SingleHitProjectile
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 
-class SingleTower(square: BuildAreaSquare) : Tower(square) {
+class SingleTower(square: BuildAreaSquare) : ProjectileTower(square) {
     override val cost = 30
     override val size = 10.0
     override val range = 75.0

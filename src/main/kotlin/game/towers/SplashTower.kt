@@ -8,7 +8,7 @@ import game.towers.projectiles.SplashProjectile
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 
-class SplashTower(square: BuildAreaSquare) : Tower(square) {
+class SplashTower(square: BuildAreaSquare) : ProjectileTower(square) {
     override val cost = 30
     override val size = 10.0
     override val range = 75.0

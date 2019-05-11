@@ -11,10 +11,9 @@ abstract class Tower(val square: BuildAreaSquare) : GameEntity {
     abstract val cost: Int
     abstract val range: Double
     abstract val fireRate: Double // Rate per second
-    abstract val projectileConstructor: ((Tower, Enemy) -> Projectile)
     abstract val size: Double
     abstract val color: Color
-    abstract val shootingComponent: ShootingComponent
+    abstract val shootingComponent: PhysicsComponent<*>
     abstract val graphicsComponent: TowerGraphicsComponent
     val rangeCircle by lazy { Circle(square.center, range) }
 
@@ -30,7 +29,8 @@ abstract class Tower(val square: BuildAreaSquare) : GameEntity {
         val allTowers = listOf(
             (::SingleTower to "Single hit tower"),
             (::SplashTower to "Splash tower"),
-            (::LightTower to "Light tower")
+            (::LightTower to "Light tower"),
+            (::FireTower to "Fire tower")
         )
     }
 }

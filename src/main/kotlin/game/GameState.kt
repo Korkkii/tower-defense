@@ -71,6 +71,16 @@ class GameState : Observer {
     }
 }
 
+fun MutableList<Enemy>.withinRangeOf(tower: Tower): List<Enemy> {
+    val rangeCircle = tower.rangeCircle
+    val center = rangeCircle.center()
+    return this.filter { enemy ->
+        val collisionBoundary = rangeCircle.radius + enemy.radius
+        val distance = (center - enemy.position).length
+        distance < collisionBoundary
+    }
+}
+
 sealed class State
 object Idle : State()
 data class PlacingTower<T : Tower>(val constructor: (BuildAreaSquare) -> T) : State()

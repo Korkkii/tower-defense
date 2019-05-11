@@ -11,24 +11,26 @@ class Game(width: Double, height: Double, val canvas: Canvas) {
 
     init {
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED, gameState.mouseHandler)
-        canvas.setOnMouseClicked {
-            val graphicsContext = canvas.graphicsContext2D
-            val inWorldCoords = graphicsContext.transform.inverseTransform(it.position())
-            val square = board.squareAtPosition(inWorldCoords)
-            val placingTower = gameState.state is PlacingTower<*>
-            val buildAreaSquare = square as? BuildAreaSquare
-            val squareHasTower = buildAreaSquare?.tower != null ?: false
+        canvas.setOnMouseClicked(::handleMouseClick)
+    }
 
-            if (placingTower) {
-                val isBuildSquare = buildAreaSquare != null
-                val hasNoTower = buildAreaSquare?.tower == null
+    private fun handleMouseClick(event: MouseEvent) {
+        val graphicsContext = canvas.graphicsContext2D
+        val inWorldCoords = graphicsContext.transform.inverseTransform(event.position())
+        val square = board.squareAtPosition(inWorldCoords)
+        val placingTower = gameState.state is PlacingTower<*>
+        val buildAreaSquare = square as? BuildAreaSquare
+        val squareHasTower = buildAreaSquare?.tower != null ?: false
 
-                if (isBuildSquare && hasNoTower) {
-                    buildAreaSquare?.let { gameState.onNotify(PlaceTowerEvent(it)) }
-                }
-            } else if (squareHasTower) {
-                buildAreaSquare?.tower?.let { gameState.onNotify(SelectTowerEvent(it)) }
+        if (placingTower) {
+            val isBuildSquare = buildAreaSquare != null
+            val hasNoTower = buildAreaSquare?.tower == null
+
+            if (isBuildSquare && hasNoTower) {
+                buildAreaSquare?.let { gameState.onNotify(PlaceTowerEvent(it)) }
             }
+        } else if (squareHasTower) {
+            buildAreaSquare?.tower?.let { gameState.onNotify(SelectTowerEvent(it)) }
         }
     }
 

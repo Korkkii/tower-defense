@@ -63,6 +63,21 @@ class GameState : Observer {
                 state = Idle
                 publisher.publish(createStateEvent())
             }
+            is UpgradeClicked -> {
+                val currentTower = (state as? TowerSelected)?.tower ?: return
+                val cost = currentTower.type.upgradeTowerType?.upgradeCost ?: return
+                if (cost > playerMoney) return
+
+                playerMoney -= cost
+                val upgradedTower = currentTower.upgrade() ?: return
+
+                currentTower.deleteTower()
+
+                towers += upgradedTower
+
+                state = TowerSelected(upgradedTower)
+                publisher.publish(createStateEvent())
+            }
             else -> {}
         }
     }

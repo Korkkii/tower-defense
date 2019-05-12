@@ -12,20 +12,29 @@ open class TowerType(
     val range: Double,
     val fireRate: Double,
     val color: Color,
-    val physicsComponent: PhysicsComponent<Tower>
+    val physicsComponent: PhysicsComponent<Tower>,
+    val upgradeTowerType: UpgradeType? = null
 ) {
     val size = 10.0
     val graphicsComponent = TowerGraphicsComponent()
+
     fun create(square: BuildAreaSquare) = Tower(square, this)
+
+    fun upgradeType(): TowerType? {
+        val upgrade = upgradeTowerType ?: return null
+
+        return TowerType(name, cost + upgrade.upgradeCost, upgrade.range, upgrade.fireRate, color, physicsComponent)
+    }
 
     companion object {
         private val singleHit = TowerType(
             "Single hit tower",
-            30,
+            10,
             75.0,
             1.0,
             Color.AQUAMARINE,
-            ShootingComponent(::SingleHitProjectile)
+            ShootingComponent(::SingleHitProjectile),
+            UpgradeType(20, 90.0, 1.2)
         )
         private val splash = TowerType(
             "Splash tower",

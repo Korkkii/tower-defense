@@ -8,14 +8,19 @@ import javafx.scene.canvas.GraphicsContext
 
 class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity {
     val rangeCircle by lazy { Circle(square.center, type.range) }
+    var canBeDeleted = false
+        private set
 
     init {
         square.tower = this
     }
 
     fun deleteTower() {
-        square.tower = null
+        if (square.tower == this) square.tower = null
+        canBeDeleted = true
     }
+
+    fun upgrade(): Tower? = type.upgradeType()?.let { Tower(square, it) }
 
     override fun update(currentState: GameState, delta: Double) {
         type.physicsComponent.update(this, currentState, delta)

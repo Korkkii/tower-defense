@@ -3,11 +3,12 @@ package game.towers
 import game.Enemy
 import game.GameState
 import game.center
+import game.towers.projectiles.Projectile
 
-class ShootingComponent : PhysicsComponent<ProjectileTower> {
+class ShootingComponent(val projectileConstructor: (Tower, Enemy) -> Projectile) : PhysicsComponent<Tower> {
     private var firingCooldown = 0.0
 
-    override fun update(entity: ProjectileTower, currentState: GameState, delta: Double) {
+    override fun update(entity: Tower, currentState: GameState, delta: Double) {
         val enemies = currentState.enemies
         if (enemies.isEmpty()) return
 
@@ -19,8 +20,8 @@ class ShootingComponent : PhysicsComponent<ProjectileTower> {
         }
 
         if (withinRange(entity, closestEnemy) && canFire) {
-            currentState.projectiles += entity.projectileConstructor(entity, closestEnemy)
-            val secondsUntilNext = 1 / entity.fireRate
+            currentState.projectiles += projectileConstructor(entity, closestEnemy)
+            val secondsUntilNext = 1 / entity.type.fireRate
             firingCooldown = secondsUntilNext
         }
     }

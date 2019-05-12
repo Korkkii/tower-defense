@@ -2,20 +2,12 @@ package game.towers
 
 import game.BuildAreaSquare
 import game.Circle
-import game.Enemy
 import game.GameEntity
-import game.towers.projectiles.Projectile
-import javafx.scene.paint.Color
+import game.GameState
+import javafx.scene.canvas.GraphicsContext
 
-abstract class Tower(val square: BuildAreaSquare) : GameEntity {
-    abstract val cost: Int
-    abstract val range: Double
-    abstract val fireRate: Double // Rate per second
-    abstract val size: Double
-    abstract val color: Color
-    abstract val shootingComponent: PhysicsComponent<*>
-    abstract val graphicsComponent: TowerGraphicsComponent
-    val rangeCircle by lazy { Circle(square.center, range) }
+class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity {
+    val rangeCircle by lazy { Circle(square.center, type.range) }
 
     init {
         square.tower = this
@@ -25,12 +17,11 @@ abstract class Tower(val square: BuildAreaSquare) : GameEntity {
         square.tower = null
     }
 
-    companion object {
-        val allTowers = listOf(
-            (::SingleTower to "Single hit tower"),
-            (::SplashTower to "Splash tower"),
-            (::LightTower to "Light tower"),
-            (::FireTower to "Fire tower")
-        )
+    override fun update(currentState: GameState, delta: Double) {
+        type.physicsComponent.update(this, currentState, delta)
+    }
+
+    override fun draw(graphics: GraphicsContext, state: GameState) {
+        type.graphicsComponent.draw(this, graphics, state)
     }
 }

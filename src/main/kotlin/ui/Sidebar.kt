@@ -1,22 +1,13 @@
 package ui
 
 import game.Event
-import game.GameEnded
 import game.GameState
 import game.GameStateChanged
 import game.Observer
-import game.PlacingTowerEvent
-import game.towers.SingleTower
-import game.towers.SplashTower
-import game.towers.Tower
 import javafx.geometry.Insets
-import javafx.scene.Node
-import javafx.scene.control.Button
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
-import javafx.scene.layout.Border
 import javafx.scene.layout.CornerRadii
-import javafx.scene.layout.FlowPane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.text.Text

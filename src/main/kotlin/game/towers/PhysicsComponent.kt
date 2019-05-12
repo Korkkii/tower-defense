@@ -1,8 +1,7 @@
 package game.towers
 
-import game.GameEntity
 import game.GameState
 
-interface PhysicsComponent<T : GameEntity> {
+interface PhysicsComponent<T> {
     fun update(entity: T, currentState: GameState, delta: Double)
 }

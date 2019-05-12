@@ -1,9 +1,8 @@
 package ui
 
-import game.BuildAreaSquare
 import game.GameState
 import game.PlacingTowerEvent
-import game.towers.Tower
+import game.towers.TowerType
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Button
@@ -14,9 +13,8 @@ import javafx.scene.shape.Circle
 
 class TowerButtons : FlowPane() {
     init {
-        val towerButtons = Tower.allTowers.map {
-            val (constructor, name) = it
-            TowerButton(constructor, name)
+        val towerButtons = TowerType.towerTypes.map {
+            TowerButton(it, it.name)
         }
 
         this.padding = Insets(10.0, 20.0, 10.0, 20.0)
@@ -27,11 +25,11 @@ class TowerButtons : FlowPane() {
     }
 }
 
-class TowerButton(towerConstructor: (BuildAreaSquare) -> Tower, name: String) : Button(name) {
+class TowerButton(towerType: TowerType, name: String) : Button(name) {
     init {
         this.graphic = Circle(20.0, Color.BLACK)
         this.contentDisplay = ContentDisplay.TOP
         this.prefWidth = 100.0
-        this.setOnMouseClicked { GameState.notify(PlacingTowerEvent(towerConstructor)) }
+        this.setOnMouseClicked { GameState.notify(PlacingTowerEvent(towerType)) }
     }
 }

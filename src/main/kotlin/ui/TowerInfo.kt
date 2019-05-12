@@ -5,6 +5,7 @@ import game.GameState
 import game.GameStateChanged
 import game.Observer
 import javafx.geometry.Insets
+import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
@@ -25,7 +26,7 @@ class TowerInfo : VBox(), Observer {
     override fun onNotify(event: Event) {
         val state = event as GameStateChanged
         val text =
-        state.selectedTower?.let { "Tower range: ${it.range}" } ?: "No tower selected"
+        state.selectedTower?.let { "Tower range: ${it.type.range}" } ?: "No tower selected"
         range.text = text
     }
 }

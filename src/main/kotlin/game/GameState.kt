@@ -1,6 +1,7 @@
 package game
 
 import game.towers.Tower
+import game.towers.TowerType
 import game.towers.projectiles.Projectile
 import ui.MouseHandler
 
@@ -25,22 +26,22 @@ class GameState : Observer {
 
     override fun onNotify(event: Event) {
         when(event) {
-            is PlacingTowerEvent<*> -> state = PlacingTower(event.towerConstructor)
+            is PlacingTowerEvent -> state = PlacingTower(event.towerType)
             is PlaceTowerEvent -> {
-                val currentState = state as? PlacingTower<*> ?: return
-
-                val tower = currentState.constructor(event.square)
+                val currentState = state as? PlacingTower ?: return
+                val towerType = currentState.type
+                val tower = towerType.create(event.square)
 
                 state = Idle
 
                 // TODO create UI error message for "not enough money"
                 // Or maybe prevent trying to place in the first place?
-                if (playerMoney < tower.cost) {
+                if (playerMoney < towerType.cost) {
                     tower.deleteTower()
                     return
                 }
 
-                playerMoney -= tower.cost
+                playerMoney -= towerType.cost
                 towers += tower
                 publisher.publish(createStateEvent())
             }
@@ -93,5 +94,5 @@ fun MutableList<Enemy>.withinRangeOf(tower: Tower): List<Enemy> {
 
 sealed class State
 object Idle : State()
-data class PlacingTower<T : Tower>(val constructor: (BuildAreaSquare) -> T) : State()
+data class PlacingTower(val type: TowerType) : State()
 data class TowerSelected(val tower: Tower) : State()

@@ -15,10 +15,6 @@ data class Vector(val x: Double, val y: Double) {
         return Vector(this.x - other.x, this.y - other.y)
     }
 
-    operator fun minus(scalar: Double): Vector {
-        return Vector(this.x - scalar, this.y - scalar)
-    }
-
     operator fun times(scalar: Double): Vector {
         return Vector(scalar * this.x, scalar * this.y)
     }

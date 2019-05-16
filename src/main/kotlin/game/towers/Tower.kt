@@ -20,7 +20,7 @@ class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity {
         canBeDeleted = true
     }
 
-    fun upgrade(): Tower? = type.upgradeType()?.let { Tower(square, it) }
+    fun upgrade(upgradeType: TowerType): Tower = Tower(square, upgradeType)
 
     override fun update(currentState: GameState, delta: Double) {
         type.physicsComponent.update(this, currentState, delta)

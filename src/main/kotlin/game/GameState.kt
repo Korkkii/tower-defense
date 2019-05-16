@@ -65,11 +65,12 @@ class GameState : Observer {
             }
             is UpgradeClicked -> {
                 val currentTower = (state as? TowerSelected)?.tower ?: return
-                val cost = currentTower.type.upgradeTowerType?.upgradeCost ?: return
+                val clickedType = event.type
+                val cost = clickedType.cost - currentTower.type.cost
                 if (cost > playerMoney) return
 
                 playerMoney -= cost
-                val upgradedTower = currentTower.upgrade() ?: return
+                val upgradedTower = currentTower.upgrade(clickedType)
 
                 currentTower.deleteTower()
 

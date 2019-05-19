@@ -12,7 +12,7 @@ class ProjectileMovementComponent : MovementComponent<Projectile> {
         val direction = (target.position - projectile.position).unitVector()
         projectile.position += projectile.velocity * direction * delta
 
-        val collisionBoundary = projectile.radius + target.radius
+        val collisionBoundary = projectile.radius + target.type.radius
         val distance = (projectile.position - target.position).length
         val isHit = distance < collisionBoundary
         projectile.hasHit = isHit

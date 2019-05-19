@@ -4,22 +4,16 @@ import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
-class Enemy(val gameBoard: GameBoard) : MovingEntity {
-    override val movementComponent = EnemyMovementComponent()
+class Enemy(val path: List<PathSquare>, val type: EnemyType) : GameEntity {
     var target: PathSquare
         private set
-    val radius = 5.0
-    private val maxHealth = 20.0
-    var health = maxHealth
+    var health = type.maxHealth
         private set
-    override val velocity = 35.0
-    override lateinit var position: Vector
+    var position: Vector
     var canBeDeleted = false
         private set
-    val enemyPrice = 5
 
     init {
-        val path = gameBoard.path
         val start = path[0]
         target = path[1]
 
@@ -31,7 +25,7 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
     private fun waypointCollisionCircle() = Circle(position.x, position.y, 1.4)
 
     override fun update(currentState: GameState, delta: Double) {
-        movementComponent.update(this, currentState, delta)
+        type.movementComponent.update(this, currentState, delta)
 
         if (waypointCollisionCircle().intersects(target.waypoint.boundsInLocal)) {
             nextTarget()
@@ -39,7 +33,6 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
     }
 
     private fun nextTarget() {
-        val path = gameBoard.path
         val nextIndex = path.indexOf(target) + 1
         val nextTarget = path.getOrNull(nextIndex)
         val hasNextTarget = nextTarget != null
@@ -55,14 +48,14 @@ class Enemy(val gameBoard: GameBoard) : MovingEntity {
 
     override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fill = Color.RED
-        graphics.fillCircle(Circle(position.x, position.y, radius))
+        graphics.fillCircle(Circle(position.x, position.y, type.radius))
 
         val healthBarWidth = 20
         val healthBarHeight = 3
         graphics.fill = Color.RED
         graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 3 * healthBarHeight, healthBarWidth.toDouble(), healthBarHeight.toDouble())
 
-        val healthRemainingWidth = health / maxHealth * healthBarWidth
+        val healthRemainingWidth = health / type.maxHealth * healthBarWidth
         graphics.fill = Color.GREEN
         graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 3 * healthBarHeight, healthRemainingWidth, healthBarHeight.toDouble())
     }

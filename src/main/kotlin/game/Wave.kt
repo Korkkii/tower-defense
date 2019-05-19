@@ -7,7 +7,7 @@ class Wave(val level: Int, gameBoard: GameBoard) : UpdatableEntity {
 
     init {
         val enemyCount = kotlin.random.Random.nextInt(1, 5)
-        enemies = (0..enemyCount).map { Enemy(gameBoard) }
+        enemies = (0..enemyCount).map { Enemy(gameBoard.path, EnemyType.enemy) }
     }
 
     private fun isComplete(): Boolean {

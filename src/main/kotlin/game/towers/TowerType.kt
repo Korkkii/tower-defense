@@ -1,6 +1,5 @@
 package game.towers
 
-import com.autodsl.annotation.AutoDsl
 import game.BuildAreaSquare
 import game.towers.projectiles.LightProjectile
 import game.towers.projectiles.SingleHitProjectile
@@ -28,7 +27,6 @@ data class TowerType(
             1.0,
             Color.AQUAMARINE,
             ShootingComponent(::SingleHitProjectile)
-            // UpgradeType(20, 90.0, 1.2)
         )
         private val singleHit2 = TowerType(
             "Single hit tower",
@@ -37,7 +35,6 @@ data class TowerType(
             1.2,
             Color.AQUAMARINE,
             ShootingComponent(::SingleHitProjectile)
-            // UpgradeType(20, 90.0, 1.2)
         )
         private val splash = TowerType(
             "Splash tower",

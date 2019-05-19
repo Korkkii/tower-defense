@@ -12,7 +12,7 @@ interface DrawableEntity {
     fun draw(graphics: GraphicsContext, state: GameState)
 }
 
-interface MovingEntity: GameEntity {
+interface MovingEntity : GameEntity {
     val velocity: Double
     var position: Vector
     val movementComponent: MovementComponent<*>

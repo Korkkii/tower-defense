@@ -31,7 +31,7 @@ class ShootingComponent(val projectileConstructor: (Tower, Enemy) -> Projectile)
 
     private fun withinRange(tower: Tower, enemy: Enemy): Boolean {
         val rangeCircle = tower.rangeCircle
-        val collisionBoundary = rangeCircle.radius + enemy.radius
+        val collisionBoundary = rangeCircle.radius + enemy.type.radius
         val distance = (rangeCircle.center() - enemy.position).length
         return distance < collisionBoundary
     }

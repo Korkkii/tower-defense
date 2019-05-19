@@ -6,6 +6,6 @@ class EnemyMovementComponent : MovementComponent<Enemy> {
         val targetPosition = target.waypoint.center()
 
         val direction = (targetPosition - entity.position).unitVector()
-        entity.position += entity.velocity * direction * delta
+        entity.position += entity.type.velocity * direction * delta
     }
 }

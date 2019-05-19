@@ -55,7 +55,7 @@ class GameState : Observer {
                 if (enemies.count { !it.canBeDeleted } > maxEnemies) publisher.publish(GameEnded)
             }
             is EnemyDefeated -> {
-                playerMoney += event.enemy.enemyPrice
+                playerMoney += event.enemy.type.enemyPrice
                 publisher.publish(createStateEvent(enemyCount = enemies.count { !it.canBeDeleted }))
             }
             is NewWave -> currentWave = event.wave
@@ -102,7 +102,7 @@ fun MutableList<Enemy>.withinRangeOf(tower: Tower): List<Enemy> {
     val rangeCircle = tower.rangeCircle
     val center = rangeCircle.center()
     return this.filter { enemy ->
-        val collisionBoundary = rangeCircle.radius + enemy.radius
+        val collisionBoundary = rangeCircle.radius + enemy.type.radius
         val distance = (center - enemy.position).length
         distance < collisionBoundary
     }

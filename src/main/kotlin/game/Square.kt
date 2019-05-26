@@ -38,14 +38,12 @@ class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) : Boa
         super.draw(graphics, state)
         graphics.fill = color.brighter().brighter()
 
-        // TODO: Remove this and make area highlight drawing in tower?
-        // To get rid of double link that is blocking currently
         val mousePosition = graphics.transform.inverseTransform(state.mousePosition())
 
         if (state.state is PlacingTower && withinArea(mousePosition)) {
             graphics.fillRect(x, y, width, height)
             if (tower != null) {
-                graphics.font = Font(90.0)
+                graphics.font = Font(20.0)
                 graphics.fill = Color.RED
                 graphics.fillText("X", x + 0.1 * width, y + 0.9 * height)
             }

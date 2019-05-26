@@ -5,6 +5,7 @@ import game.towers.TowerType
 
 interface Event
 data class PlacingTowerEvent(val towerType: TowerType) : Event
+data class BossStartEvent(val bossType: BossType) : Event
 data class PlaceTowerEvent(val square: BuildAreaSquare) : Event
 data class SelectTowerEvent(val tower: Tower) : Event
 data class NewEnemyEvent(val enemy: Enemy) : Event

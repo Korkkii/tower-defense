@@ -34,30 +34,33 @@ class Enemy(val path: List<PathSquare>, val type: EnemyType) : GameEntity {
 
     private fun nextTarget() {
         val nextIndex = path.indexOf(target) + 1
-        val nextTarget = path.getOrNull(nextIndex)
-        val hasNextTarget = nextTarget != null
+        val nextTarget = path.getOrNull(nextIndex) ?: path[0]
 
-        if (hasNextTarget) {
-            nextTarget?.let {
-                target = it
-            }
-        } else {
-            target = path[0]
-        }
+        target = nextTarget
     }
 
     override fun draw(graphics: GraphicsContext, state: GameState) {
-        graphics.fill = Color.RED
+        graphics.fill = type.color
         graphics.fillCircle(Circle(position.x, position.y, type.radius))
 
         val healthBarWidth = 20
         val healthBarHeight = 3
         graphics.fill = Color.RED
-        graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 3 * healthBarHeight, healthBarWidth.toDouble(), healthBarHeight.toDouble())
+        graphics.fillRect(
+            position.x - 0.5 * healthBarWidth,
+            position.y - 3 * healthBarHeight,
+            healthBarWidth.toDouble(),
+            healthBarHeight.toDouble()
+        )
 
         val healthRemainingWidth = health / type.maxHealth * healthBarWidth
         graphics.fill = Color.GREEN
-        graphics.fillRect(position.x - 0.5 * healthBarWidth, position.y - 3 * healthBarHeight, healthRemainingWidth, healthBarHeight.toDouble())
+        graphics.fillRect(
+            position.x - 0.5 * healthBarWidth,
+            position.y - 3 * healthBarHeight,
+            healthRemainingWidth,
+            healthBarHeight.toDouble()
+        )
     }
 
     fun takeDamage(damage: Double) {

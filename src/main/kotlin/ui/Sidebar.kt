@@ -19,10 +19,11 @@ class Sidebar :
     private val enemies = Text("Enemies on the run ${gameState.enemies.count()}")
     private val towerButtons = TowerButtons()
     private val towerInfo = TowerInfo()
+    private val bossButtons = BossButtons()
 
     init {
         this.background = Background(BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY))
-        val children = listOf(money, enemies, towerInfo, towerButtons)
+        val children = listOf(money, enemies, towerInfo, towerButtons, bossButtons)
         this.children.addAll(children)
         this.isFillWidth = true
         this.padding = Insets(10.0)

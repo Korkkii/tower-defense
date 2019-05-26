@@ -3,18 +3,16 @@ package game
 import javafx.animation.AnimationTimer
 import javafx.scene.canvas.Canvas
 
-class GameLoop(private val board: GameBoard, private val canvas: Canvas, gameState: GameState, scaleRatio: Double) : AnimationTimer(), Observer {
+class GameLoop(private val board: GameBoard, private val canvas: Canvas, gameState: GameState, scaleRatio: Double) : AnimationTimer() {
     private var previousCall: Long = 0L
     private var paused = false
     private val graphicsContext = canvas.graphicsContext2D
 
     init {
-        gameState.publisher.subscribeToEvent(GameEnded::class.java, this)
+        gameState.publisher.subscribeToEvent(GameEnded::class.java) {
+            paused = true
+        }
         graphicsContext.scale(scaleRatio, scaleRatio)
-    }
-
-    override fun onNotify(event: Event) {
-        paused = true
     }
 
     override fun handle(now: Long) {

@@ -5,7 +5,7 @@ import game.towers.TowerType
 import game.towers.projectiles.Projectile
 import ui.MouseHandler
 
-class GameState : Observer {
+class GameState {
     val enemies = mutableListOf<Enemy>()
     val towers = mutableListOf<Tower>()
     val projectiles = mutableListOf<Projectile>()
@@ -22,10 +22,10 @@ class GameState : Observer {
     val defeatedBosses = mutableSetOf<BossType>()
 
     init {
-        publisher.subscribeToAll(this)
+        publisher.subscribeToAll(::onNotify)
     }
 
-    override fun onNotify(event: Event) {
+    fun onNotify(event: Event) {
         when(event) {
             is PlacingTowerEvent -> state = PlacingTower(event.towerType)
             is PlaceTowerEvent -> {
@@ -101,7 +101,7 @@ class GameState : Observer {
     companion object {
         val instance = GameState()
         fun notify(event: Event) = instance.publisher.publish(event)
-        fun <T : Event> subscribe(event: Class<T>, observer: Observer) = instance.publisher.subscribeToEvent(event, observer)
+        fun <T : Event> subscribe(event: Class<T>, callback: (T) -> Unit) = instance.publisher.subscribeToEvent(event, callback)
     }
 }
 

@@ -3,7 +3,6 @@ package ui
 import game.Event
 import game.GameState
 import game.GameStateChanged
-import game.Observer
 import javafx.geometry.Insets
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
@@ -13,7 +12,7 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Text
 
 class Sidebar :
-    VBox(), Observer {
+    VBox() {
     private val gameState = GameState.instance
     private val money = Text("Player money ${gameState.playerMoney}")
     private val enemies = Text("Enemies on the run ${gameState.enemies.count()}")
@@ -28,15 +27,9 @@ class Sidebar :
         this.isFillWidth = true
         this.padding = Insets(10.0)
 
-        GameState.subscribe(GameStateChanged::class.java, this)
-    }
-
-    override fun onNotify(event: Event) {
-        when (event) {
-            is GameStateChanged -> {
-                money.text = "Player money ${gameState.playerMoney}"
-                enemies.text = "Enemies on the run ${gameState.enemies.count()}"
-            }
+        GameState.subscribe(GameStateChanged::class.java) {
+            money.text = "Player money ${it.money}"
+            enemies.text = "Enemies on the run ${it.enemyCount}"
         }
     }
 }

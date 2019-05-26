@@ -1,24 +1,25 @@
 package game
 
-// TODO: Refactor this into global object and subscriptions to take callback function instead of class
-// Remove observer class at that point
 class Publisher {
-    private val eventSubscribers = mutableMapOf<Class<*>, MutableList<Observer>>()
-    private val subscribersToAll = mutableListOf<Observer>()
+    private val eventSubscribers = mutableMapOf<Class<*>, MutableList<(Event) -> Unit>>()
+    private val subscribersToAll = mutableListOf<(Event) -> Unit>()
 
-    fun <T : Event> subscribeToEvent(event: Class<T>, observer: Observer) {
-        val observers = eventSubscribers[event] ?: mutableListOf()
-        observers += observer
-        eventSubscribers[event] = observers
+    fun <T : Event> subscribeToEvent(event: Class<T>, callback: (T) -> Unit) {
+        val callbacks = eventSubscribers[event] ?: mutableListOf()
+
+        @Suppress("UNCHECKED_CAST")
+        val eventCallback = callback as? (Event) -> Unit ?: return
+        callbacks += eventCallback
+        eventSubscribers[event] = callbacks
     }
 
-    fun subscribeToAll(observer: Observer) {
-        subscribersToAll += observer
+    fun subscribeToAll(callback: (Event) -> Unit) {
+        subscribersToAll += callback
     }
 
     fun publish(event: Event) {
-        val interestedObservers = eventSubscribers[event::class.java]
-        subscribersToAll.forEach { it.onNotify(event) }
-        interestedObservers?.forEach { it.onNotify(event) }
+        val interestedObservers = eventSubscribers[event::class.java].orEmpty()
+        subscribersToAll.forEach { it(event) }
+        interestedObservers.forEach { it(event) }
     }
 }

@@ -19,6 +19,7 @@ class GameState : Observer {
 
     var state: State = Idle
         private set
+    val defeatedBosses = mutableSetOf<BossType>()
 
     init {
         publisher.subscribeToAll(this)
@@ -55,7 +56,13 @@ class GameState : Observer {
                 if (enemies.count { !it.canBeDeleted } > maxEnemies) publisher.publish(GameEnded)
             }
             is EnemyDefeated -> {
-                playerMoney += event.enemy.type.enemyPrice
+                val type = event.enemy.type
+                playerMoney += type.enemyPrice
+                if (type is BossType) {
+                    defeatedBosses += type
+
+                    publisher.publish(BossDefeated)
+                }
                 publisher.publish(createStateEvent(enemyCount = enemies.count { !it.canBeDeleted }))
             }
             is NewWave -> currentWave = event.wave

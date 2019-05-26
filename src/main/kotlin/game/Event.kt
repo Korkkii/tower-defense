@@ -15,4 +15,5 @@ data class NewWave(val wave: Wave) : Event
 data class UpgradeClicked(val type: TowerType) : Event
 object WaveComplete : Event
 object EmptyClick : Event
+object BossDefeated : Event
 object GameEnded : Event

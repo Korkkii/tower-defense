@@ -1,6 +1,5 @@
 package ui
 
-import game.Event
 import game.GameState
 import game.GameStateChanged
 import game.UpgradeClicked

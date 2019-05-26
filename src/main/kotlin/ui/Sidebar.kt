@@ -1,6 +1,5 @@
 package ui
 
-import game.Event
 import game.GameState
 import game.GameStateChanged
 import javafx.geometry.Insets
@@ -13,6 +12,7 @@ import javafx.scene.text.Text
 
 class Sidebar :
     VBox() {
+    // TODO: Convert JavaFX to KotlinFX
     private val gameState = GameState.instance
     private val money = Text("Player money ${gameState.playerMoney}")
     private val enemies = Text("Enemies on the run ${gameState.enemies.count()}")

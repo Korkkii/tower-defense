@@ -1,6 +1,8 @@
 package game.towers
 
 import game.BuildAreaSquare
+import game.EnemyType
+import game.GameState
 import game.towers.projectiles.LightProjectile
 import game.towers.projectiles.SingleHitProjectile
 import game.towers.projectiles.SplashProjectile
@@ -18,6 +20,11 @@ data class TowerType(
     val graphicsComponent = TowerGraphicsComponent()
 
     fun create(square: BuildAreaSquare) = Tower(square, this)
+
+    fun isAvailable(): Boolean {
+        val requirement = requirements[this] ?: return true
+        return requirement in GameState.instance.defeatedBosses
+    }
 
     companion object {
         private val singleHit = TowerType(
@@ -63,6 +70,9 @@ data class TowerType(
         val towerTypes = listOf(
             singleHit, light, fire
         )
+
+        val requirements = mapOf(light to EnemyType.boss)
+
         val upgrades = mapOf(singleHit to listOf(singleHit2, splash))
     }
 }

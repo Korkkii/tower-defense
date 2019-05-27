@@ -3,6 +3,7 @@ package ui
 import game.BossDefeated
 import game.BossStartEvent
 import game.BossType
+import game.Enemy
 import game.EnemyType
 import game.GameState
 import javafx.geometry.Insets
@@ -14,25 +15,44 @@ import javafx.scene.shape.Circle
 
 class BossButtons : FlowPane() {
     init {
-        GameState.subscribe(BossDefeated.javaClass) {
-            children.clear()
-            children.addAll(EnemyType.getAvailableBosses().map { BossButton(it, it.name) })
-        }
+        GameState.subscribe(BossDefeated::class.java, this::onBossDefeated)
 
         padding = Insets(10.0, 20.0, 10.0, 20.0)
         alignment = Pos.CENTER
         hgap = 10.0
         vgap = 10.0
 
-        children += EnemyType.getAvailableBosses().map { BossButton(it, it.name) }
+        children += EnemyType.getAvailableBosses().map { BossButton(it) }
+    }
+
+    fun onBossDefeated(event: BossDefeated) {
+        val type = event.type
+        val nodeIndex = children.indexOfFirst { (it as? BossButton)?.type == type }
+        if (nodeIndex == -1) return
+
+        val nextType = EnemyType.bossLevels[type]
+        if (nextType != null) children[nodeIndex] = BossButton(nextType)
+        else children.removeAll(children[nodeIndex])
     }
 }
 
-class BossButton(type: BossType, name: String) : Button(name) {
+class BossButton(val type: BossType) : Button(type.name) {
+    private var bossInPlay = false
+
     init {
-        this.graphic = Circle(20.0, type.color)
-        this.contentDisplay = ContentDisplay.TOP
-        this.prefWidth = 100.0
-        this.setOnMouseClicked { GameState.notify(BossStartEvent(type)) }
+        graphic = Circle(20.0, type.color)
+        contentDisplay = ContentDisplay.TOP
+        prefWidth = 100.0
+
+        setOnMouseClicked {
+            if (!bossInPlay) {
+                GameState.notify(BossStartEvent(type))
+                bossInPlay = true
+            }
+        }
+
+        GameState.subscribe(BossDefeated::class.java) {
+            if (it.type == type) bossInPlay = false
+        }
     }
 }

@@ -13,7 +13,7 @@ data class EnemyDefeated(val enemy: Enemy) : Event
 data class GameStateChanged(val money: Int, val enemyCount: Int, val selectedTower: Tower?) : Event
 data class NewWave(val wave: Wave) : Event
 data class UpgradeClicked(val type: TowerType) : Event
+data class BossDefeated(val type: BossType) : Event
 object WaveComplete : Event
 object EmptyClick : Event
-object BossDefeated : Event
 object GameEnded : Event

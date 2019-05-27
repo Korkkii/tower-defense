@@ -16,7 +16,7 @@ open class EnemyType(
         val boss = BossType(20, 120.0, EnemyMovementComponent(), 7.0, Color.CRIMSON, "Boss Man")
         val upgradedBoss = BossType(30, 240.0, EnemyMovementComponent(), 7.0, Color.CRIMSON.darker(), "Boss Man 2")
         private val bosses = listOf(boss)
-        private val bossLevels = mapOf(boss to upgradedBoss)
+        val bossLevels = mapOf(boss to upgradedBoss)
         fun getAvailableBosses(): List<BossType> {
             val defeated = GameState.instance.defeatedBosses
             val upgradesOfDefeated = defeated.map { bossLevels[it] }.filterNotNull()

@@ -61,7 +61,7 @@ class GameState {
                 if (type is BossType) {
                     defeatedBosses += type
 
-                    publisher.publish(BossDefeated)
+                    publisher.publish(BossDefeated(type))
                 }
                 publisher.publish(createStateEvent(enemyCount = enemies.count { !it.canBeDeleted }))
             }

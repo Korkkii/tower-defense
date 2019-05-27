@@ -3,7 +3,6 @@ package ui
 import game.BossDefeated
 import game.BossStartEvent
 import game.BossType
-import game.Enemy
 import game.EnemyType
 import game.GameState
 import javafx.geometry.Insets
@@ -25,7 +24,7 @@ class BossButtons : FlowPane() {
         children += EnemyType.getAvailableBosses().map { BossButton(it) }
     }
 
-    fun onBossDefeated(event: BossDefeated) {
+    private fun onBossDefeated(event: BossDefeated) {
         val type = event.type
         val nodeIndex = children.indexOfFirst { (it as? BossButton)?.type == type }
         if (nodeIndex == -1) return
@@ -49,10 +48,6 @@ class BossButton(val type: BossType) : Button(type.name) {
                 GameState.notify(BossStartEvent(type))
                 bossInPlay = true
             }
-        }
-
-        GameState.subscribe(BossDefeated::class.java) {
-            if (it.type == type) bossInPlay = false
         }
     }
 }

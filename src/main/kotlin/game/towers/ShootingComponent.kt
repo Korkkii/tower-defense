@@ -5,7 +5,7 @@ import game.GameState
 import game.center
 import game.towers.projectiles.Projectile
 
-class ShootingComponent(val projectileConstructor: (Tower, Enemy) -> Projectile) : PhysicsComponent<Tower> {
+class ShootingComponent private constructor(val projectileConstructor: (Tower, Enemy) -> Projectile) : PhysicsComponent<Tower> {
     private var firingCooldown = 0.0
 
     override fun update(entity: Tower, currentState: GameState, delta: Double) {
@@ -34,5 +34,9 @@ class ShootingComponent(val projectileConstructor: (Tower, Enemy) -> Projectile)
         val collisionBoundary = rangeCircle.radius + enemy.type.radius
         val distance = (rangeCircle.center() - enemy.position).length
         return distance < collisionBoundary
+    }
+
+    companion object {
+        fun with(constructor: (Tower, Enemy) -> Projectile): () -> PhysicsComponent<Tower> = { ShootingComponent(constructor)}
     }
 }

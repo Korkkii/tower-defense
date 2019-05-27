@@ -17,4 +17,8 @@ class AreaEffectComponent(val areaEffectDamage: Double) : PhysicsComponent<Tower
             enemies.withinRangeOf(entity).forEach { it.takeDamage(areaEffectDamage) }
         }
     }
+
+    companion object {
+        fun with(areaDamage: Double): () -> AreaEffectComponent = { AreaEffectComponent(areaDamage) }
+    }
 }

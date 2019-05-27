@@ -10,6 +10,7 @@ class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity {
     val rangeCircle by lazy { Circle(square.center, type.range) }
     var canBeDeleted = false
         private set
+    private val physicsComponent = type.physicsComponentConstructor()
 
     init {
         square.tower = this
@@ -23,7 +24,7 @@ class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity {
     fun upgrade(upgradeType: TowerType): Tower = Tower(square, upgradeType)
 
     override fun update(currentState: GameState, delta: Double) {
-        type.physicsComponent.update(this, currentState, delta)
+        physicsComponent.update(this, currentState, delta)
     }
 
     override fun draw(graphics: GraphicsContext, state: GameState) {

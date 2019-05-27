@@ -14,7 +14,7 @@ data class TowerType(
     val range: Double,
     val fireRate: Double,
     val color: Color,
-    val physicsComponent: PhysicsComponent<Tower>
+    val physicsComponentConstructor: () -> PhysicsComponent<Tower>
 ) {
     val size = 10.0
     val graphicsComponent = TowerGraphicsComponent()
@@ -33,7 +33,7 @@ data class TowerType(
             75.0,
             1.0,
             Color.AQUAMARINE,
-            ShootingComponent(::SingleHitProjectile)
+            ShootingComponent.with(::SingleHitProjectile)
         )
         private val singleHit2 = TowerType(
             "Single hit tower",
@@ -41,7 +41,7 @@ data class TowerType(
             90.0,
             1.2,
             Color.AQUAMARINE,
-            ShootingComponent(::SingleHitProjectile)
+            ShootingComponent.with(::SingleHitProjectile)
         )
         private val splash = TowerType(
             "Splash tower",
@@ -49,7 +49,7 @@ data class TowerType(
             75.0,
             1.0,
             Color.ROSYBROWN,
-            ShootingComponent(::SplashProjectile)
+            ShootingComponent.with(::SplashProjectile)
         )
         private val light = TowerType(
             "Light tower",
@@ -57,7 +57,7 @@ data class TowerType(
             50.0,
             200.0,
             Color.ANTIQUEWHITE,
-            ShootingComponent(::LightProjectile)
+            ShootingComponent.with(::LightProjectile)
         )
         private val fire = TowerType(
             "Fire tower",
@@ -65,7 +65,7 @@ data class TowerType(
             30.0,
             1.0,
             Color.ORANGERED,
-            AreaEffectComponent(0.1)
+            AreaEffectComponent.with(0.1)
         )
         val towerTypes = listOf(
             singleHit, light, fire

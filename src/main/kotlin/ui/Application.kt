@@ -1,15 +1,13 @@
 package ui
 
 import game.Game
-import game.Vector
+import game.GameState
+import game.PlacingTowerEvent
+import game.towers.TowerType
 import javafx.application.Application
-import javafx.event.EventHandler
-import javafx.event.EventType
-import javafx.scene.Group
-import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
-import javafx.scene.input.MouseEvent
+import javafx.scene.input.KeyCode
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.stage.Stage
@@ -32,6 +30,16 @@ class Main : Application() {
         group.prefWidth = width
 
         val scene = Scene(group)
+        scene.setOnKeyReleased {
+            val type = when (it.code) {
+                KeyCode.Q -> TowerType.towerTypes[0]
+                else -> null
+            }
+
+
+            type?.let { towerType -> if (towerType.isAvailable()) GameState.notify(PlacingTowerEvent(towerType)) }
+        }
+
         primaryStage?.scene = scene
         game.start()
         primaryStage?.show()

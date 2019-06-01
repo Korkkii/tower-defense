@@ -6,18 +6,18 @@ open class EnemyType(
     val enemyPrice: Int,
     val baseHealth: Double,
     val healthPerLevel: Double,
-    val movementComponent: EnemyMovementComponent,
     val radius: Double,
     val color: Color,
     val velocity: Double
 ) {
+    val movementComponentConstructor = { EnemyMovementComponent() }
 
     companion object {
-        val enemy = EnemyType(5, 20.0, 10.0, EnemyMovementComponent(), 5.0, Color.RED, 35.0)
-        val fastEnemy = EnemyType(5, 10.0, 3.0, EnemyMovementComponent(), 5.0, Color.DEEPSKYBLUE.brighter(), 60.0)
-        val boss = BossType(20, 120.0, 0.0, EnemyMovementComponent(), 7.0, Color.CRIMSON, 35.0, "Boss Man")
+        val enemy = EnemyType(5, 20.0, 10.0,5.0, Color.RED, 35.0)
+        val fastEnemy = EnemyType(5, 10.0, 3.0,5.0, Color.DEEPSKYBLUE.brighter(), 60.0)
+        val boss = BossType(20, 120.0, 0.0,7.0, Color.CRIMSON, 35.0, "Boss Man")
         val upgradedBoss =
-            BossType(30, 240.0, 0.0, EnemyMovementComponent(), 7.0, Color.CRIMSON.darker(), 35.0, "Boss Man 2")
+            BossType(30, 240.0, 0.0,7.0, Color.CRIMSON.darker(), 35.0, "Boss Man 2")
         private val bosses = listOf(boss)
         val bossLevels = mapOf(boss to upgradedBoss)
         fun getAvailableBosses(): List<BossType> {
@@ -32,7 +32,6 @@ class BossType(
     enemyPrice: Int,
     baseHealth: Double,
     healthPerLevel: Double,
-    movementComponent: EnemyMovementComponent,
     radius: Double,
     color: Color,
     velocity: Double,
@@ -41,7 +40,6 @@ class BossType(
     enemyPrice,
     baseHealth,
     healthPerLevel,
-    movementComponent,
     radius,
     color,
     velocity

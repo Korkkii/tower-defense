@@ -13,6 +13,7 @@ class Enemy(val path: List<PathSquare>, val type: EnemyType, level: Int) : GameE
     var position: Vector
     var canBeDeleted = false
         private set
+    private val movementComponent = type.movementComponentConstructor()
 
     init {
         val start = path[0]
@@ -26,7 +27,7 @@ class Enemy(val path: List<PathSquare>, val type: EnemyType, level: Int) : GameE
     private fun waypointCollisionCircle() = Circle(position.x, position.y, 1.4)
 
     override fun update(currentState: GameState, delta: Double) {
-        type.movementComponent.update(this, currentState, delta)
+        movementComponent.update(this, currentState, delta)
 
         if (waypointCollisionCircle().intersects(target.waypoint.boundsInLocal)) {
             nextTarget()

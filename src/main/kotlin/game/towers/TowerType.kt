@@ -30,7 +30,7 @@ data class TowerType(
         private val singleHit = TowerType(
             "Single hit tower",
             10,
-            75.0,
+            35.0,
             1.0,
             Color.AQUAMARINE,
             ShootingComponent.with(::SingleHitProjectile)
@@ -38,7 +38,7 @@ data class TowerType(
         private val singleHit2 = TowerType(
             "Single hit tower",
             20,
-            90.0,
+            45.0,
             1.2,
             Color.AQUAMARINE,
             ShootingComponent.with(::SingleHitProjectile)
@@ -46,7 +46,7 @@ data class TowerType(
         private val splash = TowerType(
             "Splash tower",
             30,
-            75.0,
+            35.0,
             1.0,
             Color.ROSYBROWN,
             ShootingComponent.with(::SplashProjectile)
@@ -54,7 +54,7 @@ data class TowerType(
         private val light = TowerType(
             "Light tower",
             40,
-            50.0,
+            35.0,
             200.0,
             Color.ANTIQUEWHITE,
             ShootingComponent.with(::LightProjectile)

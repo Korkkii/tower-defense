@@ -4,17 +4,20 @@ import javafx.scene.paint.Color
 
 open class EnemyType(
     val enemyPrice: Int,
-    val maxHealth: Double,
+    val baseHealth: Double,
+    val healthPerLevel: Double,
     val movementComponent: EnemyMovementComponent,
     val radius: Double,
-    val color: Color
+    val color: Color,
+    val velocity: Double
 ) {
-    val velocity = 35.0
 
     companion object {
-        val enemy = EnemyType(5, 20.0, EnemyMovementComponent(), 5.0, Color.RED)
-        val boss = BossType(20, 120.0, EnemyMovementComponent(), 7.0, Color.CRIMSON, "Boss Man")
-        val upgradedBoss = BossType(30, 240.0, EnemyMovementComponent(), 7.0, Color.CRIMSON.darker(), "Boss Man 2")
+        val enemy = EnemyType(5, 20.0, 10.0, EnemyMovementComponent(), 5.0, Color.RED, 35.0)
+        val fastEnemy = EnemyType(5, 10.0, 3.0, EnemyMovementComponent(), 5.0, Color.DEEPSKYBLUE.brighter(), 60.0)
+        val boss = BossType(20, 120.0, 0.0, EnemyMovementComponent(), 7.0, Color.CRIMSON, 35.0, "Boss Man")
+        val upgradedBoss =
+            BossType(30, 240.0, 0.0, EnemyMovementComponent(), 7.0, Color.CRIMSON.darker(), 35.0, "Boss Man 2")
         private val bosses = listOf(boss)
         val bossLevels = mapOf(boss to upgradedBoss)
         fun getAvailableBosses(): List<BossType> {
@@ -27,15 +30,19 @@ open class EnemyType(
 
 class BossType(
     enemyPrice: Int,
-    maxHealth: Double,
+    baseHealth: Double,
+    healthPerLevel: Double,
     movementComponent: EnemyMovementComponent,
     radius: Double,
     color: Color,
+    velocity: Double,
     val name: String
 ) : EnemyType(
     enemyPrice,
-    maxHealth,
+    baseHealth,
+    healthPerLevel,
     movementComponent,
     radius,
-    color
+    color,
+    velocity
 )

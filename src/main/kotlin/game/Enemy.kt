@@ -4,10 +4,11 @@ import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
-class Enemy(val path: List<PathSquare>, val type: EnemyType) : GameEntity {
+class Enemy(val path: List<PathSquare>, val type: EnemyType, level: Int) : GameEntity {
     var target: PathSquare
         private set
-    var health = type.maxHealth
+    val maxHealth = type.baseHealth + type.healthPerLevel * level
+    var health = maxHealth
         private set
     var position: Vector
     var canBeDeleted = false
@@ -53,7 +54,7 @@ class Enemy(val path: List<PathSquare>, val type: EnemyType) : GameEntity {
             healthBarHeight.toDouble()
         )
 
-        val healthRemainingWidth = health / type.maxHealth * healthBarWidth
+        val healthRemainingWidth = health / maxHealth * healthBarWidth
         graphics.fill = Color.GREEN
         graphics.fillRect(
             position.x - 0.5 * healthBarWidth,

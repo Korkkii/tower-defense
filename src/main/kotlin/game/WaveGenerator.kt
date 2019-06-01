@@ -7,7 +7,8 @@ class WaveGenerator(private val gameBoard: GameBoard) {
             GameState.notify(NewWave(Wave(currentLevel + 1, gameBoard)))
         }
         GameState.subscribe(BossStartEvent::class.java) {
-            val enemy = Enemy(gameBoard.path, it.bossType)
+            val currentLevel = GameState.instance.currentWave?.level ?: 0
+            val enemy = Enemy(gameBoard.path, it.bossType, currentLevel)
             GameState.notify(NewEnemyEvent(enemy))
         }
         GameState.notify(NewWave(Wave(0, gameBoard)))

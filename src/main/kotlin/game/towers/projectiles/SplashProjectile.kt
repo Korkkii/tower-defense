@@ -11,7 +11,7 @@ class SplashProjectile(tower: Tower, override val target: Enemy) : Projectile() 
     override val velocity: Double = 100.0
     override val radius = 2.0
     private val damage = 3.0
-    private val splashRange = 10.0
+    private val splashRange = 15.0
     override val movementComponent = ProjectileMovementComponent()
     override var position: Vector = tower.square.center
 

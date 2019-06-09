@@ -4,24 +4,26 @@ import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
-class Enemy(val path: List<PathSquare>, val type: EnemyType, level: Int) : GameEntity {
+fun calculateStartingPosition(path: List<PathSquare>): Vector {
+    val start = path[0]
+    val centerX = start.x + 0.5 * start.width
+    val centerY = start.y + 0.5 * start.height
+    return Vector(centerX, centerY)
+}
+
+class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int) :
+    GameEntity(calculateStartingPosition(path)) {
     var target: PathSquare
         private set
     val maxHealth = type.baseHealth + type.healthPerLevel * level
     var health = maxHealth
         private set
-    var position: Vector
     var canBeDeleted = false
         private set
     private val movementComponent = type.movementComponentConstructor()
 
     init {
-        val start = path[0]
         target = path[1]
-
-        val centerX = start.x + 0.5 * start.width
-        val centerY = start.y + 0.5 * start.height
-        position = Vector(centerX, centerY)
     }
 
     private fun waypointCollisionCircle() = Circle(position.x, position.y, 1.4)

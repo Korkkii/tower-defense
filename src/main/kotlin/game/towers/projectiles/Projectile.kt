@@ -4,13 +4,11 @@ import game.Enemy
 import game.GameEntity
 import game.GameState
 import game.Vector
-import game.towers.Tower
 import javafx.scene.canvas.GraphicsContext
 
-class Projectile(val tower: Tower, val target: Enemy, val type: ProjectileType) : GameEntity {
+class Projectile(position: Vector, val target: Enemy, val type: ProjectileType, val properties: ProjectileProperties = NoProperties) : GameEntity(position) {
     private val graphicsComponent = ProjectileGraphicsComponent()
     var hasHit = false
-    var position: Vector = tower.square.center
 
     fun canDelete(): Boolean = hasHit
 
@@ -22,3 +20,7 @@ class Projectile(val tower: Tower, val target: Enemy, val type: ProjectileType) 
         graphicsComponent.draw(this, graphics, state)
     }
 }
+
+interface ProjectileProperties
+object NoProperties : ProjectileProperties
+data class BounceProperties(val bouncesLeft: Int) : ProjectileProperties

@@ -2,6 +2,8 @@ package game.towers
 
 import game.Enemy
 import game.GameState
+import game.NewProjectile
+import game.PhysicsComponent
 import game.center
 import game.towers.projectiles.Projectile
 import game.towers.projectiles.ProjectileType

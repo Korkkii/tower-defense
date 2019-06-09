@@ -6,7 +6,7 @@ import game.GameEntity
 import game.GameState
 import javafx.scene.canvas.GraphicsContext
 
-class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity {
+class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity(square.center) {
     val rangeCircle by lazy { Circle(square.center, type.range) }
     var canBeDeleted = false
         private set

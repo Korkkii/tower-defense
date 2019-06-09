@@ -3,7 +3,7 @@ package game
 import javafx.scene.canvas.GraphicsContext
 import java.io.File
 
-class GameBoard(private val width: Double, private val height: Double) : GameEntity {
+class GameBoard(private val width: Double, private val height: Double) : GameEntity(Vector(0.0, 0.0)) {
     private val rectangleWidth = 16.0
     private val rectangleHeight = 16.0
     private val children = mutableListOf<BoardSquare>()

@@ -3,7 +3,7 @@ package game.towers.projectiles
 import game.Enemy
 import game.GameState
 import game.times
-import game.towers.PhysicsComponent
+import game.PhysicsComponent
 
 class ProjectilePhysicsComponent(private val onHit: (Projectile, Enemy, GameState) -> Unit) :
     PhysicsComponent<Projectile> {

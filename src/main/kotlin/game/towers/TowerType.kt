@@ -3,6 +3,7 @@ package game.towers
 import game.BuildAreaSquare
 import game.EnemyType
 import game.GameState
+import game.PhysicsComponent
 import game.towers.projectiles.ProjectileType
 import javafx.scene.paint.Color
 
@@ -65,6 +66,8 @@ data class TowerType(
             Color.ORANGERED,
             AreaEffectComponent.with(0.1)
         )
+        private val wind =
+            TowerType("Wind tower", 5, 35.0, 1.0, Color.SILVER, ShootingComponent.with(ProjectileType.bounceProjectile))
         /*
         * Towers
         * - Fire
@@ -83,7 +86,8 @@ data class TowerType(
         val towerTypes = listOf(
             singleHit,
             light,
-            fire
+            fire,
+            wind
         )
 
         val requirements = mapOf(light to EnemyType.boss)

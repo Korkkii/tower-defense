@@ -1,6 +1,7 @@
 package game.towers
 
 import game.GameState
+import game.PhysicsComponent
 import game.withinRangeOf
 
 class AreaEffectComponent(val areaEffectDamage: Double) : PhysicsComponent<Tower> {

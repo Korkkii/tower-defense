@@ -2,6 +2,7 @@ package game
 
 import game.towers.Tower
 import game.towers.TowerType
+import game.towers.projectiles.Projectile
 
 interface Event
 data class PlacingTowerEvent(val towerType: TowerType) : Event
@@ -14,6 +15,7 @@ data class GameStateChanged(val money: Int, val enemyCount: Int, val selectedTow
 data class NewWave(val wave: Wave) : Event
 data class UpgradeClicked(val type: TowerType) : Event
 data class BossDefeated(val type: BossType) : Event
+data class NewProjectile(val projectile: Projectile) : Event
 object WaveComplete : Event
 object EmptyClick : Event
 object GameEnded : Event

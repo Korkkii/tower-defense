@@ -44,17 +44,14 @@ class MutableGameState {
                 }
 
                 playerMoney -= towerType.cost
-                towers += tower
-                publisher.publish(createStateEvent())
+                additionsList += tower
             }
             is SelectTowerEvent -> {
                 state = TowerSelected(event.tower)
                 publisher.publish(createStateEvent())
             }
             is NewEnemyEvent -> {
-                enemies += event.enemy
-                publisher.publish(createStateEvent())
-                if (enemies.count { !it.canBeDeleted } > maxEnemies) publisher.publish(GameEnded)
+                additionsList += event.enemy
             }
             is EnemyDefeated -> {
                 val type = event.enemy.type

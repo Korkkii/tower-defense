@@ -4,8 +4,9 @@ import game.Enemy
 import game.GameState
 import game.center
 import game.towers.projectiles.Projectile
+import game.towers.projectiles.ProjectileType
 
-class ShootingComponent private constructor(val projectileConstructor: (Tower, Enemy) -> Projectile) : PhysicsComponent<Tower> {
+class ShootingComponent private constructor(val projectileType: ProjectileType) : PhysicsComponent<Tower> {
     private var firingCooldown = 0.0
 
     override fun update(entity: Tower, currentState: GameState, delta: Double) {
@@ -20,7 +21,7 @@ class ShootingComponent private constructor(val projectileConstructor: (Tower, E
         }
 
         if (withinRange(entity, closestEnemy) && canFire) {
-            currentState.projectiles += projectileConstructor(entity, closestEnemy)
+            currentState.projectiles += Projectile(entity, closestEnemy, projectileType)
             val secondsUntilNext = 1 / entity.type.fireRate
             firingCooldown = secondsUntilNext
         }
@@ -37,6 +38,6 @@ class ShootingComponent private constructor(val projectileConstructor: (Tower, E
     }
 
     companion object {
-        fun with(constructor: (Tower, Enemy) -> Projectile): () -> PhysicsComponent<Tower> = { ShootingComponent(constructor)}
+        fun with(type: ProjectileType): () -> PhysicsComponent<Tower> = { ShootingComponent(type)}
     }
 }

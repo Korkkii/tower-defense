@@ -11,6 +11,6 @@ class ProjectileGraphicsComponent : GraphicsComponent<Projectile> {
     override fun draw(entity: Projectile, graphics: GraphicsContext, state: GameState) {
         val (x, y) = entity.position
         graphics.fill = Color.WHITE
-        graphics.fillCircle(Circle(x, y, entity.radius))
+        graphics.fillCircle(Circle(x, y, entity.type.radius))
     }
 }

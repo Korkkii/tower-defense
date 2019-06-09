@@ -9,7 +9,7 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, gameSta
     private val graphicsContext = canvas.graphicsContext2D
 
     init {
-        gameState.publisher.subscribeToEvent(GameEnded::class.java) {
+        GameState.subscribe(GameEnded::class.java) {
             paused = true
         }
         graphicsContext.scale(scaleRatio, scaleRatio)
@@ -34,9 +34,8 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, gameSta
             it.update(gameState, inSeconds)
         }
         gameState.currentWave?.update(gameState, inSeconds)
-        gameState.projectiles.removeAll { it.canDelete() }
-        gameState.enemies.removeAll { it.canBeDeleted }
-        gameState.towers.removeAll { it.canBeDeleted }
+        gameState.commit()
+
         board.draw(graphicsContext, gameState)
         gameState.enemies.forEach { it.draw(canvas.graphicsContext2D, gameState) }
         gameState.towers.forEach { it.draw(canvas.graphicsContext2D, gameState) }

@@ -18,7 +18,7 @@ class Game(width: Double, height: Double, val canvas: Canvas) {
         val graphicsContext = canvas.graphicsContext2D
         val inWorldCoords = graphicsContext.transform.inverseTransform(event.position())
         val square = board.squareAtPosition(inWorldCoords)
-        val placingTower = gameState.state is PlacingTower
+        val placingTower = GameState.instance.state is PlacingTower
         val buildAreaSquare = square as? BuildAreaSquare
         val squareHasTower = buildAreaSquare?.tower != null
 
@@ -27,12 +27,12 @@ class Game(width: Double, height: Double, val canvas: Canvas) {
             val hasNoTower = buildAreaSquare?.tower == null
 
             if (isBuildSquare && hasNoTower) {
-                buildAreaSquare?.let { gameState.onNotify(PlaceTowerEvent(it)) }
+                buildAreaSquare?.let { GameState.notify(PlaceTowerEvent(it)) }
             }
         } else if (squareHasTower) {
-            buildAreaSquare?.tower?.let { gameState.onNotify(SelectTowerEvent(it)) }
+            buildAreaSquare?.tower?.let { GameState.notify(SelectTowerEvent(it)) }
         } else {
-            gameState.onNotify(EmptyClick)
+            GameState.notify(EmptyClick)
         }
     }
 

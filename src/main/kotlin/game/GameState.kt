@@ -5,7 +5,7 @@ import game.towers.TowerType
 import game.towers.projectiles.Projectile
 import ui.MouseHandler
 
-class GameState {
+class MutableGameState {
     val enemies = mutableListOf<Enemy>()
     val towers = mutableListOf<Tower>()
     val projectiles = mutableListOf<Projectile>()
@@ -20,13 +20,14 @@ class GameState {
     var state: State = Idle
         private set
     val defeatedBosses = mutableSetOf<BossType>()
+    private val additionsList = mutableListOf<GameEntity>()
 
     init {
         publisher.subscribeToAll(::onNotify)
     }
 
     fun onNotify(event: Event) {
-        when(event) {
+        when (event) {
             is PlacingTowerEvent -> state = PlacingTower(event.towerType)
             is PlaceTowerEvent -> {
                 val currentState = state as? PlacingTower ?: return
@@ -86,26 +87,83 @@ class GameState {
                 state = TowerSelected(upgradedTower)
                 publisher.publish(createStateEvent())
             }
-            else -> {}
+            is NewProjectile -> {
+                additionsList += event.projectile
+            }
+            else -> {
+            }
         }
+    }
+
+    fun commitUpdates() {
+        additionsList.forEach {
+            when (it) {
+                is Enemy -> enemies += it
+                is Tower -> towers += it
+                is Projectile -> projectiles += it
+            }
+        }
+        additionsList.clear()
+
+        projectiles.removeAll { it.canDelete() }
+        enemies.removeAll { it.canBeDeleted }
+        towers.removeAll { it.canBeDeleted }
+
+        publisher.publish(createStateEvent())
+        if (enemies.count { !it.canBeDeleted } > maxEnemies) publisher.publish(GameEnded)
     }
 
     private fun createStateEvent(enemyCount: Int, money: Int = playerMoney): GameStateChanged {
         val selectedTower = (state as? TowerSelected)?.tower
         return GameStateChanged(money, enemyCount, selectedTower)
     }
+
     private fun createStateEvent() = createStateEvent(enemyCount = enemies.count())
 
-    fun mousePosition() = mouseHandler.mousePosition
-
     companion object {
-        val instance = GameState()
-        fun notify(event: Event) = instance.publisher.publish(event)
-        fun <T : Event> subscribe(event: Class<T>, callback: (T) -> Unit) = instance.publisher.subscribeToEvent(event, callback)
+        internal val instance = MutableGameState()
     }
 }
 
-fun MutableList<Enemy>.withinRangeOf(tower: Tower): List<Enemy> {
+data class GameState(
+    val playerMoney: Int,
+    val enemies: List<Enemy>,
+    val towers: List<Tower>,
+    val projectiles: List<Projectile>,
+    val currentWave: Wave?,
+    val defeatedBosses: Set<BossType>,
+    val state: State
+) {
+    fun commit() {
+        mutableState.commitUpdates()
+    }
+
+    val mouseHandler = mutableState.mouseHandler
+
+    fun mousePosition() = mutableState.mouseHandler.mousePosition
+
+    companion object {
+        private val mutableState = MutableGameState.instance
+        val instance: GameState
+            get() {
+                return GameState(
+                    mutableState.playerMoney,
+                    mutableState.enemies,
+                    mutableState.towers,
+                    mutableState.projectiles,
+                    mutableState.currentWave,
+                    mutableState.defeatedBosses,
+                    mutableState.state
+                )
+            }
+
+        fun notify(event: Event) = mutableState.publisher.publish(event)
+        fun <T : Event> subscribe(event: Class<T>, callback: (T) -> Unit) =
+            mutableState.publisher.subscribeToEvent(event, callback)
+    }
+}
+
+fun List<Enemy>.withinRangeOf(tower: Tower): List<Enemy> {
     val rangeCircle = tower.rangeCircle
     val center = rangeCircle.center()
     return this.filter { enemy ->

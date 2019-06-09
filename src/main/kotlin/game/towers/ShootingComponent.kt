@@ -21,7 +21,7 @@ class ShootingComponent private constructor(val projectileType: ProjectileType) 
         }
 
         if (withinRange(entity, closestEnemy) && canFire) {
-            currentState.projectiles += Projectile(entity, closestEnemy, projectileType)
+            GameState.notify(NewProjectile(Projectile(entity.square.center, closestEnemy, projectileType)))
             val secondsUntilNext = 1 / entity.type.fireRate
             firingCooldown = secondsUntilNext
         }
@@ -38,6 +38,6 @@ class ShootingComponent private constructor(val projectileType: ProjectileType) 
     }
 
     companion object {
-        fun with(type: ProjectileType): () -> PhysicsComponent<Tower> = { ShootingComponent(type)}
+        fun with(type: ProjectileType): () -> PhysicsComponent<Tower> = { ShootingComponent(type) }
     }
 }

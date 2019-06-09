@@ -21,6 +21,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
     var canBeDeleted = false
         private set
     private val movementComponent = type.movementComponentConstructor()
+    val statusEffects = mutableListOf<StatusEffect<Enemy>>()
 
     init {
         target = path[1]
@@ -34,6 +35,9 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
         if (waypointCollisionCircle().intersects(target.waypoint.boundsInLocal)) {
             nextTarget()
         }
+
+        statusEffects.forEach { it.update(this, currentState, delta) }
+        statusEffects.removeAll { it.duration <= 0.0 }
     }
 
     private fun nextTarget() {
@@ -74,5 +78,16 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
             canBeDeleted = true
             GameState.notify(EnemyDefeated(this))
         }
+    }
+}
+
+abstract class StatusEffect<T : GameEntity>(var duration: Double) {
+    abstract fun update(entity: T, currentState: GameState, delta: Double)
+}
+class DamageOverTime(private val damagePerSecond: Double, duration: Double) : StatusEffect<Enemy>(duration) {
+    override fun update(entity: Enemy, currentState: GameState, delta: Double) {
+        duration -= delta
+        val damage = damagePerSecond * delta
+        entity.takeDamage(damage)
     }
 }

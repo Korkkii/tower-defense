@@ -1,5 +1,6 @@
 package game.towers
 
+import game.BossType
 import game.BuildAreaSquare
 import game.EnemyType
 import game.GameState
@@ -26,37 +27,37 @@ data class TowerType(
     }
 
     companion object {
-        private val singleHit = TowerType(
-            "Single hit tower",
-            10,
-            35.0,
-            1.0,
-            Color.AQUAMARINE,
-            ShootingComponent.with(ProjectileType.singleHitProjectile)
-        )
-        private val singleHit2 = TowerType(
-            "Single hit tower",
-            20,
-            45.0,
-            1.2,
-            Color.AQUAMARINE,
-            ShootingComponent.with(ProjectileType.singleHit2Projectile)
-        )
-        private val splash = TowerType(
-            "Splash tower",
+        // private val singleHit = TowerType(
+        //     "Single hit tower",
+        //     10,
+        //     35.0,
+        //     1.0,
+        //     Color.AQUAMARINE,
+        //     ShootingComponent.with(ProjectileType.singleHitProjectile)
+        // )
+        // private val singleHit2 = TowerType(
+        //     "Single hit tower",
+        //     20,
+        //     45.0,
+        //     1.2,
+        //     Color.AQUAMARINE,
+        //     ShootingComponent.with(ProjectileType.singleHit2Projectile)
+        // )
+        private val water = TowerType(
+            "Water tower",
             30,
             35.0,
             1.0,
-            Color.ROSYBROWN,
+            Color.NAVY,
             ShootingComponent.with(ProjectileType.splashProjectile)
         )
         private val light = TowerType(
             "Light tower",
             40,
             35.0,
-            200.0,
+            1.0,
             Color.ANTIQUEWHITE,
-            ShootingComponent.with(ProjectileType.lightProjectile)
+            ShootingComponent.withMultiShot(ProjectileType.lightProjectile)
         )
         private val fire = TowerType(
             "Fire tower",
@@ -64,34 +65,37 @@ data class TowerType(
             30.0,
             1.0,
             Color.ORANGERED,
-            AreaEffectComponent.with(0.1)
+            ShootingComponent.with(ProjectileType.applyDoTProjectile)
+            // AreaEffectComponent.with(0.1)
         )
         private val wind =
             TowerType("Wind tower", 5, 35.0, 1.0, Color.SILVER, ShootingComponent.with(ProjectileType.bounceProjectile))
         /*
         * Towers
-        * - Fire
-        *   Increasing dot?
-        * - Water
+        * - X Fire
+        *   Increasing DoT debuff?
+        * - X Water
         *   Splash tower
-        * - Wind
+        * - X Wind
         *   Bounce attack
         * - Nature
         *   Attacks ground, aftershock on spot / small area of constant damage or slow?
         * - Metal
-        *   Goes through multiple opponents?
-        * - Light
+        *   Goes through multiple opponents? Multishot? Swap with light and make light multishot?
+        *   Throws roadspikes that do damage for X seconds?
+        * - X Light
         *   Increasing attack speed / damage? Reset at switch / after CD?
+        *   Instant multishot?
         * */
         val towerTypes = listOf(
-            singleHit,
             light,
             fire,
-            wind
+            wind,
+            water
         )
 
-        val requirements = mapOf(light to EnemyType.boss)
-
-        val upgrades = mapOf(singleHit to listOf(singleHit2, splash))
+        // val requirements = mapOf(light to EnemyType.boss)
+        val requirements = mapOf<TowerType, BossType>()
+        val upgrades = mapOf<TowerType, List<TowerType>>()
     }
 }

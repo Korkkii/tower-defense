@@ -7,7 +7,6 @@ import game.Vector
 import javafx.scene.canvas.GraphicsContext
 
 class Projectile(position: Vector, val target: Enemy, val type: ProjectileType, val properties: ProjectileProperties = NoProperties) : GameEntity(position) {
-    private val graphicsComponent = ProjectileGraphicsComponent()
     var hasHit = false
 
     fun canDelete(): Boolean = hasHit
@@ -17,7 +16,7 @@ class Projectile(position: Vector, val target: Enemy, val type: ProjectileType, 
     }
 
     override fun draw(graphics: GraphicsContext, state: GameState) {
-        graphicsComponent.draw(this, graphics, state)
+        type.graphicsComponent.draw(this, graphics, state)
     }
 }
 

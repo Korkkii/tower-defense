@@ -2,7 +2,6 @@ package game.towers
 
 import game.BossType
 import game.BuildAreaSquare
-import game.EnemyType
 import game.GameState
 import game.PhysicsComponent
 import game.towers.projectiles.ProjectileType
@@ -12,7 +11,7 @@ data class TowerType(
     val name: String,
     val cost: Int,
     val range: Double,
-    val fireRate: Double,
+    val baseFireRate: Double,
     val color: Color,
     val physicsComponentConstructor: () -> PhysicsComponent<Tower>
 ) {
@@ -57,7 +56,7 @@ data class TowerType(
             35.0,
             1.0,
             Color.ANTIQUEWHITE,
-            ShootingComponent.withMultiShot(ProjectileType.lightProjectile)
+            ShootingComponent.with(ProjectileType.lightProjectile, ::onShootMultiTarget)
         )
         private val fire = TowerType(
             "Fire tower",
@@ -70,6 +69,23 @@ data class TowerType(
         )
         private val wind =
             TowerType("Wind tower", 5, 35.0, 1.0, Color.SILVER, ShootingComponent.with(ProjectileType.bounceProjectile))
+        private val nature = TowerType(
+            "Nature tower",
+            10,
+            35.0,
+            1.0,
+            Color.DARKSEAGREEN,
+            ShootingComponent.with(ProjectileType.damagePerCreepProjectile)
+        )
+        private val metal = TowerType(
+            "Metal tower",
+            10,
+            35.0,
+            1.5,
+            Color.DARKSEAGREEN,
+            // ShootingComponent.with(ProjectileType.singleHitProjectile, ::onShootSingleTarget)
+            { AcceleratingShootingComponent(ProjectileType.singleHitProjectile, ::onShootSingleTarget) }
+        )
         /*
         * Towers
         * - X Fire
@@ -78,20 +94,29 @@ data class TowerType(
         *   Splash tower
         * - X Wind
         *   Bounce attack
-        * - Nature
+        * - X Nature
         *   Attacks ground, aftershock on spot / small area of constant damage or slow?
-        * - Metal
+        *   X% more damage per enemy in area
+        * - X Metal
         *   Goes through multiple opponents? Multishot? Swap with light and make light multishot?
         *   Throws roadspikes that do damage for X seconds?
         * - X Light
         *   Increasing attack speed / damage? Reset at switch / after CD?
         *   Instant multishot?
+        *
+        * Tower idea
+        *   - Green TD style spells?
+        *   - Chance for multishot / extra projectile?
+        *   - Random damage tower --> Low and high base, avg a bit above avg
+        *
         * */
         val towerTypes = listOf(
             light,
             fire,
             wind,
-            water
+            water,
+            nature,
+            metal
         )
 
         // val requirements = mapOf(light to EnemyType.boss)

@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext
 
 class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity(square.center) {
     val rangeCircle by lazy { Circle(square.center, type.range) }
+    var fireRate = type.baseFireRate
     var canBeDeleted = false
         private set
     private val physicsComponent = type.physicsComponentConstructor()

@@ -23,3 +23,4 @@ class Projectile(position: Vector, val target: Enemy, val type: ProjectileType, 
 interface ProjectileProperties
 object NoProperties : ProjectileProperties
 data class BounceProperties(val bouncesLeft: Int) : ProjectileProperties
+data class IncreasedDamageProperties(val enemyCount: Int) : ProjectileProperties

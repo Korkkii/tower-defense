@@ -9,7 +9,7 @@ open class EnemyType(
     val radius: Double,
     val color: Color,
     val velocity: Double,
-    val onDamage: (Enemy) -> Unit = {}
+    val actions: EnemyActions = NoopActions
 ) {
     val movementComponentConstructor = { EnemyMovementComponent() }
 
@@ -20,7 +20,7 @@ open class EnemyType(
             fire --> Can stun towers?
             X wind --> Faster? Burst of speed on hit?
             water --> Divides into multiple enemies?
-            nature --> Heals over time? Burst heal?
+            X nature --> Heals over time? Burst heal?
             X metal --> Takes less damage from X attack? Or just shit ton of health?
         * */
 
@@ -34,12 +34,16 @@ open class EnemyType(
             Color.SLATEGRAY,
             35.0,
             "Wind Elemental",
-            ::onHitAddSpeedBuff)
-        val metalBoss =  BossType(20, 150.0, 0.0, 6.0, Color.DARKGRAY, 35.0, "Metal Elemental")
+            OnHitAction(::onHitAddSpeedBuff)
+        )
+        val metalBoss = BossType(20, 150.0, 0.0, 6.0, Color.DARKGRAY, 35.0, "Metal Elemental")
+        val natureBoss = BossType(20, 100.0, 0.0, 6.0, Color.MEDIUMSEAGREEN, 35.0, "Nature Elemental", OnCreateAction {
+            it.statusEffects += RegenBuff(3.0, 3600.0)
+        })
         val boss = BossType(20, 120.0, 0.0, 6.0, Color.CRIMSON, 35.0, "Boss Man")
         val upgradedBoss =
             BossType(30, 240.0, 0.0, 6.0, Color.CRIMSON.darker(), 35.0, "Boss Man 2")
-        private val bosses = listOf(boss, windBoss, metalBoss)
+        private val bosses = listOf(boss, windBoss, metalBoss, natureBoss)
         val bossLevels = mapOf(boss to upgradedBoss)
         fun getAvailableBosses(): List<BossType> {
             val defeated = GameState.instance.defeatedBosses
@@ -47,6 +51,21 @@ open class EnemyType(
             return bosses + upgradesOfDefeated - GameState.instance.defeatedBosses
         }
     }
+}
+
+interface EnemyActions {
+    fun onDamage(enemy: Enemy) {}
+    fun onCreate(enemy: Enemy) {}
+}
+
+object NoopActions : EnemyActions
+
+data class OnHitAction(val onDamageFun : (Enemy) -> Unit) : EnemyActions {
+    override fun onDamage(enemy: Enemy): Unit = onDamageFun(enemy)
+}
+
+data class OnCreateAction(val onCreateFun : (Enemy) -> Unit) : EnemyActions {
+    override fun onCreate(enemy: Enemy): Unit = onCreateFun(enemy)
 }
 
 fun onHitAddSpeedBuff(enemy: Enemy) {
@@ -62,7 +81,7 @@ class BossType(
     color: Color,
     velocity: Double,
     val name: String,
-    onDamage: (Enemy) -> Unit = {}
+    actions: EnemyActions = NoopActions
 ) : EnemyType(
     enemyPrice,
     baseHealth,
@@ -70,5 +89,5 @@ class BossType(
     radius,
     color,
     velocity,
-    onDamage
+    actions
 )

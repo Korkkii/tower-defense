@@ -25,6 +25,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
 
     init {
         target = path[1]
+        type.actions.onCreate(this)
     }
 
     private fun waypointCollisionCircle() = Circle(position.x, position.y, 1.4)
@@ -73,7 +74,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
 
     fun takeDamage(damage: Double) {
         health -= damage
-        type.onDamage(this)
+        type.actions.onDamage(this)
 
         if (health <= 0.0) {
             canBeDeleted = true
@@ -101,3 +102,10 @@ class DamageOverTime(private val damagePerSecond: Double, duration: Double) : St
 }
 
 class SpeedBuff(val speedScaling: Double, duration: Double) : StatusEffect<Enemy>(duration)
+
+class RegenBuff(private val healthPerSecond: Double, duration: Double) : StatusEffect<Enemy>(duration) {
+    override fun onUpdate(entity: Enemy, currentState: GameState, delta: Double) {
+        val regenAmount = healthPerSecond * delta
+        entity.takeDamage(-regenAmount)
+    }
+}

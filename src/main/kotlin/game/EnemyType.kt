@@ -21,7 +21,7 @@ open class EnemyType(
             X wind --> Faster? Burst of speed on hit?
             water --> Divides into multiple enemies?
             nature --> Heals over time? Burst heal?
-            metal --> Takes less damage from X attack?
+            X metal --> Takes less damage from X attack? Or just shit ton of health?
         * */
 
         val enemy = EnemyType(5, 20.0, 10.0, 4.0, Color.RED, 35.0)
@@ -35,10 +35,11 @@ open class EnemyType(
             35.0,
             "Wind Elemental",
             ::onHitAddSpeedBuff)
+        val metalBoss =  BossType(20, 150.0, 0.0, 6.0, Color.DARKGRAY, 35.0, "Metal Elemental")
         val boss = BossType(20, 120.0, 0.0, 6.0, Color.CRIMSON, 35.0, "Boss Man")
         val upgradedBoss =
             BossType(30, 240.0, 0.0, 6.0, Color.CRIMSON.darker(), 35.0, "Boss Man 2")
-        private val bosses = listOf(boss, windBoss)
+        private val bosses = listOf(boss, windBoss, metalBoss)
         val bossLevels = mapOf(boss to upgradedBoss)
         fun getAvailableBosses(): List<BossType> {
             val defeated = GameState.instance.defeatedBosses

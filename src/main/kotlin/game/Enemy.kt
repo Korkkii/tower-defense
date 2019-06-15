@@ -37,7 +37,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
         }
 
         statusEffects.forEach { it.update(this, currentState, delta) }
-        statusEffects.removeAll { it.duration <= 0.0 }
+        statusEffects.removeAll { it.isOver() }
     }
 
     private fun nextTarget() {
@@ -73,6 +73,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
 
     fun takeDamage(damage: Double) {
         health -= damage
+        type.onDamage(this)
 
         if (health <= 0.0) {
             canBeDeleted = true
@@ -81,13 +82,22 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
     }
 }
 
-abstract class StatusEffect<T : GameEntity>(var duration: Double) {
-    abstract fun update(entity: T, currentState: GameState, delta: Double)
+abstract class StatusEffect<T : GameEntity>(private var duration: Double) {
+    fun update(entity: T, currentState: GameState, delta: Double) {
+        duration -= delta
+
+        onUpdate(entity, currentState, delta)
+    }
+
+    fun isOver() = duration <= 0.0
+
+    open fun onUpdate(entity: T, currentState: GameState, delta: Double) {}
 }
 class DamageOverTime(private val damagePerSecond: Double, duration: Double) : StatusEffect<Enemy>(duration) {
-    override fun update(entity: Enemy, currentState: GameState, delta: Double) {
-        duration -= delta
+    override fun onUpdate(entity: Enemy, currentState: GameState, delta: Double) {
         val damage = damagePerSecond * delta
         entity.takeDamage(damage)
     }
 }
+
+class SpeedBuff(val speedScaling: Double, duration: Double) : StatusEffect<Enemy>(duration)

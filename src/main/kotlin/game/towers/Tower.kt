@@ -4,6 +4,7 @@ import game.BuildAreaSquare
 import game.Circle
 import game.GameEntity
 import game.GameState
+import game.StatusEffects
 import javafx.scene.canvas.GraphicsContext
 
 class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity(square.center) {
@@ -12,6 +13,7 @@ class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity(squar
     var canBeDeleted = false
         private set
     private val physicsComponent = type.physicsComponentConstructor()
+    val statusEffects = StatusEffects<Tower>()
 
     init {
         square.tower = this
@@ -26,6 +28,7 @@ class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity(squar
 
     override fun update(currentState: GameState, delta: Double) {
         physicsComponent.update(this, currentState, delta)
+        statusEffects.update(this, currentState, delta)
     }
 
     override fun draw(graphics: GraphicsContext, state: GameState) {

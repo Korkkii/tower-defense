@@ -20,7 +20,9 @@ class MutableGameState {
     var state: State = Idle
         private set
     val defeatedBosses = mutableSetOf<BossType>()
+    val miscEntities = mutableListOf<GameEntity>()
     private val additionsList = mutableListOf<GameEntity>()
+    private val deletionsList = mutableListOf<GameEntity>()
 
     init {
         publisher.subscribeToAll(::onNotify)
@@ -87,6 +89,12 @@ class MutableGameState {
             is NewProjectile -> {
                 additionsList += event.projectile
             }
+            is AddEntity -> {
+                additionsList += event.entity
+            }
+            is DeleteEntity -> {
+                deletionsList += event.entity
+            }
             else -> {
             }
         }
@@ -98,8 +106,10 @@ class MutableGameState {
                 is Enemy -> enemies += it
                 is Tower -> towers += it
                 is Projectile -> projectiles += it
+                else -> miscEntities += it
             }
         }
+        deletionsList.forEach { miscEntities.remove(it) }
         additionsList.clear()
 
         projectiles.removeAll { it.canDelete() }
@@ -127,6 +137,7 @@ data class GameState(
     val enemies: List<Enemy>,
     val towers: List<Tower>,
     val projectiles: List<Projectile>,
+    val entities: List<GameEntity>,
     val currentWave: Wave?,
     val defeatedBosses: Set<BossType>,
     val state: State
@@ -148,6 +159,7 @@ data class GameState(
                     mutableState.enemies,
                     mutableState.towers,
                     mutableState.projectiles,
+                    mutableState.miscEntities,
                     mutableState.currentWave,
                     mutableState.defeatedBosses,
                     mutableState.state

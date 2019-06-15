@@ -1,7 +1,7 @@
 package game
 
-class EnemyMovementComponent : MovementComponent<Enemy> {
-    override fun update(entity: Enemy, gameState: GameState, delta: Double) {
+class EnemyMovementComponent : PhysicsComponent<Enemy> {
+    override fun update(entity: Enemy, currentState: GameState, delta: Double) {
         val target = entity.target
         val targetPosition = target.waypoint.center()
         val speedBuff = entity.statusEffects.currentEffects.find { it is SpeedBuff } as? SpeedBuff

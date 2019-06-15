@@ -9,10 +9,9 @@ open class EnemyType(
     val radius: Double,
     val color: Color,
     val velocity: Double,
-    val actions: EnemyActions = NoopActions
+    val actions: EnemyActions = NoopActions,
+    val physicsComponentConstructor: () -> PhysicsComponent<Enemy> = { EnemyMovementComponent() }
 ) {
-    val movementComponentConstructor = { EnemyMovementComponent() }
-
     companion object {
         /*
         * Element types
@@ -30,7 +29,7 @@ open class EnemyType(
             20,
             80.0,
             0.0,
-            7.0,
+            6.0,
             Color.SLATEGRAY,
             35.0,
             "Wind Elemental",
@@ -40,10 +39,20 @@ open class EnemyType(
         val natureBoss = BossType(20, 100.0, 0.0, 6.0, Color.MEDIUMSEAGREEN, 35.0, "Nature Elemental", OnCreateAction {
             it.statusEffects.currentEffects += RegenBuff(3.0, 3600.0)
         })
+        val fireBoss = BossType(
+            20,
+            100.0,
+            0.0,
+            7.0,
+            Color.FIREBRICK,
+            35.0,
+            "Fire Elemental",
+            physicsComponentConstructor = { FireBossPhysicsComponent() }
+        )
         val boss = BossType(20, 120.0, 0.0, 6.0, Color.CRIMSON, 35.0, "Boss Man")
         val upgradedBoss =
             BossType(30, 240.0, 0.0, 6.0, Color.CRIMSON.darker(), 35.0, "Boss Man 2")
-        private val bosses = listOf(boss, windBoss, metalBoss, natureBoss)
+        private val bosses = listOf(boss, windBoss, metalBoss, natureBoss, fireBoss)
         val bossLevels = mapOf(boss to upgradedBoss)
         fun getAvailableBosses(): List<BossType> {
             val defeated = GameState.instance.defeatedBosses
@@ -60,11 +69,11 @@ interface EnemyActions {
 
 object NoopActions : EnemyActions
 
-data class OnHitAction(val onDamageFun : (Enemy, DamageType) -> Unit) : EnemyActions {
+data class OnHitAction(val onDamageFun: (Enemy, DamageType) -> Unit) : EnemyActions {
     override fun onDamage(enemy: Enemy, damageType: DamageType): Unit = onDamageFun(enemy, damageType)
 }
 
-data class OnCreateAction(val onCreateFun : (Enemy) -> Unit) : EnemyActions {
+data class OnCreateAction(val onCreateFun: (Enemy) -> Unit) : EnemyActions {
     override fun onCreate(enemy: Enemy): Unit = onCreateFun(enemy)
 }
 
@@ -81,7 +90,8 @@ class BossType(
     color: Color,
     velocity: Double,
     val name: String,
-    actions: EnemyActions = NoopActions
+    actions: EnemyActions = NoopActions,
+    physicsComponentConstructor: () -> PhysicsComponent<Enemy> = { EnemyMovementComponent() }
 ) : EnemyType(
     enemyPrice,
     baseHealth,
@@ -89,5 +99,6 @@ class BossType(
     radius,
     color,
     velocity,
-    actions
+    actions,
+    physicsComponentConstructor
 )

@@ -3,7 +3,7 @@ package game
 import javafx.animation.AnimationTimer
 import javafx.scene.canvas.Canvas
 
-class GameLoop(private val board: GameBoard, private val canvas: Canvas, gameState: GameState, scaleRatio: Double) : AnimationTimer() {
+class GameLoop(private val board: GameBoard, private val canvas: Canvas, scaleRatio: Double) : AnimationTimer() {
     private var previousCall: Long = 0L
     private var paused = false
     private val graphicsContext = canvas.graphicsContext2D
@@ -33,6 +33,7 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, gameSta
         gameState.projectiles.forEach {
             it.update(gameState, inSeconds)
         }
+        gameState.entities.forEach { it.update(gameState, inSeconds) }
         gameState.currentWave?.update(gameState, inSeconds)
         gameState.commit()
 
@@ -40,6 +41,7 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, gameSta
         gameState.enemies.forEach { it.draw(canvas.graphicsContext2D, gameState) }
         gameState.towers.forEach { it.draw(canvas.graphicsContext2D, gameState) }
         gameState.projectiles.forEach { it.draw(canvas.graphicsContext2D, gameState) }
+        gameState.entities.forEach { it.draw(canvas.graphicsContext2D, gameState) }
 
         previousCall = now
     }

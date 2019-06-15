@@ -16,6 +16,8 @@ data class NewWave(val wave: Wave) : Event
 data class UpgradeClicked(val type: TowerType) : Event
 data class BossDefeated(val type: BossType) : Event
 data class NewProjectile(val projectile: Projectile) : Event
+data class DeleteEntity(val entity: GameEntity) : Event
+data class AddEntity(val entity: GameEntity) : Event
 object WaveComplete : Event
 object EmptyClick : Event
 object GameEnded : Event

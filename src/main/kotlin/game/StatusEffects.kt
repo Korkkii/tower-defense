@@ -1,5 +1,7 @@
 package game
 
+import game.towers.Tower
+
 class StatusEffects<T : GameEntity> {
     val currentEffects = mutableListOf<StatusEffect<T>>()
 
@@ -35,3 +37,5 @@ class RegenBuff(private val healthPerSecond: Double, duration: Double) : StatusE
         entity.takeDamage(-regenAmount)
     }
 }
+
+class StunDebuff(duration: Double) : StatusEffect<Tower>(duration)

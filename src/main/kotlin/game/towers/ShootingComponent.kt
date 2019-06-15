@@ -4,6 +4,7 @@ import game.Enemy
 import game.GameState
 import game.NewProjectile
 import game.PhysicsComponent
+import game.StunDebuff
 import game.center
 import game.towers.projectiles.Projectile
 import game.towers.projectiles.ProjectileProperties
@@ -17,10 +18,13 @@ open class ShootingComponent protected constructor(
     protected var firingCooldown = 0.0
 
     override fun update(entity: Tower, currentState: GameState, delta: Double) {
+        firingCooldown -= delta
+
+        if (entity.statusEffects.currentEffects.any { it is StunDebuff }) return
+
         val enemies = currentState.enemies
         if (enemies.isEmpty()) return
 
-        firingCooldown -= delta
         val canFire = firingCooldown <= 0.0
         val enemiesWithinRange = enemies.filter { withinRange(entity, it) }
 

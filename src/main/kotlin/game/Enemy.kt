@@ -20,7 +20,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
         private set
     var canBeDeleted = false
         private set
-    private val movementComponent = type.movementComponentConstructor()
+    private val physicsComponent = type.physicsComponentConstructor()
     val statusEffects = StatusEffects<Enemy>()
 
     init {
@@ -31,7 +31,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
     private fun waypointCollisionCircle() = Circle(position.x, position.y, 1.4)
 
     override fun update(currentState: GameState, delta: Double) {
-        movementComponent.update(this, currentState, delta)
+        physicsComponent.update(this, currentState, delta)
 
         if (waypointCollisionCircle().intersects(target.waypoint.boundsInLocal)) {
             nextTarget()

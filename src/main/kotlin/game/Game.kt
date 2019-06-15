@@ -7,7 +7,7 @@ class Game(width: Double, height: Double, val canvas: Canvas) {
     private val gameState = GameState.instance
     private val board = GameBoard(width, height)
     private val waveGenerator = WaveGenerator(board)
-    private val gameLoop = GameLoop(board, canvas, gameState, board.ratio)
+    private val gameLoop = GameLoop(board, canvas, board.ratio)
 
     init {
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED, gameState.mouseHandler)

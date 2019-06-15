@@ -69,7 +69,7 @@ fun onBounceHit(damage: Double, bounceRange: Double, initialBounceAmount: Int) =
 
 fun onDoTHit(initialDamage: Double, damagePerStack: Double) = { _: Projectile, target: Enemy, _: GameState ->
     target.takeDamage(initialDamage)
-    target.statusEffects += DamageOverTime(damagePerStack, 5.0)
+    target.statusEffects.currentEffects += DamageOverTime(damagePerStack, 5.0)
 }
 
 fun onScalingDamageHit(initialDamage: Double, scaling: Double) = { projectile: Projectile, target: Enemy, _: GameState ->

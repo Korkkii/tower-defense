@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
-fun calculateStartingPosition(path: List<PathSquare>): Vector {
+private fun calculateStartingPosition(path: List<PathSquare>): Vector {
     val start = path[0]
     val centerX = start.x + 0.5 * start.width
     val centerY = start.y + 0.5 * start.height
@@ -21,7 +21,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
     var canBeDeleted = false
         private set
     private val movementComponent = type.movementComponentConstructor()
-    val statusEffects = mutableListOf<StatusEffect<Enemy>>()
+    val statusEffects = StatusEffects<Enemy>()
 
     init {
         target = path[1]
@@ -37,8 +37,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
             nextTarget()
         }
 
-        statusEffects.forEach { it.update(this, currentState, delta) }
-        statusEffects.removeAll { it.isOver() }
+        statusEffects.update(this, currentState, delta)
     }
 
     private fun nextTarget() {
@@ -72,9 +71,9 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
         )
     }
 
-    fun takeDamage(damage: Double) {
+    fun takeDamage(damage: Double, damageType: DamageType = SingleHitDamage) {
         health -= damage
-        type.actions.onDamage(this)
+        type.actions.onDamage(this, damageType)
 
         if (health <= 0.0) {
             canBeDeleted = true
@@ -83,29 +82,6 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
     }
 }
 
-abstract class StatusEffect<T : GameEntity>(private var duration: Double) {
-    fun update(entity: T, currentState: GameState, delta: Double) {
-        duration -= delta
-
-        onUpdate(entity, currentState, delta)
-    }
-
-    fun isOver() = duration <= 0.0
-
-    open fun onUpdate(entity: T, currentState: GameState, delta: Double) {}
-}
-class DamageOverTime(private val damagePerSecond: Double, duration: Double) : StatusEffect<Enemy>(duration) {
-    override fun onUpdate(entity: Enemy, currentState: GameState, delta: Double) {
-        val damage = damagePerSecond * delta
-        entity.takeDamage(damage)
-    }
-}
-
-class SpeedBuff(val speedScaling: Double, duration: Double) : StatusEffect<Enemy>(duration)
-
-class RegenBuff(private val healthPerSecond: Double, duration: Double) : StatusEffect<Enemy>(duration) {
-    override fun onUpdate(entity: Enemy, currentState: GameState, delta: Double) {
-        val regenAmount = healthPerSecond * delta
-        entity.takeDamage(-regenAmount)
-    }
-}
+interface DamageType
+object SingleHitDamage : DamageType
+object OverTimeDamage : DamageType

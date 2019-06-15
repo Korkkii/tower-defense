@@ -38,7 +38,7 @@ open class EnemyType(
         )
         val metalBoss = BossType(20, 150.0, 0.0, 6.0, Color.DARKGRAY, 35.0, "Metal Elemental")
         val natureBoss = BossType(20, 100.0, 0.0, 6.0, Color.MEDIUMSEAGREEN, 35.0, "Nature Elemental", OnCreateAction {
-            it.statusEffects += RegenBuff(3.0, 3600.0)
+            it.statusEffects.currentEffects += RegenBuff(3.0, 3600.0)
         })
         val boss = BossType(20, 120.0, 0.0, 6.0, Color.CRIMSON, 35.0, "Boss Man")
         val upgradedBoss =
@@ -54,23 +54,23 @@ open class EnemyType(
 }
 
 interface EnemyActions {
-    fun onDamage(enemy: Enemy) {}
+    fun onDamage(enemy: Enemy, damageType: DamageType) {}
     fun onCreate(enemy: Enemy) {}
 }
 
 object NoopActions : EnemyActions
 
-data class OnHitAction(val onDamageFun : (Enemy) -> Unit) : EnemyActions {
-    override fun onDamage(enemy: Enemy): Unit = onDamageFun(enemy)
+data class OnHitAction(val onDamageFun : (Enemy, DamageType) -> Unit) : EnemyActions {
+    override fun onDamage(enemy: Enemy, damageType: DamageType): Unit = onDamageFun(enemy, damageType)
 }
 
 data class OnCreateAction(val onCreateFun : (Enemy) -> Unit) : EnemyActions {
     override fun onCreate(enemy: Enemy): Unit = onCreateFun(enemy)
 }
 
-fun onHitAddSpeedBuff(enemy: Enemy) {
-    if (enemy.statusEffects.none { it is SpeedBuff })
-        enemy.statusEffects += SpeedBuff(2.0, 1.5)
+fun onHitAddSpeedBuff(enemy: Enemy, damageType: DamageType) {
+    if (enemy.statusEffects.currentEffects.none { it is SpeedBuff } && damageType !is OverTimeDamage)
+        enemy.statusEffects.currentEffects += SpeedBuff(2.0, 1.5)
 }
 
 class BossType(

@@ -11,13 +11,6 @@ import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
-private fun calculateStartingPosition(path: List<PathSquare>): Vector {
-    val start = path[0]
-    val centerX = start.x + 0.5 * start.width
-    val centerY = start.y + 0.5 * start.height
-    return Vector(centerX, centerY)
-}
-
 class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int) :
     GameEntity(calculateStartingPosition(path)) {
     var target: PathSquare
@@ -89,6 +82,9 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
     }
 }
 
-interface DamageType
-object SingleHitDamage : DamageType
-object OverTimeDamage : DamageType
+private fun calculateStartingPosition(path: List<PathSquare>): Vector {
+    val start = path[0]
+    val centerX = start.x + 0.5 * start.width
+    val centerY = start.y + 0.5 * start.height
+    return Vector(centerX, centerY)
+}

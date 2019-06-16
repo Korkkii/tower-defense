@@ -15,11 +15,12 @@ import kotlin.math.min
 
 typealias OnShootFunction = (Tower, List<Enemy>, ProjectileType, ProjectileProperties) -> Unit
 
-open class ShootingComponent protected constructor(
+class ShootingComponent (
     private val projectileType: ProjectileType,
     private val onShoot: OnShootFunction
 ) : PhysicsComponent<Tower> {
-    protected var firingCooldown = 0.0
+    var firingCooldown = 0.0
+        private set
 
     override fun update(entity: Tower, currentState: GameState, delta: Double) {
         firingCooldown -= delta
@@ -63,15 +64,16 @@ open class ShootingComponent protected constructor(
 class AcceleratingShootingComponent constructor(
     projectileType: ProjectileType,
     onShoot: (Tower, List<Enemy>, ProjectileType, ProjectileProperties) -> Unit
-) : ShootingComponent(projectileType, onShoot) {
+) : PhysicsComponent<Tower> {
+    private var shootingComponent = ShootingComponent(projectileType, onShoot)
     private var timerCooldown = 2.0
     private var acceleratedAttackTimer = timerCooldown
 
     override fun update(entity: Tower, currentState: GameState, delta: Double) {
-        super.update(entity, currentState, delta)
+        shootingComponent.update(entity, currentState, delta)
 
         acceleratedAttackTimer -= delta
-        val didFire = firingCooldown == (1 / entity.fireRate)
+        val didFire = shootingComponent.firingCooldown == (1 / entity.fireRate)
         if (didFire) {
             acceleratedAttackTimer = timerCooldown
             val acceleratedFireRate = min(entity.fireRate * 1.2, 5.0)
@@ -81,41 +83,3 @@ class AcceleratingShootingComponent constructor(
         }
     }
 }
-
-fun onShootSingleTarget(
-    entity: Tower,
-    enemiesWithinRange: List<Enemy>,
-    projectileType: ProjectileType,
-    properties: ProjectileProperties
-) {
-    val closestEnemy = getClosestEnemy(entity, enemiesWithinRange)
-    GameState.notify(NewProjectile(Projectile(entity, closestEnemy, projectileType, properties)))
-}
-
-private fun getClosestEnemy(entity: Tower, enemiesWithinRange: List<Enemy>): Enemy {
-    return enemiesWithinRange.reduce { currentClosest, nextEnemy ->
-        if (distanceToEnemy(entity, currentClosest) > distanceToEnemy(entity, nextEnemy)) nextEnemy
-        else currentClosest
-    }
-}
-
-fun onShootMultiTarget(
-    entity: Tower,
-    enemiesWithinRange: List<Enemy>,
-    projectileType: ProjectileType,
-    properties: ProjectileProperties
-) {
-    enemiesWithinRange.forEach {
-        val projectile = Projectile(
-            entity,
-            it,
-            projectileType,
-            properties
-        )
-
-        GameState.notify(NewProjectile(projectile))
-    }
-}
-
-private fun distanceToEnemy(tower: Tower, enemy: Enemy): Double =
-    (tower.rangeCircle.center() - enemy.position).length

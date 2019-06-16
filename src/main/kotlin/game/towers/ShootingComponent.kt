@@ -1,26 +1,30 @@
 package game.towers
 
+import game.BlindDebuff
 import game.Enemy
 import game.GameState
 import game.NewProjectile
 import game.PhysicsComponent
 import game.StunDebuff
 import game.center
+import game.towers.projectiles.BlindedProperty
 import game.towers.projectiles.Projectile
 import game.towers.projectiles.ProjectileProperties
 import game.towers.projectiles.ProjectileType
 import kotlin.math.min
 
+typealias OnShootFunction = (Tower, List<Enemy>, ProjectileType, ProjectileProperties) -> Unit
+
 open class ShootingComponent protected constructor(
     private val projectileType: ProjectileType,
-    private val onShoot: (Tower, List<Enemy>, ProjectileType, ProjectileProperties) -> Unit
+    private val onShoot: OnShootFunction
 ) : PhysicsComponent<Tower> {
     protected var firingCooldown = 0.0
 
     override fun update(entity: Tower, currentState: GameState, delta: Double) {
         firingCooldown -= delta
 
-        if (entity.statusEffects.currentEffects.any { it is StunDebuff }) return
+        if (entity.statusEffects.has(StunDebuff::class)) return
 
         val enemies = currentState.enemies
         if (enemies.isEmpty()) return
@@ -29,8 +33,12 @@ open class ShootingComponent protected constructor(
         val enemiesWithinRange = enemies.filter { withinRange(entity, it) }
 
         if (enemiesWithinRange.isNotEmpty() && canFire) {
-            val properties = projectileType.propertiesConstructor(enemiesWithinRange)
+            val projectileProperty = projectileType.propertyConstructor(enemiesWithinRange)
+            val blindProperty = if (entity.statusEffects.has(BlindDebuff::class)) BlindedProperty(0.3) else null
+            val properties = ProjectileProperties(projectileProperty, blindProperty)
+
             onShoot(entity, enemiesWithinRange, projectileType, properties)
+
             val secondsUntilNext = 1 / entity.fireRate
             firingCooldown = secondsUntilNext
         }
@@ -46,7 +54,7 @@ open class ShootingComponent protected constructor(
     companion object {
         fun with(
             type: ProjectileType,
-            onShoot: (Tower, List<Enemy>, ProjectileType, ProjectileProperties) -> Unit = ::onShootSingleTarget
+            onShoot: OnShootFunction = ::onShootSingleTarget
         ): () -> PhysicsComponent<Tower> =
             { ShootingComponent(type, onShoot) }
     }
@@ -81,7 +89,7 @@ fun onShootSingleTarget(
     properties: ProjectileProperties
 ) {
     val closestEnemy = getClosestEnemy(entity, enemiesWithinRange)
-    GameState.notify(NewProjectile(Projectile(entity.square.center, closestEnemy, projectileType, properties)))
+    GameState.notify(NewProjectile(Projectile(entity, closestEnemy, projectileType, properties)))
 }
 
 private fun getClosestEnemy(entity: Tower, enemiesWithinRange: List<Enemy>): Enemy {
@@ -98,16 +106,14 @@ fun onShootMultiTarget(
     properties: ProjectileProperties
 ) {
     enemiesWithinRange.forEach {
-        GameState.notify(
-            NewProjectile(
-                Projectile(
-                    entity.square.center,
-                    it,
-                    projectileType,
-                    properties
-                )
-            )
+        val projectile = Projectile(
+            entity,
+            it,
+            projectileType,
+            properties
         )
+
+        GameState.notify(NewProjectile(projectile))
     }
 }
 

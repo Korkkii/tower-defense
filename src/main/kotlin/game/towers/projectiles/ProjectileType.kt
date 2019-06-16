@@ -15,7 +15,7 @@ class ProjectileType(
     val velocity: Double,
     val graphicsComponent: GraphicsComponent<Projectile>,
     onHit: (Projectile, Enemy, GameState) -> Unit,
-    val propertiesConstructor: (List<Enemy>) -> ProjectileProperties = { NoProperties }
+    internal val propertyConstructor: (List<Enemy>) -> ProjectileProperty = { NoProperty }
 ) {
     val physicsComponent = ProjectilePhysicsComponent(onHit)
 
@@ -31,7 +31,7 @@ class ProjectileType(
             100.0,
             ProjectileGraphicsComponent(),
             onScalingDamageHit(3.0, 2.0),
-            { IncreasedDamageProperties(it.size) })
+            { IncreasedDamageProperty(it.size) })
     }
 }
 
@@ -47,36 +47,37 @@ fun onSplashHit(damage: Double, splashRange: Double) = { projectile: Projectile,
 fun onBounceHit(damage: Double, bounceRange: Double, initialBounceAmount: Int) =
     onHit@{ projectile: Projectile, target: Enemy, currentState: GameState ->
         target.takeDamage(damage)
-
-        val bouncesLeft = (projectile.properties as? BounceProperties)?.bouncesLeft ?: initialBounceAmount
+        val bounceProperty = projectile.properties.find(BounceProperty::class)
+        val bouncesLeft = bounceProperty?.bouncesLeft ?: initialBounceAmount
 
         if (bouncesLeft <= 0) return@onHit
 
         val bouncableEnemies =
             enemiesWithinRange(currentState.enemies, projectile.position, bounceRange).filter { it != target }
         val nextTarget = if (bouncableEnemies.isNotEmpty()) bouncableEnemies.random() else return@onHit
-        GameState.notify(
-            NewProjectile(
-                Projectile(
-                    projectile.position,
-                    nextTarget,
-                    projectile.type,
-                    BounceProperties(bouncesLeft - 1)
-                )
-            )
+        val properties = ProjectileProperties(BounceProperty(bouncesLeft - 1))
+        val bounceProjectile = Projectile(
+            projectile,
+            nextTarget,
+            projectile.type,
+            properties
         )
+
+        GameState.notify(NewProjectile(bounceProjectile))
     }
 
 fun onDoTHit(initialDamage: Double, damagePerStack: Double) = { _: Projectile, target: Enemy, _: GameState ->
     target.takeDamage(initialDamage)
-    target.statusEffects.currentEffects += DamageOverTime(damagePerStack, 5.0)
+    target.statusEffects += DamageOverTime(damagePerStack, 5.0)
 }
 
-fun onScalingDamageHit(initialDamage: Double, scaling: Double) = { projectile: Projectile, target: Enemy, _: GameState ->
-    val modifier = (projectile.properties as? IncreasedDamageProperties)?.enemyCount ?: 1
-    val damage = initialDamage * scaling.pow(modifier)
-    target.takeDamage(damage)
-}
+fun onScalingDamageHit(initialDamage: Double, scaling: Double) =
+    { projectile: Projectile, target: Enemy, _: GameState ->
+        val damageProperty = projectile.properties.find(IncreasedDamageProperty::class)
+        val modifier = damageProperty?.enemyCount ?: 1
+        val damage = initialDamage * scaling.pow(modifier)
+        target.takeDamage(damage)
+    }
 
 private fun enemiesWithinRange(enemies: List<Enemy>, position: Vector, range: Double): List<Enemy> {
     val rangeCircle = Circle(position, range)

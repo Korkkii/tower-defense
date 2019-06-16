@@ -15,8 +15,8 @@ open class EnemyType(
     companion object {
         /*
         * Element types
-        *   light --> Multiple copies? Can blind towers to give chance to miss?
-            fire --> Can stun towers?
+        *   X light --> Multiple copies? Can blind towers to give chance to miss?
+            X fire --> Can stun towers?
             X wind --> Faster? Burst of speed on hit?
             water --> Divides into multiple enemies?
             X nature --> Heals over time? Burst heal?
@@ -37,7 +37,7 @@ open class EnemyType(
         )
         val metalBoss = BossType(20, 150.0, 0.0, 6.0, Color.DARKGRAY, 35.0, "Metal Elemental")
         val natureBoss = BossType(20, 100.0, 0.0, 6.0, Color.MEDIUMSEAGREEN, 35.0, "Nature Elemental", OnCreateAction {
-            it.statusEffects.currentEffects += RegenBuff(3.0, 3600.0)
+            it.statusEffects += RegenBuff(3.0, 3600.0)
         })
         val fireBoss = BossType(
             20,
@@ -47,12 +47,22 @@ open class EnemyType(
             Color.FIREBRICK,
             35.0,
             "Fire Elemental",
-            physicsComponentConstructor = { FireBossPhysicsComponent() }
+            physicsComponentConstructor = { BlastBossPhysicsComponent(20.0, 5.0, ::StunEffect) }
+        )
+        val lightBoss = BossType(
+            20,
+            100.0,
+            0.0,
+            7.0,
+            Color.WHITESMOKE,
+            35.0,
+            "Light Elemental",
+            physicsComponentConstructor = { BlastBossPhysicsComponent(20.0, 5.0, ::FlashEffect) }
         )
         val boss = BossType(20, 120.0, 0.0, 6.0, Color.CRIMSON, 35.0, "Boss Man")
         val upgradedBoss =
             BossType(30, 240.0, 0.0, 6.0, Color.CRIMSON.darker(), 35.0, "Boss Man 2")
-        private val bosses = listOf(boss, windBoss, metalBoss, natureBoss, fireBoss)
+        private val bosses = listOf(boss, windBoss, metalBoss, natureBoss, fireBoss, lightBoss)
         val bossLevels = mapOf(boss to upgradedBoss)
         fun getAvailableBosses(): List<BossType> {
             val defeated = GameState.instance.defeatedBosses
@@ -78,8 +88,10 @@ data class OnCreateAction(val onCreateFun: (Enemy) -> Unit) : EnemyActions {
 }
 
 fun onHitAddSpeedBuff(enemy: Enemy, damageType: DamageType) {
-    if (enemy.statusEffects.currentEffects.none { it is SpeedBuff } && damageType !is OverTimeDamage)
-        enemy.statusEffects.currentEffects += SpeedBuff(2.0, 1.5)
+    val noSpeedBuff = !enemy.statusEffects.has(SpeedBuff::class)
+    val notOverTime = damageType !is OverTimeDamage
+    if (noSpeedBuff && notOverTime)
+        enemy.statusEffects += SpeedBuff(2.0, 1.5)
 }
 
 class BossType(

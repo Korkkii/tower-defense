@@ -3,10 +3,21 @@ package game.towers.projectiles
 import game.Enemy
 import game.GameEntity
 import game.GameState
+import game.StatusEffect
 import game.Vector
+import game.find
+import game.towers.Tower
 import javafx.scene.canvas.GraphicsContext
+import kotlin.reflect.KClass
 
-class Projectile(position: Vector, val target: Enemy, val type: ProjectileType, val properties: ProjectileProperties = NoProperties) : GameEntity(position) {
+class Projectile(
+    val originEntity: GameEntity,
+    val target: Enemy,
+    val type: ProjectileType,
+    val properties: ProjectileProperties = NoProperties
+) : GameEntity(
+    calculateStartingPosition(originEntity)
+) {
     var hasHit = false
 
     fun canDelete(): Boolean = hasHit
@@ -20,7 +31,15 @@ class Projectile(position: Vector, val target: Enemy, val type: ProjectileType, 
     }
 }
 
-interface ProjectileProperties
-object NoProperties : ProjectileProperties
-data class BounceProperties(val bouncesLeft: Int) : ProjectileProperties
-data class IncreasedDamageProperties(val enemyCount: Int) : ProjectileProperties
+fun calculateStartingPosition(entity: GameEntity): Vector = (entity as? Tower)?.square?.center ?: entity.position
+
+interface ProjectileProperty
+open class ProjectileProperties(vararg properties: ProjectileProperty?) {
+    private val all = properties.filterNotNull()
+    fun <U : ProjectileProperty> find(type: KClass<U>): U? = all.find(type)
+}
+object NoProperties : ProjectileProperties()
+object NoProperty : ProjectileProperty
+data class BounceProperty(val bouncesLeft: Int) : ProjectileProperty
+data class IncreasedDamageProperty(val enemyCount: Int) : ProjectileProperty
+data class BlindedProperty(val missChance: Double) : ProjectileProperty

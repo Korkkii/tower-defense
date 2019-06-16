@@ -25,7 +25,7 @@ class TowerGraphicsComponent : GraphicsComponent<Tower> {
         if (stateT is TowerSelected && stateT.tower == entity)
             graphics.strokeCircle(entity.rangeCircle)
 
-        if (entity.statusEffects.currentEffects.any { it is StunDebuff }) {
+        if (entity.statusEffects.has(StunDebuff::class)) {
             graphics.stroke = Color.BLUEVIOLET
             val entitySquare = entity.square
             graphics.strokeLine(

@@ -1,5 +1,6 @@
 package game
 
+import game.board.GameBoard
 import game.enemies.Enemy
 
 class WaveGenerator(private val gameBoard: GameBoard) {

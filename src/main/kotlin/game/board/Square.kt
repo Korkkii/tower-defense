@@ -1,5 +1,9 @@
-package game
+package game.board
 
+import game.GameState
+import game.PlacingTower
+import game.Vector
+import game.inverseTransform
 import game.towers.Tower
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color

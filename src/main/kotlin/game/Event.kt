@@ -1,5 +1,6 @@
 package game
 
+import game.board.BuildAreaSquare
 import game.enemies.BossType
 import game.enemies.Enemy
 import game.towers.Tower

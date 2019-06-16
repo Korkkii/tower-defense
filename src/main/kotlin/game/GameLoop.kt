@@ -1,5 +1,6 @@
 package game
 
+import game.board.GameBoard
 import javafx.animation.AnimationTimer
 import javafx.scene.canvas.Canvas
 

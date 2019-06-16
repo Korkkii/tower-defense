@@ -1,5 +1,9 @@
-package game
+package game.board
 
+import game.GameEntity
+import game.GameState
+import game.Vector
+import game.map
 import javafx.scene.canvas.GraphicsContext
 import java.io.File
 

@@ -1,5 +1,7 @@
 package game
 
+import game.board.BuildAreaSquare
+import game.board.GameBoard
 import javafx.scene.canvas.Canvas
 import javafx.scene.input.MouseEvent
 

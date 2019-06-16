@@ -1,6 +1,6 @@
 package game.towers
 
-import game.BuildAreaSquare
+import game.board.BuildAreaSquare
 import game.Circle
 import game.GameEntity
 import game.GameState

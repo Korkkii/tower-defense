@@ -1,5 +1,6 @@
 package game
 
+import game.board.PathSquare
 import game.enemies.Enemy
 import game.enemies.EnemyType
 import kotlin.random.Random.Default.nextInt

@@ -1,5 +1,6 @@
 package game
 
+import game.board.GameBoard
 import game.enemies.Enemy
 
 class Wave(val level: Int, gameBoard: GameBoard) : UpdatableEntity {

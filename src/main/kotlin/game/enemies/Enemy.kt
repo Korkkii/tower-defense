@@ -3,7 +3,7 @@ package game.enemies
 import game.EnemyDefeated
 import game.GameEntity
 import game.GameState
-import game.PathSquare
+import game.board.PathSquare
 import game.StatusEffects
 import game.Vector
 import game.fillCircle

@@ -1,7 +1,7 @@
 package game.towers
 
 import game.enemies.BossType
-import game.BuildAreaSquare
+import game.board.BuildAreaSquare
 import game.GameState
 import game.PhysicsComponent
 import game.towers.projectiles.ProjectileType

@@ -27,7 +27,7 @@ class Sidebar :
         this.isFillWidth = true
         this.padding = Insets(10.0)
 
-        GameState.subscribe(GameStateChanged::class.java) {
+        GameState.subscribe(GameStateChanged::class) {
             money.text = "Player money ${it.money}"
             enemies.text = "Enemies on the run ${it.enemyCount}"
         }

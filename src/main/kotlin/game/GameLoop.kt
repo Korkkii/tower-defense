@@ -10,7 +10,7 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, scaleRa
     private val graphicsContext = canvas.graphicsContext2D
 
     init {
-        GameState.subscribe(GameEnded::class.java) {
+        GameState.subscribe(GameEnded::class) {
             paused = true
         }
         graphicsContext.scale(scaleRatio, scaleRatio)

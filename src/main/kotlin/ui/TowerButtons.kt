@@ -44,7 +44,7 @@ class TowerButton(private val towerType: TowerType, name: String) : VBox() {
         alignment = Pos.CENTER
         spacing = 2.0
         padding = Insets(4.0)
-        GameState.subscribe(BossDefeated::class.java) { updateButton(towerType) }
+        GameState.subscribe(BossDefeated::class) { updateButton(towerType) }
 
         setOnMouseClicked {
             if (towerType.isAvailable()) GameState.notify(PlacingTowerEvent(towerType))

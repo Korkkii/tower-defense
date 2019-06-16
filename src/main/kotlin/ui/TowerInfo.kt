@@ -19,7 +19,7 @@ class TowerInfo : VBox() {
     private val upgrade = Upgrades()
 
     init {
-        GameState.subscribe(GameStateChanged::class.java) {
+        GameState.subscribe(GameStateChanged::class) {
             val text =
                 it.selectedTower?.let { tower -> "Tower range: ${tower.type.range}" } ?: "No tower selected"
             range.text = text
@@ -32,7 +32,7 @@ class TowerInfo : VBox() {
 
 class Upgrades : FlowPane() {
     init {
-        GameState.subscribe(GameStateChanged::class.java) {
+        GameState.subscribe(GameStateChanged::class) {
             val selectedTower = it.selectedTower
 
             val upgradeTypes = selectedTower?.type?.let { type -> TowerType.upgrades[type] } ?: listOf()

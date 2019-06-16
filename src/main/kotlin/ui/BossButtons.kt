@@ -14,7 +14,7 @@ import javafx.scene.shape.Circle
 
 class BossButtons : FlowPane() {
     init {
-        GameState.subscribe(BossDefeated::class.java, this::onBossDefeated)
+        GameState.subscribe(BossDefeated::class, this::onBossDefeated)
 
         padding = Insets(10.0, 20.0, 10.0, 20.0)
         alignment = Pos.CENTER

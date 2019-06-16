@@ -6,6 +6,7 @@ import game.towers.Tower
 import game.towers.TowerType
 import game.towers.projectiles.Projectile
 import ui.MouseHandler
+import kotlin.reflect.KClass
 
 class MutableGameState {
     val enemies = mutableListOf<Enemy>()
@@ -169,7 +170,7 @@ data class GameState(
             }
 
         fun notify(event: Event) = mutableState.publisher.publish(event)
-        fun <T : Event> subscribe(event: Class<T>, callback: (T) -> Unit) =
+        fun <T : Event> subscribe(event: KClass<T>, callback: (T) -> Unit) =
             mutableState.publisher.subscribeToEvent(event, callback)
     }
 }

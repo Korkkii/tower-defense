@@ -13,7 +13,8 @@ open class EnemyType(
     val radius: Double,
     val color: Color,
     val velocity: Double,
-    val actions: EnemyActions = NoopActions,
+    val onDamage: (Enemy, DamageType) -> Unit = { _, _ -> },
+    val onCreate: (Enemy) -> Unit = {},
     val physicsComponentConstructor: () -> PhysicsComponent<Enemy> = { EnemyMovementComponent() }
 ) {
     companion object {
@@ -37,7 +38,7 @@ open class EnemyType(
             Color.SLATEGRAY,
             35.0,
             "Wind Elemental",
-            OnHitAction(::onHitAddSpeedBuff)
+            onDamage = ::onHitAddSpeedBuff
         )
         val metalBoss = BossType(20, 150.0, 0.0, 6.0, Color.DARKGRAY, 35.0, "Metal Elemental")
         val natureBoss = BossType(
@@ -48,7 +49,7 @@ open class EnemyType(
             Color.MEDIUMSEAGREEN,
             35.0,
             "Nature Elemental",
-            OnCreateAction {
+            onCreate = {
                 it.statusEffects += RegenBuff(3.0, 3600.0)
             })
         val fireBoss = BossType(
@@ -91,21 +92,6 @@ open class EnemyType(
     }
 }
 
-interface EnemyActions {
-    fun onDamage(enemy: Enemy, damageType: DamageType) {}
-    fun onCreate(enemy: Enemy) {}
-}
-
-object NoopActions : EnemyActions
-
-data class OnHitAction(val onDamageFun: (Enemy, DamageType) -> Unit) : EnemyActions {
-    override fun onDamage(enemy: Enemy, damageType: DamageType): Unit = onDamageFun(enemy, damageType)
-}
-
-data class OnCreateAction(val onCreateFun: (Enemy) -> Unit) : EnemyActions {
-    override fun onCreate(enemy: Enemy): Unit = onCreateFun(enemy)
-}
-
 fun onHitAddSpeedBuff(enemy: Enemy, damageType: DamageType) {
     val noSpeedBuff = !enemy.statusEffects.has(SpeedBuff::class)
     val notOverTime = damageType !is OverTimeDamage
@@ -121,7 +107,8 @@ class BossType(
     color: Color,
     velocity: Double,
     val name: String,
-    actions: EnemyActions = NoopActions,
+    onDamage: (Enemy, DamageType) -> Unit = { _, _ -> },
+    onCreate: (Enemy) -> Unit = {},
     physicsComponentConstructor: () -> PhysicsComponent<Enemy> = { EnemyMovementComponent() }
 ) : EnemyType(
     enemyPrice,
@@ -130,6 +117,7 @@ class BossType(
     radius,
     color,
     velocity,
-    actions,
+    onDamage,
+    onCreate,
     physicsComponentConstructor
 )

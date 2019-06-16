@@ -25,7 +25,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
 
     init {
         target = path[1]
-        type.actions.onCreate(this)
+        type.onCreate(this)
     }
 
     private fun waypointCollisionCircle() = Circle(position.x, position.y, 1.4)
@@ -73,7 +73,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
 
     fun takeDamage(damage: Double, damageType: DamageType = SingleHitDamage) {
         health -= damage
-        type.actions.onDamage(this, damageType)
+        type.onDamage(this, damageType)
 
         if (health <= 0.0) {
             canBeDeleted = true

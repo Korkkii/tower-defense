@@ -35,7 +35,7 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, scaleRa
             it.update(gameState, inSeconds)
         }
         gameState.entities.forEach { it.update(gameState, inSeconds) }
-        gameState.currentWave?.update(gameState, inSeconds)
+        gameState.currentWave?.update(inSeconds)
         gameState.commit()
 
         board.draw(graphicsContext, gameState)

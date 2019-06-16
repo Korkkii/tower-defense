@@ -2,8 +2,8 @@ package ui
 
 import game.BossDefeated
 import game.BossStartEvent
-import game.BossType
-import game.EnemyType
+import game.enemies.BossType
+import game.enemies.EnemyType
 import game.GameState
 import javafx.geometry.Insets
 import javafx.geometry.Pos

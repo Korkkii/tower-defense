@@ -1,5 +1,9 @@
-package game
+package game.enemies
 
+import game.GameState
+import game.PhysicsComponent
+import game.RegenBuff
+import game.SpeedBuff
 import javafx.scene.paint.Color
 
 open class EnemyType(
@@ -36,9 +40,17 @@ open class EnemyType(
             OnHitAction(::onHitAddSpeedBuff)
         )
         val metalBoss = BossType(20, 150.0, 0.0, 6.0, Color.DARKGRAY, 35.0, "Metal Elemental")
-        val natureBoss = BossType(20, 100.0, 0.0, 6.0, Color.MEDIUMSEAGREEN, 35.0, "Nature Elemental", OnCreateAction {
-            it.statusEffects += RegenBuff(3.0, 3600.0)
-        })
+        val natureBoss = BossType(
+            20,
+            100.0,
+            0.0,
+            6.0,
+            Color.MEDIUMSEAGREEN,
+            35.0,
+            "Nature Elemental",
+            OnCreateAction {
+                it.statusEffects += RegenBuff(3.0, 3600.0)
+            })
         val fireBoss = BossType(
             20,
             100.0,
@@ -62,7 +74,14 @@ open class EnemyType(
         val boss = BossType(20, 120.0, 0.0, 6.0, Color.CRIMSON, 35.0, "Boss Man")
         val upgradedBoss =
             BossType(30, 240.0, 0.0, 6.0, Color.CRIMSON.darker(), 35.0, "Boss Man 2")
-        private val bosses = listOf(boss, windBoss, metalBoss, natureBoss, fireBoss, lightBoss)
+        private val bosses = listOf(
+            boss,
+            windBoss,
+            metalBoss,
+            natureBoss,
+            fireBoss,
+            lightBoss
+        )
         val bossLevels = mapOf(boss to upgradedBoss)
         fun getAvailableBosses(): List<BossType> {
             val defeated = GameState.instance.defeatedBosses

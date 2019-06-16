@@ -1,5 +1,7 @@
 package game
 
+import game.enemies.BossType
+import game.enemies.Enemy
 import game.towers.Tower
 import game.towers.TowerType
 import game.towers.projectiles.Projectile

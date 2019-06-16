@@ -1,5 +1,7 @@
 package game
 
+import game.enemies.Enemy
+
 class Wave(val level: Int, gameBoard: GameBoard) : UpdatableEntity {
     private val enemies: MutableList<Enemy> = createWave(gameBoard.path, level).toMutableList()
     private var timeUntilNextEnemy = if (level == 0) 0.0 else 5.0

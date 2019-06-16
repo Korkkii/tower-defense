@@ -1,5 +1,7 @@
 package game
 
+import game.enemies.Enemy
+import game.enemies.OverTimeDamage
 import game.towers.Tower
 import kotlin.reflect.KClass
 

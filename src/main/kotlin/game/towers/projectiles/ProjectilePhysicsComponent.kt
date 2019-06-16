@@ -2,13 +2,12 @@ package game.towers.projectiles
 
 import game.AddEntity
 import game.DeleteEntity
-import game.Enemy
+import game.enemies.Enemy
 import game.GameEntity
 import game.GameState
 import game.times
 import game.PhysicsComponent
 import game.Vector
-import game.find
 import game.towers.Tower
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color

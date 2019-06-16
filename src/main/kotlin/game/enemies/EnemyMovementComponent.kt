@@ -1,4 +1,10 @@
-package game
+package game.enemies
+
+import game.GameState
+import game.PhysicsComponent
+import game.SpeedBuff
+import game.center
+import game.times
 
 class EnemyMovementComponent : PhysicsComponent<Enemy> {
     override fun update(entity: Enemy, currentState: GameState, delta: Double) {

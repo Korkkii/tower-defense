@@ -1,5 +1,7 @@
 package game
 
+import game.enemies.Enemy
+import game.enemies.EnemyType
 import kotlin.random.Random.Default.nextInt
 
 private val basicWave = listOf(EnemyType.enemy)

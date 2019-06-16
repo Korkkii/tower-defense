@@ -1,12 +1,25 @@
-package game
+package game.enemies
 
+import game.AddEntity
+import game.BlindDebuff
+import game.Circle
+import game.DeleteEntity
+import game.GameEntity
+import game.GameState
+import game.PhysicsComponent
+import game.StatusEffect
+import game.StunDebuff
+import game.Vector
+import game.fillCircle
 import game.towers.Tower
+import game.withOpacity
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 
 typealias EffectEntityConstructor = (List<Tower>,
     maxRadius: Double,
-    position: Vector) -> GameEntity
+    position: Vector
+) -> GameEntity
 
 class BlastBossPhysicsComponent(
     private val blastRadius: Double,
@@ -25,7 +38,12 @@ class BlastBossPhysicsComponent(
         val towersNear = towers.filter { it.square.intersects(stunArea.boundsInLocal) }
         if (towersNear.isEmpty() || timeUntilNext > 0.0) return
 
-        GameState.notify(AddEntity(effectEntityConstructor(towersNear, blastRadius, entity.position)))
+        val effectEntity = effectEntityConstructor(
+            towersNear,
+            blastRadius,
+            entity.position
+        )
+        GameState.notify(AddEntity(effectEntity))
         timeUntilNext = blastCooldown
     }
 }

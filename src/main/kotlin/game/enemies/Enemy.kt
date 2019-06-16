@@ -1,5 +1,12 @@
-package game
+package game.enemies
 
+import game.EnemyDefeated
+import game.GameEntity
+import game.GameState
+import game.PathSquare
+import game.StatusEffects
+import game.Vector
+import game.fillCircle
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle

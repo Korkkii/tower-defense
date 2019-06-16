@@ -1,6 +1,6 @@
 package game.towers
 
-import game.BossType
+import game.enemies.BossType
 import game.BuildAreaSquare
 import game.GameState
 import game.PhysicsComponent
@@ -26,22 +26,6 @@ data class TowerType(
     }
 
     companion object {
-        // private val singleHit = TowerType(
-        //     "Single hit tower",
-        //     10,
-        //     35.0,
-        //     1.0,
-        //     Color.AQUAMARINE,
-        //     ShootingComponent.with(ProjectileType.singleHitProjectile)
-        // )
-        // private val singleHit2 = TowerType(
-        //     "Single hit tower",
-        //     20,
-        //     45.0,
-        //     1.2,
-        //     Color.AQUAMARINE,
-        //     ShootingComponent.with(ProjectileType.singleHit2Projectile)
-        // )
         private val water = TowerType(
             "Water tower",
             30,
@@ -65,7 +49,6 @@ data class TowerType(
             1.0,
             Color.ORANGERED,
             ShootingComponent.with(ProjectileType.applyDoTProjectile)
-            // AreaEffectComponent.with(0.1)
         )
         private val wind =
             TowerType("Wind tower", 5, 35.0, 1.0, Color.SILVER, ShootingComponent.with(ProjectileType.bounceProjectile))
@@ -75,7 +58,7 @@ data class TowerType(
             35.0,
             1.0,
             Color.DARKSEAGREEN,
-            ShootingComponent.with(ProjectileType.damagePerCreepProjectile)
+            physicsComponentConstructor = ShootingComponent.with(ProjectileType.damagePerCreepProjectile)
         )
         private val metal = TowerType(
             "Metal tower",
@@ -83,8 +66,7 @@ data class TowerType(
             35.0,
             1.5,
             Color.DARKSEAGREEN,
-            // ShootingComponent.with(ProjectileType.singleHitProjectile, ::onShootSingleTarget)
-            { AcceleratingShootingComponent(ProjectileType.singleHitProjectile, ::onShootSingleTarget) }
+            physicsComponentConstructor = { AcceleratingShootingComponent(ProjectileType.singleHitProjectile, ::onShootSingleTarget) }
         )
         /*
         * Towers

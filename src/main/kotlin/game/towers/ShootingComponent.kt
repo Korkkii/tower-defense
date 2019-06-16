@@ -1,7 +1,7 @@
 package game.towers
 
 import game.BlindDebuff
-import game.Enemy
+import game.enemies.Enemy
 import game.GameState
 import game.NewProjectile
 import game.PhysicsComponent

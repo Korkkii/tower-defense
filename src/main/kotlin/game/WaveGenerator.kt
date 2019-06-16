@@ -1,5 +1,7 @@
 package game
 
+import game.enemies.Enemy
+
 class WaveGenerator(private val gameBoard: GameBoard) {
     init {
         GameState.subscribe(WaveComplete.javaClass) {

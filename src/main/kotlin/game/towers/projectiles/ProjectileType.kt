@@ -2,7 +2,7 @@ package game.towers.projectiles
 
 import game.Circle
 import game.DamageOverTime
-import game.Enemy
+import game.enemies.Enemy
 import game.GameState
 import game.GraphicsComponent
 import game.NewProjectile

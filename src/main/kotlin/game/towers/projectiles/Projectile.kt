@@ -1,9 +1,8 @@
 package game.towers.projectiles
 
-import game.Enemy
+import game.enemies.Enemy
 import game.GameEntity
 import game.GameState
-import game.StatusEffect
 import game.Vector
 import game.find
 import game.towers.Tower

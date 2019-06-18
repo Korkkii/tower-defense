@@ -1,6 +1,7 @@
 package game
 
 import game.board.BuildAreaSquare
+import game.board.PathSquare
 import game.enemies.BossType
 import game.enemies.Enemy
 import game.towers.Tower
@@ -9,7 +10,13 @@ import game.towers.projectiles.Projectile
 
 interface Event
 data class PlacingTowerEvent(val towerType: TowerType) : Event
-data class BossStartEvent(val bossType: BossType) : Event
+data class BossStartEvent(
+    val bossType: BossType,
+    val healthPercent: Double = 1.0,
+    val currentTarget: PathSquare? = null,
+    val currentPosition: Vector? = null
+) : Event
+
 data class PlaceTowerEvent(val square: BuildAreaSquare) : Event
 data class SelectTowerEvent(val tower: Tower) : Event
 data class NewEnemyEvent(val enemy: Enemy) : Event

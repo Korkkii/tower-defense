@@ -1,10 +1,14 @@
 package game.enemies
 
+import game.AddEntity
+import game.BossStartEvent
 import game.GameState
 import game.PhysicsComponent
 import game.RegenBuff
 import game.SpeedBuff
+import game.center
 import javafx.scene.paint.Color
+import kotlin.random.Random
 
 open class EnemyType(
     val enemyPrice: Int,
@@ -72,6 +76,16 @@ open class EnemyType(
             "Light Elemental",
             physicsComponentConstructor = { BlastBossPhysicsComponent(20.0, 5.0, ::FlashEffect) }
         )
+        val waterBoss = BossType(
+            20,
+            80.0,
+            0.0,
+            7.0,
+            Color.NAVY.brighter(),
+            35.0,
+            "Water Elemental",
+            onDamage = ::onHitSpawnClone
+        )
         val boss = BossType(20, 120.0, 0.0, 6.0, Color.CRIMSON, 35.0, "Boss Man")
         val upgradedBoss =
             BossType(30, 240.0, 0.0, 6.0, Color.CRIMSON.darker(), 35.0, "Boss Man 2")
@@ -81,7 +95,8 @@ open class EnemyType(
             metalBoss,
             natureBoss,
             fireBoss,
-            lightBoss
+            lightBoss,
+            waterBoss
         )
         val bossLevels = mapOf(boss to upgradedBoss)
         fun getAvailableBosses(): List<BossType> {
@@ -97,6 +112,21 @@ fun onHitAddSpeedBuff(enemy: Enemy, damageType: DamageType) {
     val notOverTime = damageType !is OverTimeDamage
     if (noSpeedBuff && notOverTime)
         enemy.statusEffects += SpeedBuff(2.0, 1.5)
+}
+
+fun onHitSpawnClone(enemy: Enemy, damageType: DamageType) {
+    val spawnChance = 0.1
+    val randomDouble = Random.nextDouble()
+
+    if (randomDouble < spawnChance) {
+        val bossHealthPercent = enemy.health / enemy.maxHealth
+        val type = enemy.type as BossType
+        val animationEntity = SpawnEffectEntity(enemy.position, enemy.target.waypoint.center(), enemy.type.radius) {
+            GameState.notify(BossStartEvent(type, bossHealthPercent, enemy.target, it))
+        }
+
+        GameState.notify(AddEntity(animationEntity))
+    }
 }
 
 class BossType(

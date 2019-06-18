@@ -2,6 +2,8 @@ package game
 
 import game.enemies.BossType
 import game.enemies.Enemy
+import game.enemies.EnemyType
+import game.enemies.EnemyType.Companion.waterBoss
 import game.towers.Tower
 import game.towers.TowerType
 import game.towers.projectiles.Projectile
@@ -62,6 +64,10 @@ class MutableGameState {
                 val type = event.enemy.type
                 playerMoney += type.enemyPrice
                 if (type is BossType) {
+                    val isWaterBoss = type == waterBoss
+                    val waterBossesStillLeft = enemies.any { it.type == waterBoss }
+                    if (isWaterBoss && waterBossesStillLeft) return
+
                     defeatedBosses += type
 
                     publisher.publish(BossDefeated(type))

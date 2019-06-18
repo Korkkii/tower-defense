@@ -3,20 +3,27 @@ package game.enemies
 import game.EnemyDefeated
 import game.GameEntity
 import game.GameState
-import game.board.PathSquare
 import game.StatusEffects
 import game.Vector
+import game.board.PathSquare
 import game.fillCircle
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 
-class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int) :
-    GameEntity(calculateStartingPosition(path)) {
+class Enemy(
+    private val path: List<PathSquare>,
+    val type: EnemyType,
+    level: Int,
+    healthPercent: Double = 1.0,
+    currentTarget: PathSquare? = null,
+    currentPosition: Vector? = null
+) :
+    GameEntity(currentPosition ?: calculateStartingPosition(path)) {
     var target: PathSquare
         private set
     val maxHealth = type.baseHealth + type.healthPerLevel * level
-    var health = maxHealth
+    var health = maxHealth * healthPercent
         private set
     var canBeDeleted = false
         private set
@@ -24,7 +31,7 @@ class Enemy(private val path: List<PathSquare>, val type: EnemyType, level: Int)
     val statusEffects = StatusEffects<Enemy>()
 
     init {
-        target = path[1]
+        target = currentTarget ?: path[1]
         type.onCreate(this)
     }
 

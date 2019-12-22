@@ -49,10 +49,15 @@ open class StatusEffect<T : GameEntity>(private var duration: Double) {
     }
 }
 
-class DamageOverTime(private val damagePerSecond: Double, duration: Double) : StatusEffect<Enemy>(duration) {
+class DamageOverTime(private val damagePerSecond: Double, duration: Double, private val ticksPerSecond: Double) : StatusEffect<Enemy>(duration) {
+    private var cooldown = 1 / ticksPerSecond
     override fun onUpdate(entity: Enemy, currentState: GameState, delta: Double) {
-        val damage = damagePerSecond * delta
-        entity.takeDamage(damage, OverTimeDamage)
+        cooldown -= delta
+        if (cooldown <= 0.0) {
+            val damage = damagePerSecond / ticksPerSecond
+            entity.takeDamage(damage, OverTimeDamage)
+            cooldown = 1 / ticksPerSecond
+        }
     }
 }
 

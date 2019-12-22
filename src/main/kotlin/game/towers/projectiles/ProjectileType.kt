@@ -28,7 +28,7 @@ class ProjectileType(
         val splashProjectile = ProjectileType(2.0, 100.0, ::drawProjectile, onSplashHit(3.0, 25.0))
         val lightProjectile = ProjectileType(0.5, 300.0, ::drawStraightLine, onSingleHit(2.0))
         val bounceProjectile = ProjectileType(1.3, 200.0, ::drawProjectile, onBounceHit(2.5, 25.0, 3))
-        val applyDoTProjectile = ProjectileType(2.0, 100.0, ::drawProjectile, onDoTHit(2.0, 5.0))
+        val applyDoTProjectile = ProjectileType(2.0, 100.0, ::drawProjectile, onDoTHit(2.0, 5.0, 2.0))
         val damagePerCreepProjectile = ProjectileType(
             2.0,
             100.0,
@@ -70,9 +70,9 @@ fun onBounceHit(damage: Double, bounceRange: Double, initialBounceAmount: Int) =
         GameState.notify(NewProjectile(bounceProjectile))
     }
 
-fun onDoTHit(initialDamage: Double, damagePerStack: Double) = { projectile: Projectile, target: Enemy, _: GameState ->
+fun onDoTHit(initialDamage: Double, damagePerSecond: Double, ticksPerSecond: Double) = { projectile: Projectile, target: Enemy, _: GameState ->
     target.takeDamage(initialDamage, projectileProperties = projectile.properties)
-    target.statusEffects += DamageOverTime(damagePerStack, 5.0)
+    target.statusEffects += DamageOverTime(damagePerSecond, 5.0, ticksPerSecond)
 }
 
 fun onScalingDamageHit(initialDamage: Double, scaling: Double) =

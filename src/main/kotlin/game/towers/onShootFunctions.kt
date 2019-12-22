@@ -5,14 +5,14 @@ import game.NewProjectile
 import game.center
 import game.enemies.Enemy
 import game.towers.projectiles.Projectile
-import game.towers.projectiles.ProjectileProperties
+import game.towers.projectiles.ProjectileProperty
 import game.towers.projectiles.ProjectileType
 
 fun onShootSingleTarget(
     entity: Tower,
     enemiesWithinRange: List<Enemy>,
     projectileType: ProjectileType,
-    properties: ProjectileProperties
+    properties: List<ProjectileProperty?>
 ) {
     val closestEnemy = getClosestEnemy(entity, enemiesWithinRange)
     GameState.notify(NewProjectile(Projectile(entity, closestEnemy, projectileType, properties)))
@@ -32,7 +32,7 @@ fun onShootMultiTarget(
     entity: Tower,
     enemiesWithinRange: List<Enemy>,
     projectileType: ProjectileType,
-    properties: ProjectileProperties
+    properties: List<ProjectileProperty?>
 ) {
     enemiesWithinRange.forEach {
         val projectile = Projectile(

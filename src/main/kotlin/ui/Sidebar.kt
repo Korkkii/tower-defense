@@ -19,6 +19,7 @@ class Sidebar :
     private val towerButtons = TowerButtons()
     private val towerInfo = TowerInfo()
     private val bossButtons = BossButtons()
+    private val animationRender = AnimationRender
 
     init {
         this.background = Background(BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY))

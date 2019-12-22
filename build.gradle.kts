@@ -3,7 +3,7 @@ import java.net.URI
 
 plugins {
     java
-    kotlin("jvm") version "1.3.21"
+    kotlin("jvm") version "1.3.60"
 }
 
 group = "korkki"

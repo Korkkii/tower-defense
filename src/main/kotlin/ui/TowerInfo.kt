@@ -20,8 +20,10 @@ class TowerInfo : VBox() {
 
     init {
         GameState.subscribe(GameStateChanged::class) {
+            // TODO: Better status info instead of class names
             val text =
-                it.selectedTower?.let { tower -> "Tower range: ${tower.type.range}" } ?: "No tower selected"
+                it.selectedTower?.let { tower -> "Tower range: ${tower.type.range}\nTower status: ${tower.statusEffects.snapshot()}" }
+                    ?: "No tower selected"
             range.text = text
         }
         background = Background(BackgroundFill(Color.GRAY.brighter(), CornerRadii(2.0), Insets.EMPTY))

@@ -13,11 +13,12 @@ class Projectile(
     val originEntity: GameEntity,
     val target: Enemy,
     val type: ProjectileType,
-    val properties: ProjectileProperties = NoProperties
+    properties: List<ProjectileProperty?>
 ) : GameEntity(
     calculateStartingPosition(originEntity)
 ) {
     var hasHit = false
+    val properties = properties.filterNotNull()
 
     fun canDelete(): Boolean = hasHit
 
@@ -26,19 +27,8 @@ class Projectile(
     }
 
     override fun draw(graphics: GraphicsContext, state: GameState) {
-        type.graphicsComponent.draw(this, graphics, state)
+        type.drawGraphics(this, graphics, state)
     }
 }
 
 fun calculateStartingPosition(entity: GameEntity): Vector = (entity as? Tower)?.square?.center ?: entity.position
-
-interface ProjectileProperty
-open class ProjectileProperties(vararg properties: ProjectileProperty?) {
-    private val all = properties.filterNotNull()
-    fun <U : ProjectileProperty> find(type: KClass<U>): U? = all.find(type)
-}
-object NoProperties : ProjectileProperties()
-object NoProperty : ProjectileProperty
-data class BounceProperty(val bouncesLeft: Int) : ProjectileProperty
-data class IncreasedDamageProperty(val enemyCount: Int) : ProjectileProperty
-data class BlindedProperty(val missChance: Double) : ProjectileProperty

@@ -1,14 +1,14 @@
 package game.towers
 
 import game.board.BuildAreaSquare
-import game.Circle
+import game.circle
 import game.GameEntity
 import game.GameState
 import game.StatusEffects
 import javafx.scene.canvas.GraphicsContext
 
 class Tower(val square: BuildAreaSquare, val type: TowerType) : GameEntity(square.center) {
-    val rangeCircle by lazy { Circle(square.center, type.range) }
+    val rangeCircle by lazy { circle(square.center, type.range) }
     var fireRate = type.baseFireRate
     var canBeDeleted = false
         private set

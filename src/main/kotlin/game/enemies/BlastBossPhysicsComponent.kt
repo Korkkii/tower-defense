@@ -1,7 +1,7 @@
 package game.enemies
 
 import game.AddEntity
-import game.Circle
+import game.circle
 import game.GameEntity
 import game.GameState
 import game.PhysicsComponent
@@ -26,7 +26,7 @@ class BlastBossPhysicsComponent(
         movementComponent.update(entity, currentState, delta)
 
         timeUntilNext -= delta
-        val stunArea = Circle(entity.position, blastRadius)
+        val stunArea = circle(entity.position, blastRadius)
         val towers = currentState.towers
         val towersNear = towers.filter { it.square.intersects(stunArea.boundsInLocal) }
         if (towersNear.isEmpty() || timeUntilNext > 0.0) return

@@ -1,21 +1,20 @@
 package game.towers
 
 import game.BlindDebuff
-import game.enemies.Enemy
 import game.GameState
-import game.NewProjectile
 import game.PhysicsComponent
 import game.StunDebuff
 import game.center
+import game.enemies.Enemy
 import game.towers.projectiles.BlindedProperty
-import game.towers.projectiles.Projectile
-import game.towers.projectiles.ProjectileProperties
+import game.towers.projectiles.ProjectileProperty
 import game.towers.projectiles.ProjectileType
+import game.towers.projectiles.ShootingTowerProperty
 import kotlin.math.min
 
-typealias OnShootFunction = (Tower, List<Enemy>, ProjectileType, ProjectileProperties) -> Unit
+typealias OnShootFunction = (Tower, List<Enemy>, ProjectileType, List<ProjectileProperty?>) -> Unit
 
-class ShootingComponent (
+class ShootingComponent(
     private val projectileType: ProjectileType,
     private val onShoot: OnShootFunction
 ) : PhysicsComponent<Tower> {
@@ -36,7 +35,8 @@ class ShootingComponent (
         if (enemiesWithinRange.isNotEmpty() && canFire) {
             val projectileProperty = projectileType.propertyConstructor(enemiesWithinRange)
             val blindProperty = if (entity.statusEffects.has(BlindDebuff::class)) BlindedProperty(0.3) else null
-            val properties = ProjectileProperties(projectileProperty, blindProperty)
+            val towerProperty = ShootingTowerProperty(entity.statusEffects.snapshot())
+            val properties = listOf(projectileProperty, blindProperty, towerProperty)
 
             onShoot(entity, enemiesWithinRange, projectileType, properties)
 
@@ -63,7 +63,7 @@ class ShootingComponent (
 
 class AcceleratingShootingComponent constructor(
     projectileType: ProjectileType,
-    onShoot: (Tower, List<Enemy>, ProjectileType, ProjectileProperties) -> Unit
+    onShoot: OnShootFunction
 ) : PhysicsComponent<Tower> {
     private var shootingComponent = ShootingComponent(projectileType, onShoot)
     private var timerCooldown = 2.0

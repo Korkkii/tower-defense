@@ -1,12 +1,17 @@
 package game.enemies
 
+import game.DamageBoost
 import game.EnemyDefeated
+import game.EnemyTakeDamageEvent
 import game.GameEntity
 import game.GameState
 import game.StatusEffects
 import game.Vector
 import game.board.PathSquare
 import game.fillCircle
+import game.find
+import game.towers.projectiles.ProjectileProperty
+import game.towers.projectiles.ShootingTowerProperty
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
@@ -78,15 +83,28 @@ class Enemy(
         )
     }
 
-    fun takeDamage(damage: Double, damageType: DamageType = SingleHitDamage) {
-        health -= damage
+    fun takeDamage(
+        initialDamage: Double,
+        damageType: DamageType = SingleHitDamage,
+        projectileProperties: List<ProjectileProperty> = listOf()
+    ) {
+        val totalDamage = calculateDamage(initialDamage, projectileProperties)
+        health -= totalDamage
+
         type.onDamage(this, damageType)
+        GameState.notify(EnemyTakeDamageEvent(this, totalDamage))
 
         if (health <= 0.0) {
             canBeDeleted = true
             GameState.notify(EnemyDefeated(this))
         }
     }
+}
+
+private fun calculateDamage(initialDamage: Double, projectileProperties: List<ProjectileProperty>): Double {
+    val towerStatuses = projectileProperties.find(ShootingTowerProperty::class)?.statusEffect
+    val modifiers = towerStatuses?.find(DamageBoost::class)?.boostPercentage ?: 0.0
+    return initialDamage * (1 + modifiers)
 }
 
 private fun calculateStartingPosition(path: List<PathSquare>): Vector {

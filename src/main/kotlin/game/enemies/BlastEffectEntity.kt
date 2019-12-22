@@ -1,7 +1,7 @@
 package game.enemies
 
 import game.BlindDebuff
-import game.Circle
+import game.circle
 import game.DeleteEntity
 import game.GameEntity
 import game.GameState
@@ -36,7 +36,7 @@ open class BlastEffectEntity protected constructor(
 
     override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fill = effectColor
-        graphics.fillCircle(Circle(position, radius))
+        graphics.fillCircle(circle(position, radius))
     }
 }
 

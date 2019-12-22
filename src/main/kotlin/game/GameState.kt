@@ -7,6 +7,7 @@ import game.enemies.EnemyType.Companion.waterBoss
 import game.towers.Tower
 import game.towers.TowerType
 import game.towers.projectiles.Projectile
+import ui.DamageText
 import ui.MouseHandler
 import kotlin.reflect.KClass
 
@@ -19,7 +20,7 @@ class MutableGameState {
         private set
     val publisher = Publisher()
     val maxEnemies = 20
-    var playerMoney = 50
+    var playerMoney = 300
         private set
 
     var state: State = Idle
@@ -33,7 +34,7 @@ class MutableGameState {
         publisher.subscribeToAll(::onNotify)
     }
 
-    fun onNotify(event: Event) {
+    private fun onNotify(event: Event) {
         when (event) {
             is PlacingTowerEvent -> state = PlacingTower(event.towerType)
             is PlaceTowerEvent -> {

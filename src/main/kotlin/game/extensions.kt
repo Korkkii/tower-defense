@@ -17,7 +17,7 @@ fun <T, U> List<List<U>>.map(mappingFunction: (x: Int, y: Int, cellValue: U) -> 
 
 fun Circle.center(): Vector = Vector(this.centerX, this.centerY)
 
-fun Circle(center: Vector, radius: Double) = Circle(center.x, center.y, radius)
+fun circle(center: Vector, radius: Double) = Circle(center.x, center.y, radius)
 
 fun Circle.contains(position: Vector) = this.contains(position.x, position.y)
 

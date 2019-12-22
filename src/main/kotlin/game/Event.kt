@@ -28,6 +28,8 @@ data class BossDefeated(val type: BossType) : Event
 data class NewProjectile(val projectile: Projectile) : Event
 data class DeleteEntity(val entity: GameEntity) : Event
 data class AddEntity(val entity: GameEntity) : Event
+data class TowerMissedEvent(val tower: Tower) : Event
+data class EnemyTakeDamageEvent(val enemy: Enemy, val damage: Double) : Event
 object WaveComplete : Event
 object EmptyClick : Event
 object GameEnded : Event

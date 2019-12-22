@@ -1,6 +1,6 @@
 package game.enemies
 
-import game.Circle
+import game.circle
 import game.DeleteEntity
 import game.GameEntity
 import game.GameState
@@ -30,6 +30,6 @@ class SpawnEffectEntity(position: Vector, endPosition: Vector, val endRadius: Do
     override fun draw(graphics: GraphicsContext, state: GameState) {
         graphics.fill = Color.NAVY.brighter()
         val radius = endRadius * sin(time * PI) + 0.4 * endRadius
-        graphics.fillCircle(Circle(position, radius))
+        graphics.fillCircle(circle(position, radius))
     }
 }

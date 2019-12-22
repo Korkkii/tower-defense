@@ -1,9 +1,9 @@
 package game.towers
 
-import game.enemies.BossType
-import game.board.BuildAreaSquare
 import game.GameState
 import game.PhysicsComponent
+import game.board.BuildAreaSquare
+import game.enemies.BossType
 import game.towers.projectiles.ProjectileType
 import javafx.scene.paint.Color
 
@@ -66,7 +66,21 @@ data class TowerType(
             35.0,
             1.5,
             Color.DARKSEAGREEN,
-            physicsComponentConstructor = { AcceleratingShootingComponent(ProjectileType.singleHitProjectile, ::onShootSingleTarget) }
+            physicsComponentConstructor = {
+                AcceleratingShootingComponent(
+                    ProjectileType.singleHitProjectile,
+                    ::onShootSingleTarget
+                )
+            }
+        )
+
+        private val blacksmith = TowerType(
+            "Blacksmith tower",
+            50,
+            50.0,
+            1.0,
+            Color.DARKRED,
+            physicsComponentConstructor = { BlacksmithPhysicsComponent() }
         )
         /*
         * Towers
@@ -90,6 +104,7 @@ data class TowerType(
         *   - Green TD style spells?
         *   - Chance for multishot / extra projectile?
         *   - Random damage tower --> Low and high base, avg a bit above avg
+        *   - Pierce through multiple
         *
         * */
         val towerTypes = listOf(
@@ -98,10 +113,41 @@ data class TowerType(
             wind,
             water,
             nature,
-            metal
+            metal,
+            blacksmith
         )
 
+        /*
+        * TODO:
+        *  - 3 levels for each basic tower
+        *  - New towers for
+        *   - X Metal + fire - Blacksmith i.e. damage +%
+        *   - Metal + X
+        *   - Wind + light - attack speed +%
+        *   - Wind + water - Chance for extra projectile?
+        *   - Fire + X - Shockwave hit? I.e. creates projectile to all enemies within range on hit
+        *   - Fire + nature - do more damage on lower health %?
+        *   - Light + X - Magic?
+        *   - Light + nature - Transport X space backwards? No meaning in circle?
+        *   - Nature + light - Life tower? No lives so what instead?
+        *   - Nature + metal - Critical strike?
+        *   - Water + wind - Frost --> slow
+        *   - Water + fire - Steam tower --> AoE damage
+        *
+        * TODO: triples
+        *   - Metal + water + air - Rust -> add damage taken
+        *
+        * */
+
         // val requirements = mapOf(light to EnemyType.boss)
+        // val requirements = mapOf(
+        //     light to lightBoss,
+        //     water to waterBoss,
+        //     fire to fireBoss,
+        //     wind to windBoss,
+        //     metal to metalBoss,
+        //     nature to natureBoss
+        // )
         val requirements = mapOf<TowerType, BossType>()
         val upgrades = mapOf<TowerType, List<TowerType>>()
     }

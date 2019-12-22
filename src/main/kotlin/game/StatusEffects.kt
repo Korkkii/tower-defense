@@ -23,13 +23,17 @@ class StatusEffects<T : GameEntity> {
         currentEffects.removeAll { it.isOver() }
     }
 
+    fun snapshot() = currentEffects.toList()
+
     override fun toString(): String {
         val effectStrings = currentEffects.joinToString()
         return "${javaClass.canonicalName}($effectStrings)"
     }
 }
 
-abstract class StatusEffect<T : GameEntity>(private var duration: Double) {
+// TODO: Convert to use type object and composition instead of inheritance
+// TODO: Convert StatusEffects class into extension functions instead of wrapper class
+open class StatusEffect<T : GameEntity>(private var duration: Double) {
     fun update(entity: T, currentState: GameState, delta: Double) {
         duration -= delta
 
@@ -64,3 +68,5 @@ class RegenBuff(private val healthPerSecond: Double, duration: Double) : StatusE
 class StunDebuff(duration: Double) : StatusEffect<Tower>(duration)
 
 class BlindDebuff(duration: Double) : StatusEffect<Tower>(duration)
+
+class DamageBoost(duration: Double, val boostPercentage: Double) : StatusEffect<Tower>(duration)

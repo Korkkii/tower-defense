@@ -10,6 +10,7 @@ import game.Vector
 import game.board.PathSquare
 import game.fillCircle
 import game.find
+import game.towers.projectiles.CritProperty
 import game.towers.projectiles.ProjectileProperty
 import game.towers.projectiles.ShootingTowerProperty
 import javafx.scene.canvas.GraphicsContext
@@ -92,7 +93,9 @@ class Enemy(
         health -= totalDamage
 
         type.onDamage(this, damageType)
-        GameState.notify(EnemyTakeDamageEvent(this, totalDamage))
+        val isCrit = projectileProperties.find(CritProperty::class) != null
+        val damageEvent = EnemyTakeDamageEvent(this, totalDamage, isCrit)
+        GameState.notify(damageEvent)
 
         if (health <= 0.0) {
             canBeDeleted = true
@@ -103,8 +106,9 @@ class Enemy(
 
 private fun calculateDamage(initialDamage: Double, projectileProperties: List<ProjectileProperty>): Double {
     val towerStatuses = projectileProperties.find(ShootingTowerProperty::class)?.statusEffect
-    val modifiers = towerStatuses?.find(DamageBoost::class)?.boostPercentage ?: 0.0
-    return initialDamage * (1 + modifiers)
+    val critModifier = projectileProperties.find(CritProperty::class)?.damageModifier ?: 1.0
+    val towerDamageModifiers = towerStatuses?.find(DamageBoost::class)?.boostPercentage ?: 0.0
+    return initialDamage * (1 + towerDamageModifiers) * critModifier
 }
 
 private fun calculateStartingPosition(path: List<PathSquare>): Vector {

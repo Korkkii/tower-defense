@@ -24,7 +24,7 @@ object AnimationRender {
     }
 
     private fun createDamageText(event: EnemyTakeDamageEvent) {
-        val damageText = DamageText(event.enemy.position, event.damage)
+        val damageText = DamageText(event)
         GameState.notify(AddEntity(damageText))
     }
 }
@@ -45,12 +45,16 @@ class MissText(position: Vector) : GameEntity(position) {
     override fun draw(graphics: GraphicsContext, state: GameState) {
         val (x, y) = position
         graphics.font = Font(7.0)
-        graphics.stroke = Color.RED
-        graphics.strokeText("Miss", x, y)
+        graphics.fill = Color.RED
+        graphics.fillText("Miss", x, y)
     }
 }
 
-class DamageText(position: Vector, private val damage: Double) : GameEntity(position) {
+class DamageText(event: EnemyTakeDamageEvent) : GameEntity(event.enemy.position) {
+    private val damage = event.damage
+    private val fontWeight = if (event.isCrit) FontWeight.BOLD else FontWeight.THIN
+    private val color = if (event.isCrit) Color.RED else Color.BLACK
+    private val size = if (event.isCrit) 5.0 else 4.0
     private var lifeTime = 1.0
     private var velocity = 2.0
 
@@ -65,8 +69,8 @@ class DamageText(position: Vector, private val damage: Double) : GameEntity(posi
 
     override fun draw(graphics: GraphicsContext, state: GameState) {
         val (x, y) = position
-        graphics.font = Font.font("Helvetica", FontWeight.THIN, 4.0)
-        graphics.stroke = Color.BLACK
-        graphics.strokeText("$damage", x, y)
+        graphics.font = Font.font("Helvetica", fontWeight, size)
+        graphics.fill = color
+        graphics.fillText("%.1f".format(damage), x, y)
     }
 }

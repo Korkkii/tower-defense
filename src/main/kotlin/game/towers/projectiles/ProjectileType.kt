@@ -10,6 +10,7 @@ import game.enemies.Enemy
 import game.find
 import javafx.scene.canvas.GraphicsContext
 import kotlin.math.pow
+import kotlin.random.Random
 
 typealias GraphicsFunction = (Projectile, GraphicsContext, GameState) -> Unit
 
@@ -35,6 +36,12 @@ class ProjectileType(
             ::drawProjectile,
             onScalingDamageHit(3.0, 2.0),
             { IncreasedDamageProperty(it.size) })
+        val critProjectile = ProjectileType(
+            2.0,
+            100.0,
+            ::drawProjectile,
+            onCritProjectileHit(3.0, 0.2)
+        )
     }
 }
 
@@ -82,6 +89,13 @@ fun onScalingDamageHit(initialDamage: Double, scaling: Double) =
         val damage = initialDamage * scaling.pow(modifier)
         target.takeDamage(damage, projectileProperties = projectile.properties)
     }
+
+fun onCritProjectileHit(baseDamage: Double, critChance: Double) = { projectile: Projectile, target: Enemy, _: GameState ->
+    val isCrit = Random.Default.nextDouble() < critChance
+    val critMultiplier = if (isCrit) CritProperty(2.0) else null
+    val properties = (projectile.properties + critMultiplier).filterNotNull()
+    target.takeDamage(baseDamage, projectileProperties = properties)
+}
 
 private fun enemiesWithinRange(enemies: List<Enemy>, position: Vector, range: Double): List<Enemy> {
     val rangeCircle = circle(position, range)

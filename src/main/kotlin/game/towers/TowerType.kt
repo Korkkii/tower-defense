@@ -92,6 +92,14 @@ data class TowerType(
             Color.LIGHTSKYBLUE,
             physicsComponentConstructor = { BuffOthersPhysicsComponent { AttackSpeedBoost(5.0, 0.30) } }
         )
+        private val critTower = TowerType(
+            "Critical strike tower",
+            50,
+            30.0,
+            1.0,
+            Color.DARKORANGE,
+            ShootingComponent.with(ProjectileType.critProjectile)
+        )
         /*
         * Towers
         * - X Fire
@@ -125,7 +133,8 @@ data class TowerType(
             nature,
             metal,
             blacksmith,
-            quickshot
+            quickshot,
+            critTower
         )
 
         /*

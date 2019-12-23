@@ -100,6 +100,14 @@ data class TowerType(
             Color.DARKORANGE,
             ShootingComponent.with(ProjectileType.critProjectile)
         )
+        private val steamTower = TowerType(
+            "Steam tower",
+            50,
+            30.0,
+            10.0,
+            Color.WHITESMOKE,
+            physicsComponentConstructor = { AreaEffectComponent(3.0, 6.0) }
+        )
         /*
         * Towers
         * - X Fire
@@ -134,7 +142,8 @@ data class TowerType(
             metal,
             blacksmith,
             quickshot,
-            critTower
+            critTower,
+            steamTower
         )
 
         /*
@@ -150,9 +159,9 @@ data class TowerType(
         *   - Light + X - Magic?
         *   - Light + nature - Transport X space backwards? No meaning in circle?
         *   - Nature + light - Life tower? No lives so what instead?
-        *   - Nature + metal - Critical strike?
+        *   - X Nature + metal - Critical strike?
         *   - Water + wind - Frost --> slow
-        *   - Water + fire - Steam tower --> AoE damage
+        *   - X Water + fire - Steam tower --> AoE damage
         *
         * TODO: triples
         *   - Metal + water + air - Rust -> add damage taken

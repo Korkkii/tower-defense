@@ -19,8 +19,7 @@ class ShootingComponent(
     private val projectileType: ProjectileType,
     private val onShoot: OnShootFunction
 ) : PhysicsComponent<Tower> {
-    var firingCooldown = 0.0
-        private set
+    private var firingCooldown = 0.0
 
     override fun update(entity: Tower, currentState: GameState, delta: Double) {
         firingCooldown -= delta

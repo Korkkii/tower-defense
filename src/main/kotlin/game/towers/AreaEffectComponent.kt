@@ -1,11 +1,15 @@
 package game.towers
 
+import game.AttackSpeedBoost
 import game.GameState
 import game.PhysicsComponent
+import game.towers.projectiles.ShootingTowerProperty
 import game.withinRangeOf
 
-class AreaEffectComponent(val areaEffectDamage: Double) : PhysicsComponent<Tower> {
-    private var firingCooldown = 0.0
+class AreaEffectComponent(areaEffectDamagePerSecond: Double, private val ticksPerSecond: Double) :
+    PhysicsComponent<Tower> {
+    private var firingCooldown = 1 / ticksPerSecond
+    private val damagePerTick = areaEffectDamagePerSecond / ticksPerSecond
 
     override fun update(entity: Tower, currentState: GameState, delta: Double) {
         val enemies = currentState.enemies
@@ -15,11 +19,11 @@ class AreaEffectComponent(val areaEffectDamage: Double) : PhysicsComponent<Tower
         val canFire = firingCooldown <= 0.0
 
         if (canFire) {
-            enemies.withinRangeOf(entity).forEach { it.takeDamage(areaEffectDamage) }
+            val towerProperty = ShootingTowerProperty(entity.statusEffects.snapshot())
+            enemies.withinRangeOf(entity)
+                .forEach { it.takeDamage(damagePerTick, projectileProperties = listOf(towerProperty)) }
+            val attackSpeedBoost = entity.statusEffects.find(AttackSpeedBoost::class)?.boostPercentage ?: 0.0
+            firingCooldown = 1 / (ticksPerSecond * (1 + attackSpeedBoost))
         }
-    }
-
-    companion object {
-        fun with(areaDamage: Double): () -> AreaEffectComponent = { AreaEffectComponent(areaDamage) }
     }
 }

@@ -2,12 +2,10 @@ package game
 
 import game.enemies.BossType
 import game.enemies.Enemy
-import game.enemies.EnemyType
 import game.enemies.EnemyType.Companion.waterBoss
 import game.towers.Tower
 import game.towers.TowerType
 import game.towers.projectiles.Projectile
-import ui.DamageText
 import ui.MouseHandler
 import kotlin.reflect.KClass
 
@@ -47,6 +45,7 @@ class MutableGameState {
                 // TODO create UI error message for "not enough money"
                 // Or maybe prevent trying to place in the first place?
                 if (playerMoney < towerType.cost) {
+                    GameState.notify(NotEnoughMoney)
                     tower.deleteTower()
                     return
                 }

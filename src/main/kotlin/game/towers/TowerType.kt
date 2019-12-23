@@ -134,7 +134,7 @@ data class TowerType(
         *  - New towers for
         *   - X Metal + fire - Blacksmith i.e. damage +% for others
         *   - Metal + X
-        *   - Wind + light - attack speed +% for others
+        *   - X Wind + light - Quickshot - attack speed +% for others
         *   - Wind + water - Chance for extra projectile? High pressure water something??
         *   - Fire + X - Shockwave hit? I.e. creates projectile to all enemies within range on hit
         *   - Fire + nature - do more damage on lower health %?

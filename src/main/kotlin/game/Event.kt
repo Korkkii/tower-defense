@@ -33,3 +33,4 @@ data class EnemyTakeDamageEvent(val enemy: Enemy, val damage: Double) : Event
 object WaveComplete : Event
 object EmptyClick : Event
 object GameEnded : Event
+object NotEnoughMoney: Event

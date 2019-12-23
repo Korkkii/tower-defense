@@ -4,16 +4,14 @@ import game.enemies.Enemy
 import game.GameEntity
 import game.GameState
 import game.Vector
-import game.find
 import game.towers.Tower
 import javafx.scene.canvas.GraphicsContext
-import kotlin.reflect.KClass
 
 class Projectile(
     val originEntity: GameEntity,
     val target: Enemy,
     val type: ProjectileType,
-    properties: List<ProjectileProperty?>
+    properties: List<AttackProperty?>
 ) : GameEntity(
     calculateStartingPosition(originEntity)
 ) {

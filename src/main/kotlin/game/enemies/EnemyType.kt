@@ -5,7 +5,7 @@ import game.BossStartEvent
 import game.GameState
 import game.PhysicsComponent
 import game.RegenBuff
-import game.SpeedBuff
+import game.SpeedChange
 import game.center
 import javafx.scene.paint.Color
 import kotlin.random.Random
@@ -108,10 +108,10 @@ open class EnemyType(
 }
 
 fun onHitAddSpeedBuff(enemy: Enemy, damageType: DamageType) {
-    val noSpeedBuff = !enemy.statusEffects.has(SpeedBuff::class)
+    val noSpeedBuff = !enemy.statusEffects.has(SpeedChange::class)
     val notOverTime = damageType !is OverTimeDamage
     if (noSpeedBuff && notOverTime)
-        enemy.statusEffects += SpeedBuff(2.0, 1.5)
+        enemy.statusEffects += SpeedChange(2.0, 1.5)
 }
 
 fun onHitSpawnClone(enemy: Enemy, damageType: DamageType) {

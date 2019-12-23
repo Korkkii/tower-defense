@@ -11,7 +11,7 @@ import game.board.PathSquare
 import game.fillCircle
 import game.find
 import game.towers.projectiles.CritProperty
-import game.towers.projectiles.ProjectileProperty
+import game.towers.projectiles.AttackProperty
 import game.towers.projectiles.ShootingTowerProperty
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
@@ -87,13 +87,13 @@ class Enemy(
     fun takeDamage(
         initialDamage: Double,
         damageType: DamageType = SingleHitDamage,
-        projectileProperties: List<ProjectileProperty> = listOf()
+        attackProperties: List<AttackProperty> = listOf()
     ) {
-        val totalDamage = calculateDamage(initialDamage, projectileProperties)
+        val totalDamage = calculateDamage(initialDamage, attackProperties)
         health -= totalDamage
 
         type.onDamage(this, damageType)
-        val isCrit = projectileProperties.find(CritProperty::class) != null
+        val isCrit = attackProperties.find(CritProperty::class) != null
         val damageEvent = EnemyTakeDamageEvent(this, totalDamage, isCrit)
         GameState.notify(damageEvent)
 
@@ -104,9 +104,9 @@ class Enemy(
     }
 }
 
-private fun calculateDamage(initialDamage: Double, projectileProperties: List<ProjectileProperty>): Double {
-    val towerStatuses = projectileProperties.find(ShootingTowerProperty::class)?.statusEffect
-    val critModifier = projectileProperties.find(CritProperty::class)?.damageModifier ?: 1.0
+private fun calculateDamage(initialDamage: Double, attackProperties: List<AttackProperty>): Double {
+    val towerStatuses = attackProperties.find(ShootingTowerProperty::class)?.statusEffect
+    val critModifier = attackProperties.find(CritProperty::class)?.damageModifier ?: 1.0
     val towerDamageModifiers = towerStatuses?.find(DamageBoost::class)?.boostPercentage ?: 0.0
     return initialDamage * (1 + towerDamageModifiers) * critModifier
 }

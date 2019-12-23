@@ -3,10 +3,18 @@ package game.towers
 import game.AttackSpeedBoost
 import game.GameState
 import game.PhysicsComponent
+import game.enemies.Enemy
+import game.towers.projectiles.AttackProperty
 import game.towers.projectiles.ShootingTowerProperty
 import game.withinRangeOf
 
-class AreaEffectComponent(areaEffectDamagePerSecond: Double, private val ticksPerSecond: Double) :
+typealias OnTick = (enemy: Enemy) -> Unit
+
+class AreaEffectComponent(
+    areaEffectDamagePerSecond: Double,
+    private val ticksPerSecond: Double,
+    private val onTick: OnTick = { _: Enemy -> }
+) :
     PhysicsComponent<Tower> {
     private var firingCooldown = 1 / ticksPerSecond
     private val damagePerTick = areaEffectDamagePerSecond / ticksPerSecond
@@ -20,8 +28,12 @@ class AreaEffectComponent(areaEffectDamagePerSecond: Double, private val ticksPe
 
         if (canFire) {
             val towerProperty = ShootingTowerProperty(entity.statusEffects.snapshot())
-            enemies.withinRangeOf(entity)
-                .forEach { it.takeDamage(damagePerTick, projectileProperties = listOf(towerProperty)) }
+            val properties = listOf(towerProperty)
+            enemies.withinRangeOf(entity).forEach {
+                it.takeDamage(damagePerTick, attackProperties = properties)
+                onTick(it)
+            }
+
             val attackSpeedBoost = entity.statusEffects.find(AttackSpeedBoost::class)?.boostPercentage ?: 0.0
             firingCooldown = 1 / (ticksPerSecond * (1 + attackSpeedBoost))
         }

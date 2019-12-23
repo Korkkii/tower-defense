@@ -19,7 +19,7 @@ class ProjectileType(
     val velocity: Double,
     val drawGraphics: GraphicsFunction,
     onHit: (Projectile, Enemy, GameState) -> Unit,
-    internal val propertyConstructor: (List<Enemy>) -> ProjectileProperty = { NoProperty }
+    internal val propertyConstructor: (List<Enemy>) -> AttackProperty = { NoProperty }
 ) {
     val physicsComponent = ProjectilePhysicsComponent(onHit)
 
@@ -46,17 +46,17 @@ class ProjectileType(
 }
 
 fun onSingleHit(damage: Double) = { projectile: Projectile, target: Enemy, _: GameState ->
-    target.takeDamage(damage, projectileProperties = projectile.properties)
+    target.takeDamage(damage, attackProperties = projectile.properties)
 }
 
 fun onSplashHit(damage: Double, splashRange: Double) = { projectile: Projectile, _: Enemy, currentState: GameState ->
     val splashedEnemies = enemiesWithinRange(currentState.enemies, projectile.position, splashRange)
-    splashedEnemies.forEach { it.takeDamage(damage, projectileProperties = projectile.properties) }
+    splashedEnemies.forEach { it.takeDamage(damage, attackProperties = projectile.properties) }
 }
 
 fun onBounceHit(damage: Double, bounceRange: Double, initialBounceAmount: Int) =
     onHit@{ projectile: Projectile, target: Enemy, currentState: GameState ->
-        target.takeDamage(damage, projectileProperties = projectile.properties)
+        target.takeDamage(damage, attackProperties = projectile.properties)
         val bounceProperty = projectile.properties.find(BounceProperty::class)
         val bouncesLeft = bounceProperty?.bouncesLeft ?: initialBounceAmount
 
@@ -78,7 +78,7 @@ fun onBounceHit(damage: Double, bounceRange: Double, initialBounceAmount: Int) =
     }
 
 fun onDoTHit(initialDamage: Double, damagePerSecond: Double, ticksPerSecond: Double) = { projectile: Projectile, target: Enemy, _: GameState ->
-    target.takeDamage(initialDamage, projectileProperties = projectile.properties)
+    target.takeDamage(initialDamage, attackProperties = projectile.properties)
     target.statusEffects += DamageOverTime(damagePerSecond, 5.0, ticksPerSecond)
 }
 
@@ -87,14 +87,14 @@ fun onScalingDamageHit(initialDamage: Double, scaling: Double) =
         val damageProperty = projectile.properties.find(IncreasedDamageProperty::class)
         val modifier = damageProperty?.enemyCount ?: 1
         val damage = initialDamage * scaling.pow(modifier)
-        target.takeDamage(damage, projectileProperties = projectile.properties)
+        target.takeDamage(damage, attackProperties = projectile.properties)
     }
 
 fun onCritProjectileHit(baseDamage: Double, critChance: Double) = { projectile: Projectile, target: Enemy, _: GameState ->
     val isCrit = Random.Default.nextDouble() < critChance
     val critMultiplier = if (isCrit) CritProperty(2.0) else null
     val properties = (projectile.properties + critMultiplier).filterNotNull()
-    target.takeDamage(baseDamage, projectileProperties = properties)
+    target.takeDamage(baseDamage, attackProperties = properties)
 }
 
 private fun enemiesWithinRange(enemies: List<Enemy>, position: Vector, range: Double): List<Enemy> {

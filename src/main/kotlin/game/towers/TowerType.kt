@@ -4,6 +4,7 @@ import game.AttackSpeedBoost
 import game.DamageBoost
 import game.GameState
 import game.PhysicsComponent
+import game.SpeedChange
 import game.board.BuildAreaSquare
 import game.enemies.BossType
 import game.towers.projectiles.ProjectileType
@@ -108,6 +109,18 @@ data class TowerType(
             Color.WHITESMOKE,
             physicsComponentConstructor = { AreaEffectComponent(3.0, 6.0) }
         )
+        private val frostTower = TowerType(
+            "Frost tower",
+            50,
+            30.0,
+            10.0,
+            Color.WHITESMOKE,
+            physicsComponentConstructor = {
+                AreaEffectComponent(1.0, 6.0) { enemy ->
+                    enemy.statusEffects += SpeedChange(0.7, 2.0)
+                }
+            }
+        )
         /*
         * Towers
         * - X Fire
@@ -143,7 +156,8 @@ data class TowerType(
             blacksmith,
             quickshot,
             critTower,
-            steamTower
+            steamTower,
+            frostTower
         )
 
         /*
@@ -160,7 +174,7 @@ data class TowerType(
         *   - Light + nature - Transport X space backwards? No meaning in circle?
         *   - Nature + light - Life tower? No lives so what instead?
         *   - X Nature + metal - Critical strike?
-        *   - Water + wind - Frost --> slow
+        *   - X Water + wind - Frost --> slow
         *   - X Water + fire - Steam tower --> AoE damage
         *
         * TODO: triples

@@ -15,6 +15,8 @@ class StatusEffects<T : GameEntity> {
     fun <U : StatusEffect<T>> find(type: KClass<U>): U? = currentEffects.find(type)
 
     operator fun <U : StatusEffect<T>> plusAssign(effect: U) {
+        val foundExisting = currentEffects.find(effect::class)
+        foundExisting?.let { currentEffects -= foundExisting }
         currentEffects += effect
     }
 
@@ -62,7 +64,7 @@ class DamageOverTime(private val damagePerSecond: Double, duration: Double, priv
     }
 }
 
-class SpeedBuff(val speedScaling: Double, duration: Double) : StatusEffect<Enemy>(duration)
+class SpeedChange(val speedScaling: Double, duration: Double) : StatusEffect<Enemy>(duration)
 
 class RegenBuff(private val healthPerSecond: Double, duration: Double) : StatusEffect<Enemy>(duration) {
     override fun onUpdate(entity: Enemy, currentState: GameState, delta: Double) {

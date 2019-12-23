@@ -8,12 +8,12 @@ import game.StunDebuff
 import game.center
 import game.enemies.Enemy
 import game.towers.projectiles.BlindedProperty
-import game.towers.projectiles.ProjectileProperty
+import game.towers.projectiles.AttackProperty
 import game.towers.projectiles.ProjectileType
 import game.towers.projectiles.ShootingTowerProperty
 import kotlin.math.min
 
-typealias OnShootFunction = (Tower, List<Enemy>, ProjectileType, List<ProjectileProperty?>) -> Unit
+typealias OnShootFunction = (Tower, List<Enemy>, ProjectileType, List<AttackProperty?>) -> Unit
 
 class ShootingComponent(
     private val projectileType: ProjectileType,
@@ -80,7 +80,7 @@ class AcceleratingShootingComponent constructor(
         entity: Tower,
         enemiesWithinRange: List<Enemy>,
         projectileType: ProjectileType,
-        properties: List<ProjectileProperty?>
+        properties: List<AttackProperty?>
     ) {
         onShoot(entity, enemiesWithinRange, projectileType, properties)
 

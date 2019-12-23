@@ -121,6 +121,14 @@ data class TowerType(
                 }
             }
         )
+        private val photosynthesis = TowerType(
+            "Photosynthesis tower",
+            50,
+            30.0,
+            1.0,
+            Color.WHITESMOKE,
+            ShootingComponent.with(ProjectileType.missingHpProjectile)
+        )
         /*
         * Towers
         * - X Fire
@@ -157,7 +165,8 @@ data class TowerType(
             quickshot,
             critTower,
             steamTower,
-            frostTower
+            frostTower,
+            photosynthesis
         )
 
         /*
@@ -173,12 +182,16 @@ data class TowerType(
         *   - Light + X - Magic?
         *   - Light + nature - Transport X space backwards? No meaning in circle?
         *   - Nature + light - Life tower? No lives so what instead?
-        *   - X Nature + metal - Critical strike?
+        *   - X Nature + metal - Critical strike?e
         *   - X Water + wind - Frost --> slow
         *   - X Water + fire - Steam tower --> AoE damage
         *
         * TODO: triples
         *   - Metal + water + air - Rust -> add damage taken
+        *
+        *
+        * - Gold tower
+        * -
         *
         * */
 

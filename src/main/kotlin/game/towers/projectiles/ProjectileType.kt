@@ -42,6 +42,12 @@ class ProjectileType(
             ::drawProjectile,
             onCritProjectileHit(3.0, 0.2)
         )
+        val missingHpProjectile = ProjectileType(
+            2.0,
+            100.0,
+            ::drawProjectile,
+            onEnemyMissingHpScaledHit(3.0, 2.0)
+        )
     }
 }
 
@@ -77,10 +83,11 @@ fun onBounceHit(damage: Double, bounceRange: Double, initialBounceAmount: Int) =
         GameState.notify(NewProjectile(bounceProjectile))
     }
 
-fun onDoTHit(initialDamage: Double, damagePerSecond: Double, ticksPerSecond: Double) = { projectile: Projectile, target: Enemy, _: GameState ->
-    target.takeDamage(initialDamage, attackProperties = projectile.properties)
-    target.statusEffects += DamageOverTime(damagePerSecond, 5.0, ticksPerSecond)
-}
+fun onDoTHit(initialDamage: Double, damagePerSecond: Double, ticksPerSecond: Double) =
+    { projectile: Projectile, target: Enemy, _: GameState ->
+        target.takeDamage(initialDamage, attackProperties = projectile.properties)
+        target.statusEffects += DamageOverTime(damagePerSecond, 5.0, ticksPerSecond)
+    }
 
 fun onScalingDamageHit(initialDamage: Double, scaling: Double) =
     { projectile: Projectile, target: Enemy, _: GameState ->
@@ -90,12 +97,20 @@ fun onScalingDamageHit(initialDamage: Double, scaling: Double) =
         target.takeDamage(damage, attackProperties = projectile.properties)
     }
 
-fun onCritProjectileHit(baseDamage: Double, critChance: Double) = { projectile: Projectile, target: Enemy, _: GameState ->
-    val isCrit = Random.Default.nextDouble() < critChance
-    val critMultiplier = if (isCrit) CritProperty(2.0) else null
-    val properties = (projectile.properties + critMultiplier).filterNotNull()
-    target.takeDamage(baseDamage, attackProperties = properties)
-}
+fun onCritProjectileHit(baseDamage: Double, critChance: Double) =
+    { projectile: Projectile, target: Enemy, _: GameState ->
+        val isCrit = Random.Default.nextDouble() < critChance
+        val critMultiplier = if (isCrit) CritProperty(2.0) else null
+        val properties = (projectile.properties + critMultiplier).filterNotNull()
+        target.takeDamage(baseDamage, attackProperties = properties)
+    }
+
+fun onEnemyMissingHpScaledHit(baseDamage: Double, maximumScaling: Double) =
+    { projectile: Projectile, target: Enemy, _: GameState ->
+        val scalingModifier = target.health / target.maxHealth * maximumScaling
+        val totalDamage = scalingModifier * baseDamage
+        target.takeDamage(totalDamage, attackProperties = projectile.properties)
+    }
 
 private fun enemiesWithinRange(enemies: List<Enemy>, position: Vector, range: Double): List<Enemy> {
     val rangeCircle = circle(position, range)

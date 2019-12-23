@@ -1,5 +1,7 @@
 package game.towers
 
+import game.AttackSpeedBoost
+import game.DamageBoost
 import game.GameState
 import game.PhysicsComponent
 import game.board.BuildAreaSquare
@@ -77,10 +79,18 @@ data class TowerType(
         private val blacksmith = TowerType(
             "Blacksmith tower",
             50,
-            50.0,
+            30.0,
             1.0,
             Color.DARKRED,
-            physicsComponentConstructor = { BlacksmithPhysicsComponent() }
+            physicsComponentConstructor = { BuffOthersPhysicsComponent { DamageBoost(5.0, 0.30) } }
+        )
+        private val quickshot = TowerType(
+            "Quickshot tower",
+            50,
+            30.0,
+            1.0,
+            Color.LIGHTSKYBLUE,
+            physicsComponentConstructor = { BuffOthersPhysicsComponent { AttackSpeedBoost(5.0, 0.30) } }
         )
         /*
         * Towers
@@ -114,17 +124,18 @@ data class TowerType(
             water,
             nature,
             metal,
-            blacksmith
+            blacksmith,
+            quickshot
         )
 
         /*
         * TODO:
         *  - 3 levels for each basic tower
         *  - New towers for
-        *   - X Metal + fire - Blacksmith i.e. damage +%
+        *   - X Metal + fire - Blacksmith i.e. damage +% for others
         *   - Metal + X
-        *   - Wind + light - attack speed +%
-        *   - Wind + water - Chance for extra projectile?
+        *   - Wind + light - attack speed +% for others
+        *   - Wind + water - Chance for extra projectile? High pressure water something??
         *   - Fire + X - Shockwave hit? I.e. creates projectile to all enemies within range on hit
         *   - Fire + nature - do more damage on lower health %?
         *   - Light + X - Magic?

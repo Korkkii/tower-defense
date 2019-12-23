@@ -1,5 +1,6 @@
 package game.towers
 
+import game.AttackSpeedBoost
 import game.BlindDebuff
 import game.GameState
 import game.PhysicsComponent
@@ -40,7 +41,7 @@ class ShootingComponent(
 
             onShoot(entity, enemiesWithinRange, projectileType, properties)
 
-            val secondsUntilNext = 1 / entity.fireRate
+            val secondsUntilNext = 1 / calculateFireRate(entity.fireRate, entity)
             firingCooldown = secondsUntilNext
         }
     }
@@ -61,25 +62,43 @@ class ShootingComponent(
     }
 }
 
+fun calculateFireRate(fireRate: Double, entity: Tower): Double {
+    val attackSpeedModifier = entity.statusEffects.find(AttackSpeedBoost::class)?.boostPercentage ?: 0.0
+    return fireRate + attackSpeedModifier
+}
+
 class AcceleratingShootingComponent constructor(
     projectileType: ProjectileType,
-    onShoot: OnShootFunction
+    private val onShoot: OnShootFunction
 ) : PhysicsComponent<Tower> {
-    private var shootingComponent = ShootingComponent(projectileType, onShoot)
-    private var timerCooldown = 2.0
-    private var acceleratedAttackTimer = timerCooldown
+    private val shootingComponent = ShootingComponent(projectileType, ::acceleratingOnShoot)
+    private val timerCooldown = 2.0
+    private var acceleratedAttackResetTimer = timerCooldown
+    private val maxAcceleratedFireRate = 5.0
+
+    // TODO: Convert to use attack speed boost status effect instead of modifying fire rate var? ---> less mutable
+    private fun acceleratingOnShoot(
+        entity: Tower,
+        enemiesWithinRange: List<Enemy>,
+        projectileType: ProjectileType,
+        properties: List<ProjectileProperty?>
+    ) {
+        onShoot(entity, enemiesWithinRange, projectileType, properties)
+
+        acceleratedAttackResetTimer = timerCooldown
+        val maxFireRate = calculateFireRate(maxAcceleratedFireRate, entity)
+        val acceleratedFireRate = min(entity.fireRate * 1.2, maxFireRate)
+        entity.fireRate = acceleratedFireRate
+    }
 
     override fun update(entity: Tower, currentState: GameState, delta: Double) {
         shootingComponent.update(entity, currentState, delta)
 
-        acceleratedAttackTimer -= delta
-        val didFire = shootingComponent.firingCooldown == (1 / entity.fireRate)
-        if (didFire) {
-            acceleratedAttackTimer = timerCooldown
-            val acceleratedFireRate = min(entity.fireRate * 1.2, 5.0)
-            entity.fireRate = acceleratedFireRate
-        } else if (acceleratedAttackTimer <= 0.0) {
-            entity.fireRate = entity.type.baseFireRate
+        acceleratedAttackResetTimer -= delta
+
+        if (acceleratedAttackResetTimer <= 0.0) {
+            val resettedFireRate = calculateFireRate(entity.type.baseFireRate, entity)
+            entity.fireRate = resettedFireRate
         }
     }
 }

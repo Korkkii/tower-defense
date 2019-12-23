@@ -49,7 +49,8 @@ open class StatusEffect<T : GameEntity>(private var duration: Double) {
     }
 }
 
-class DamageOverTime(private val damagePerSecond: Double, duration: Double, private val ticksPerSecond: Double) : StatusEffect<Enemy>(duration) {
+class DamageOverTime(private val damagePerSecond: Double, duration: Double, private val ticksPerSecond: Double) :
+    StatusEffect<Enemy>(duration) {
     private var cooldown = 1 / ticksPerSecond
     override fun onUpdate(entity: Enemy, currentState: GameState, delta: Double) {
         cooldown -= delta
@@ -75,3 +76,5 @@ class StunDebuff(duration: Double) : StatusEffect<Tower>(duration)
 class BlindDebuff(duration: Double) : StatusEffect<Tower>(duration)
 
 class DamageBoost(duration: Double, val boostPercentage: Double) : StatusEffect<Tower>(duration)
+
+class AttackSpeedBoost(duration: Double, val boostPercentage: Double) : StatusEffect<Tower>(duration)

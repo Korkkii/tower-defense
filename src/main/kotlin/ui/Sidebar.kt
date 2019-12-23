@@ -19,6 +19,7 @@ class Sidebar :
     private val towerButtons = TowerButtons()
     private val towerInfo = TowerInfo()
     private val bossButtons = BossButtons()
+    @Suppress("unused")
     private val animationRender = AnimationRender
 
     init {

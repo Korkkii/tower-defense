@@ -4,6 +4,7 @@ import game.GameState
 import game.GameStateChanged
 import game.UpgradeClicked
 import game.towers.TowerType
+import game.towers.calculateFireRate
 import javafx.geometry.Insets
 import javafx.scene.control.Button
 import javafx.scene.control.Label
@@ -22,7 +23,13 @@ class TowerInfo : VBox() {
         GameState.subscribe(GameStateChanged::class) {
             // TODO: Better status info instead of class names
             val text =
-                it.selectedTower?.let { tower -> "Tower range: ${tower.type.range}\nTower status: ${tower.statusEffects.snapshot()}" }
+                it.selectedTower?.let { tower ->
+                    val range = "Tower range: ${tower.type.range}"
+                    val statusEffects = "Tower status: ${tower.statusEffects.snapshot()}"
+                    val totalFireRate = calculateFireRate(tower.fireRate, tower)
+                    val attackSpeed = "Tower attack speed: ${totalFireRate.toExactString()}"
+                    listOf(range, attackSpeed, statusEffects).joinToString("\n")
+                }
                     ?: "No tower selected"
             range.text = text
         }
@@ -31,6 +38,8 @@ class TowerInfo : VBox() {
         children += listOf(range, upgrade)
     }
 }
+
+private fun Double.toExactString() = this.toBigDecimal().toPlainString()
 
 class Upgrades : FlowPane() {
     init {

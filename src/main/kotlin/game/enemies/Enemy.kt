@@ -19,7 +19,7 @@ import javafx.scene.shape.Circle
 
 class Enemy(
     private val path: List<PathSquare>,
-    val type: EnemyType,
+    val type: EnemyInfo,
     level: Int,
     healthPercent: Double = 1.0,
     currentTarget: PathSquare? = null,

@@ -17,7 +17,7 @@ class MutableGameState {
     var currentWave: Wave? = null
         private set
     val publisher = Publisher()
-    val maxEnemies = 20
+    private val maxEnemies = 20
     var playerMoney = 300
         private set
 
@@ -42,8 +42,6 @@ class MutableGameState {
 
                 state = Idle
 
-                // TODO create UI error message for "not enough money"
-                // Or maybe prevent trying to place in the first place?
                 if (playerMoney < towerType.cost) {
                     GameState.notify(NotEnoughMoney)
                     tower.deleteTower()

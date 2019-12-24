@@ -35,7 +35,7 @@ class BuildAreaSquare(x: Double, y: Double, width: Double, height: Double) :
     val center = Vector(x + 0.5 * width, y + 0.5 * height)
     var tower: Tower? = null
 
-    fun withinArea(position: Vector): Boolean {
+    private fun withinArea(position: Vector): Boolean {
         return this.contains(position.x, position.y)
     }
 

@@ -114,7 +114,7 @@ data class TowerType(
             50,
             30.0,
             10.0,
-            Color.WHITESMOKE,
+            Color.LIGHTSTEELBLUE,
             physicsComponentConstructor = {
                 AreaEffectComponent(1.0, 6.0) { enemy ->
                     enemy.statusEffects += SpeedChange(0.7, 2.0)
@@ -126,7 +126,7 @@ data class TowerType(
             50,
             30.0,
             1.0,
-            Color.WHITESMOKE,
+            Color.FORESTGREEN,
             ShootingComponent.with(ProjectileType.missingHpProjectile)
         )
         /*
@@ -191,7 +191,13 @@ data class TowerType(
         *
         *
         * - Gold tower
-        * -
+        * - Sniper?
+        *   - Shoots as long as a target is dead, regardless of range
+        * - Gain damage buff per target killed in range
+        * - Stun tower
+        * - Explosion tower, gather stacks to target which explode on target's death
+        * - Longer range hit, larger damage
+        * - Quake - on hit causes shockwave which hits neighbours
         *
         * */
 

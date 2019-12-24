@@ -4,7 +4,7 @@ import game.AttackSpeedBoost
 import game.BlindDebuff
 import game.GameState
 import game.PhysicsComponent
-import game.StunDebuff
+import game.StunTowerDebuff
 import game.center
 import game.enemies.Enemy
 import game.towers.projectiles.BlindedProperty
@@ -24,7 +24,7 @@ class ShootingComponent(
     override fun update(entity: Tower, currentState: GameState, delta: Double) {
         firingCooldown -= delta
 
-        if (entity.statusEffects.has(StunDebuff::class)) return
+        if (entity.statusEffects.has(StunTowerDebuff::class)) return
 
         val enemies = currentState.enemies
         if (enemies.isEmpty()) return

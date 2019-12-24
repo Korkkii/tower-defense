@@ -5,6 +5,7 @@ import game.circle
 import game.GameEntity
 import game.GameState
 import game.PhysicsComponent
+import game.StunEnemyDebuff
 import game.Vector
 import game.towers.Tower
 
@@ -23,6 +24,8 @@ class BlastBossPhysicsComponent(
     private var timeUntilNext = blastCooldown
 
     override fun update(entity: Enemy, currentState: GameState, delta: Double) {
+        if (entity.statusEffects.has(StunEnemyDebuff::class)) return
+
         movementComponent.update(entity, currentState, delta)
 
         timeUntilNext -= delta

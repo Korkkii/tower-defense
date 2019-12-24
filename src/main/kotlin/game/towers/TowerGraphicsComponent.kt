@@ -2,7 +2,7 @@ package game.towers
 
 import game.GameState
 import game.GraphicsComponent
-import game.StunDebuff
+import game.StunTowerDebuff
 import game.TowerSelected
 import game.strokeCircle
 import javafx.scene.canvas.GraphicsContext
@@ -25,7 +25,7 @@ class TowerGraphicsComponent : GraphicsComponent<Tower> {
         if (stateT is TowerSelected && stateT.tower == entity)
             graphics.strokeCircle(entity.rangeCircle)
 
-        if (entity.statusEffects.has(StunDebuff::class)) {
+        if (entity.statusEffects.has(StunTowerDebuff::class)) {
             graphics.stroke = Color.BLUEVIOLET
             val entitySquare = entity.square
             graphics.strokeLine(

@@ -3,11 +3,14 @@ package game.enemies
 import game.GameState
 import game.PhysicsComponent
 import game.SpeedChange
+import game.StunEnemyDebuff
 import game.center
 import game.times
 
 class EnemyMovementComponent : PhysicsComponent<Enemy> {
     override fun update(entity: Enemy, currentState: GameState, delta: Double) {
+        if (entity.statusEffects.has(StunEnemyDebuff::class)) return
+
         val target = entity.target
         val targetPosition = target.waypoint.center()
         val speedBuff = entity.statusEffects.find(SpeedChange::class)

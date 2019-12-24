@@ -75,7 +75,9 @@ class RegenBuff(private val healthPerSecond: Double, duration: Double) : StatusE
 
 class DamageTakenChange(val damageScaling: Double, duration: Double): StatusEffect<Enemy>(duration)
 
-class StunDebuff(duration: Double) : StatusEffect<Tower>(duration)
+class StunEnemyDebuff(duration: Double) : StatusEffect<Enemy>(duration)
+
+class StunTowerDebuff(duration: Double) : StatusEffect<Tower>(duration)
 
 class BlindDebuff(duration: Double) : StatusEffect<Tower>(duration)
 

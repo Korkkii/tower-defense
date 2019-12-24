@@ -6,7 +6,7 @@ import game.DeleteEntity
 import game.GameEntity
 import game.GameState
 import game.StatusEffect
-import game.StunDebuff
+import game.StunTowerDebuff
 import game.Vector
 import game.fillCircle
 import game.towers.Tower
@@ -41,7 +41,7 @@ open class BlastEffectEntity protected constructor(
 }
 
 class StunEffect(towersNear: List<Tower>, maxRadius: Double, position: Vector) :
-    BlastEffectEntity(towersNear, maxRadius, ::StunDebuff, Color.ORANGERED, position)
+    BlastEffectEntity(towersNear, maxRadius, ::StunTowerDebuff, Color.ORANGERED, position)
 
 class FlashEffect(towersNear: List<Tower>, maxRadius: Double, position: Vector) :
     BlastEffectEntity(towersNear, maxRadius, ::BlindDebuff, Color.LIGHTYELLOW.withOpacity(0.4), position)

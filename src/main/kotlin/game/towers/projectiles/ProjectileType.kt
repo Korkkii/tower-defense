@@ -4,6 +4,7 @@ import game.DamageOverTime
 import game.DamageTakenChange
 import game.GameState
 import game.NewProjectile
+import game.StunEnemyDebuff
 import game.Vector
 import game.circle
 import game.contains
@@ -53,6 +54,12 @@ class ProjectileType(
             100.0,
             ::drawProjectile,
             onDebuffHit(1.0)
+        )
+        val stunProjectile = ProjectileType(
+            2.0,
+            100.0,
+            ::drawProjectile,
+            onStunHit(1.0, 1.0)
         )
     }
 }
@@ -122,6 +129,12 @@ fun onDebuffHit(damage: Double) =
     { projectile: Projectile, target: Enemy, _: GameState ->
         target.takeDamage(damage, attackProperties = projectile.properties)
         target.statusEffects += DamageTakenChange(2.0, 2.0)
+    }
+
+fun onStunHit(damage: Double, stunDuration: Double) =
+    { projectile: Projectile, target: Enemy, _: GameState ->
+        target.takeDamage(damage, attackProperties = projectile.properties)
+        target.statusEffects += StunEnemyDebuff(stunDuration)
     }
 
 private fun enemiesWithinRange(enemies: List<Enemy>, position: Vector, range: Double): List<Enemy> {

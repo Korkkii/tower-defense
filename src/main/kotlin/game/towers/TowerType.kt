@@ -137,6 +137,14 @@ data class TowerType(
             Color.FIREBRICK,
             ShootingComponent.with(ProjectileType.damageTakenDebuffProjectile)
         )
+        private val iceberg = TowerType(
+            "Iceberg tower",
+            50,
+            30.0,
+            1.0,
+            Color.BLUEVIOLET,
+            ShootingComponent.with(ProjectileType.stunProjectile)
+        )
         /*
         * Towers
         * - X Fire
@@ -175,7 +183,8 @@ data class TowerType(
             steamTower,
             frostTower,
             photosynthesis,
-            rust // TODO: Prefer targets without debuff?
+            rust, // TODO: Prefer targets without debuff?
+            iceberg
         )
 
         /*

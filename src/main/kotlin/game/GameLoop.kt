@@ -29,20 +29,14 @@ class GameLoop(private val board: GameBoard, private val canvas: Canvas, scaleRa
         val gameState = GameState.instance
 
         board.update(gameState, inSeconds)
-        gameState.enemies.forEach { it.update(gameState, inSeconds) }
-        gameState.towers.forEach { it.update(gameState, inSeconds) }
-        gameState.projectiles.forEach {
-            it.update(gameState, inSeconds)
-        }
-        gameState.entities.forEach { it.update(gameState, inSeconds) }
+        val updatableEntities = listOf(gameState.enemies, gameState.towers, gameState.projectiles, gameState.entities).flatten()
+        updatableEntities.forEach { it.update(gameState, inSeconds) }
+
         gameState.currentWave?.update(inSeconds)
         gameState.commit()
 
         board.draw(graphicsContext, gameState)
-        gameState.enemies.forEach { it.draw(canvas.graphicsContext2D, gameState) }
-        gameState.towers.forEach { it.draw(canvas.graphicsContext2D, gameState) }
-        gameState.projectiles.forEach { it.draw(canvas.graphicsContext2D, gameState) }
-        gameState.entities.forEach { it.draw(canvas.graphicsContext2D, gameState) }
+        updatableEntities.forEach { it.draw(canvas.graphicsContext2D, gameState) }
 
         previousCall = now
     }

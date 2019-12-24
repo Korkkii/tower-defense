@@ -25,11 +25,10 @@ class ProjectileType(
 
     companion object {
         val singleHitProjectile = ProjectileType(2.0, 100.0, ::drawProjectile, onSingleHit(3.0))
-        val singleHit2Projectile = ProjectileType(2.0, 100.0, ::drawProjectile, onSingleHit(5.0))
         val splashProjectile = ProjectileType(2.0, 100.0, ::drawProjectile, onSplashHit(3.0, 25.0))
         val lightProjectile = ProjectileType(0.5, 300.0, ::drawStraightLine, onSingleHit(2.0))
         val bounceProjectile = ProjectileType(1.3, 200.0, ::drawProjectile, onBounceHit(2.5, 25.0, 3))
-        val applyDoTProjectile = ProjectileType(2.0, 100.0, ::drawProjectile, onDoTHit(2.0, 5.0, 2.0))
+        val applyDoTProjectile = ProjectileType(2.0, 100.0, ::drawProjectile, onDoTHit(2.0, 5.0, 8.0))
         val damagePerCreepProjectile = ProjectileType(
             2.0,
             100.0,

@@ -129,6 +129,14 @@ data class TowerType(
             Color.FORESTGREEN,
             ShootingComponent.with(ProjectileType.missingHpProjectile)
         )
+        private val rust = TowerType(
+            "Rust tower",
+            50,
+            30.0,
+            1.0,
+            Color.FIREBRICK,
+            ShootingComponent.with(ProjectileType.damageTakenDebuffProjectile)
+        )
         /*
         * Towers
         * - X Fire
@@ -166,7 +174,8 @@ data class TowerType(
             critTower,
             steamTower,
             frostTower,
-            photosynthesis
+            photosynthesis,
+            rust // TODO: Prefer targets without debuff?
         )
 
         /*
@@ -187,14 +196,17 @@ data class TowerType(
         *   - X Water + fire - Steam tower --> AoE damage
         *
         * TODO: triples
-        *   - Metal + water + air - Rust -> add damage taken
+        *   - Metal + water + wind - Rust -> add damage taken
+        *   - Wind + Light + Water - Iceberg -> Stun
+        *   - Fire + nature + metal - Explosion -> gather stacks to target which explode on target's death
+        *   - Light + Fire + Nature - Gold -> Extra gold from kills
+        *
         *
         *
         * - Gold tower
         * - Sniper?
         *   - Shoots as long as a target is dead, regardless of range
         * - Gain damage buff per target killed in range
-        * - Stun tower
         * - Explosion tower, gather stacks to target which explode on target's death
         * - Longer range hit, larger damage
         * - Quake - on hit causes shockwave which hits neighbours

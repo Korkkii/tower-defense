@@ -1,6 +1,7 @@
 package game.towers.projectiles
 
 import game.DamageOverTime
+import game.DamageTakenChange
 import game.GameState
 import game.NewProjectile
 import game.Vector
@@ -46,6 +47,12 @@ class ProjectileType(
             100.0,
             ::drawProjectile,
             onEnemyMissingHpScaledHit(3.0, 2.0)
+        )
+        val damageTakenDebuffProjectile = ProjectileType(
+            2.0,
+            100.0,
+            ::drawProjectile,
+            onDebuffHit(1.0)
         )
     }
 }
@@ -109,6 +116,12 @@ fun onEnemyMissingHpScaledHit(baseDamage: Double, maximumScaling: Double) =
         val scalingModifier = target.health / target.maxHealth * maximumScaling
         val totalDamage = scalingModifier * baseDamage
         target.takeDamage(totalDamage, attackProperties = projectile.properties)
+    }
+
+fun onDebuffHit(damage: Double) =
+    { projectile: Projectile, target: Enemy, _: GameState ->
+        target.takeDamage(damage, attackProperties = projectile.properties)
+        target.statusEffects += DamageTakenChange(2.0, 2.0)
     }
 
 private fun enemiesWithinRange(enemies: List<Enemy>, position: Vector, range: Double): List<Enemy> {

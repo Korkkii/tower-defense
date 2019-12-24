@@ -1,6 +1,7 @@
 package game.enemies
 
 import game.DamageBoost
+import game.DamageTakenChange
 import game.EnemyDefeated
 import game.EnemyTakeDamageEvent
 import game.GameEntity
@@ -89,7 +90,7 @@ class Enemy(
         damageType: DamageType = SingleHitDamage,
         attackProperties: List<AttackProperty> = listOf()
     ) {
-        val totalDamage = calculateDamage(initialDamage, attackProperties)
+        val totalDamage = calculateDamage(initialDamage, attackProperties, statusEffects)
         health -= totalDamage
 
         type.onDamage(this, damageType)
@@ -104,11 +105,12 @@ class Enemy(
     }
 }
 
-private fun calculateDamage(initialDamage: Double, attackProperties: List<AttackProperty>): Double {
+private fun calculateDamage(initialDamage: Double, attackProperties: List<AttackProperty>, statusEffects: StatusEffects<Enemy>): Double {
     val towerStatuses = attackProperties.find(ShootingTowerProperty::class)?.statusEffect
     val critModifier = attackProperties.find(CritProperty::class)?.damageModifier ?: 1.0
     val towerDamageModifiers = towerStatuses?.find(DamageBoost::class)?.boostPercentage ?: 0.0
-    return initialDamage * (1 + towerDamageModifiers) * critModifier
+    val damageTakenModifier = statusEffects.find(DamageTakenChange::class)?.damageScaling ?: 1.0
+    return initialDamage * (1 + towerDamageModifiers) * critModifier * damageTakenModifier
 }
 
 private fun calculateStartingPosition(path: List<PathSquare>): Vector {

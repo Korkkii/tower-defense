@@ -60,7 +60,10 @@ class MutableGameState {
             }
             is EnemyDefeated -> {
                 val type = event.enemy.type
-                playerMoney += type.enemyPrice
+                val shooter = event.shooter
+                val priceModifier = if (shooter?.type == TowerType.gold) 2 else 1
+                val price = priceModifier * type.enemyPrice
+                playerMoney += price
                 if (type is BossType) {
                     val isWaterBoss = type == waterBoss
                     val waterBossesStillLeft = enemies.any { it.type == waterBoss }

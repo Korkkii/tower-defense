@@ -4,7 +4,6 @@ import game.AttackSpeedBoost
 import game.GameState
 import game.PhysicsComponent
 import game.enemies.Enemy
-import game.towers.projectiles.AttackProperty
 import game.towers.projectiles.ShootingTowerProperty
 import game.withinRangeOf
 
@@ -27,7 +26,7 @@ class AreaEffectComponent(
         val canFire = firingCooldown <= 0.0
 
         if (canFire) {
-            val towerProperty = ShootingTowerProperty(entity.statusEffects.snapshot())
+            val towerProperty = ShootingTowerProperty(entity, entity.statusEffects.snapshot())
             val properties = listOf(towerProperty)
             enemies.withinRangeOf(entity).forEach {
                 it.takeDamage(damagePerTick, attackProperties = properties)

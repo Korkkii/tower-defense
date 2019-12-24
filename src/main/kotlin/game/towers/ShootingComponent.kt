@@ -35,7 +35,7 @@ class ShootingComponent(
         if (enemiesWithinRange.isNotEmpty() && canFire) {
             val projectileProperty = projectileType.propertyConstructor(enemiesWithinRange)
             val blindProperty = if (entity.statusEffects.has(BlindDebuff::class)) BlindedProperty(0.3) else null
-            val towerProperty = ShootingTowerProperty(entity.statusEffects.snapshot())
+            val towerProperty = ShootingTowerProperty(entity, entity.statusEffects.snapshot())
             val properties = listOf(projectileProperty, blindProperty, towerProperty)
 
             onShoot(entity, enemiesWithinRange, projectileType, properties)

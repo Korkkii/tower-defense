@@ -70,6 +70,7 @@ class ProjectileType(
             ::drawProjectile,
             onDebuffHit(2.0) { ExplosionDebuff(3.0) }
         )
+        val goldProjectile = ProjectileType(2.0, 100.0, ::drawProjectile, onSingleHit(7.0))
     }
 }
 

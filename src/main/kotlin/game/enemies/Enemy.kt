@@ -110,7 +110,9 @@ class Enemy(
                 val blastEffect = ExplosionEffect(position, 25.0, it)
                 GameState.notify(AddEntity(blastEffect))
             }
-            GameState.notify(EnemyDefeated(this))
+
+            val shootingTower = attackProperties.find(ShootingTowerProperty::class)?.tower
+            GameState.notify(EnemyDefeated(this, shootingTower))
         }
     }
 }

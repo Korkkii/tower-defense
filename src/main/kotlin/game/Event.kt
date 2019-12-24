@@ -20,7 +20,7 @@ data class BossStartEvent(
 data class PlaceTowerEvent(val square: BuildAreaSquare) : Event
 data class SelectTowerEvent(val tower: Tower) : Event
 data class NewEnemyEvent(val enemy: Enemy) : Event
-data class EnemyDefeated(val enemy: Enemy) : Event
+data class EnemyDefeated(val enemy: Enemy, val shooter: Tower?) : Event
 data class GameStateChanged(val money: Int, val enemyCount: Int, val selectedTower: Tower?) : Event
 data class NewWave(val wave: Wave) : Event
 data class UpgradeClicked(val type: TowerType) : Event

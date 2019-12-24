@@ -153,6 +153,14 @@ data class TowerType(
             Color.BLUEVIOLET,
             ShootingComponent.with(ProjectileType.explosionProjectile)
         )
+        val gold = TowerType(
+            "Gold tower",
+            50,
+            30.0,
+            0.33,
+            Color.BLUEVIOLET,
+            ShootingComponent.with(ProjectileType.goldProjectile)
+        )
         /*
         * Towers
         * - X Fire
@@ -193,7 +201,8 @@ data class TowerType(
             photosynthesis,
             rust, // TODO: Prefer targets without debuff?
             iceberg,
-            explosion
+            explosion,
+            gold
         )
 
         /*

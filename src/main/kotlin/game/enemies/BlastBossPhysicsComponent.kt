@@ -1,18 +1,16 @@
 package game.enemies
 
 import game.AddEntity
-import game.circle
 import game.GameEntity
 import game.GameState
 import game.PhysicsComponent
 import game.StunEnemyDebuff
 import game.Vector
-import game.towers.Tower
+import game.circle
 
 typealias EffectEntityConstructor = (
-    List<Tower>,
-    maxRadius: Double,
-    position: Vector
+    origin: Vector,
+    maxRadius: Double
 ) -> GameEntity
 
 class BlastBossPhysicsComponent(
@@ -35,9 +33,8 @@ class BlastBossPhysicsComponent(
         if (towersNear.isEmpty() || timeUntilNext > 0.0) return
 
         val effectEntity = effectEntityConstructor(
-            towersNear,
-            blastRadius,
-            entity.position
+            entity.position,
+            blastRadius
         )
         GameState.notify(AddEntity(effectEntity))
         timeUntilNext = blastCooldown

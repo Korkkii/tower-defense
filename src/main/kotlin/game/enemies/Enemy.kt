@@ -1,18 +1,21 @@
 package game.enemies
 
+import game.AddEntity
 import game.DamageBoost
 import game.DamageTakenChange
 import game.EnemyDefeated
 import game.EnemyTakeDamageEvent
+import game.ExplosionDebuff
 import game.GameEntity
 import game.GameState
 import game.StatusEffects
 import game.Vector
 import game.board.PathSquare
+import game.circle
 import game.fillCircle
 import game.find
-import game.towers.projectiles.CritProperty
 import game.towers.projectiles.AttackProperty
+import game.towers.projectiles.CritProperty
 import game.towers.projectiles.ShootingTowerProperty
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
@@ -43,6 +46,8 @@ class Enemy(
     }
 
     private fun waypointCollisionCircle() = Circle(position.x, position.y, 1.4)
+
+    fun collisionCircle() = circle(position, type.radius)
 
     override fun update(currentState: GameState, delta: Double) {
         physicsComponent.update(this, currentState, delta)
@@ -100,12 +105,21 @@ class Enemy(
 
         if (health <= 0.0) {
             canBeDeleted = true
+            val explosionDebuff = statusEffects.find(ExplosionDebuff::class)
+            explosionDebuff?.let {
+                val blastEffect = ExplosionEffect(position, 25.0, it)
+                GameState.notify(AddEntity(blastEffect))
+            }
             GameState.notify(EnemyDefeated(this))
         }
     }
 }
 
-private fun calculateDamage(initialDamage: Double, attackProperties: List<AttackProperty>, statusEffects: StatusEffects<Enemy>): Double {
+private fun calculateDamage(
+    initialDamage: Double,
+    attackProperties: List<AttackProperty>,
+    statusEffects: StatusEffects<Enemy>
+): Double {
     val towerStatuses = attackProperties.find(ShootingTowerProperty::class)?.statusEffect
     val critModifier = attackProperties.find(CritProperty::class)?.damageModifier ?: 1.0
     val towerDamageModifiers = towerStatuses?.find(DamageBoost::class)?.boostPercentage ?: 0.0

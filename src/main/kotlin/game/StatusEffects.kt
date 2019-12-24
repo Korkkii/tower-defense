@@ -15,14 +15,20 @@ class StatusEffects<T : GameEntity> {
     fun <U : StatusEffect<T>> find(type: KClass<U>): U? = currentEffects.find(type)
 
     operator fun <U : StatusEffect<T>> plusAssign(effect: U) {
-        val foundExisting = currentEffects.find(effect::class)
-        foundExisting?.let { currentEffects -= foundExisting }
-        currentEffects += effect
+        val foundExisting: StatusEffect<T>? = currentEffects.find(effect::class)
+
+        if (foundExisting is StackableStatus<T>) {
+            foundExisting.stackSize += 1
+        } else {
+            foundExisting?.let { currentEffects -= foundExisting }
+            currentEffects += effect
+        }
     }
 
     fun update(entity: T, currentState: GameState, delta: Double) {
-        currentEffects.forEach { it.update(entity, currentState, delta) }
-        currentEffects.removeAll { it.isOver() }
+        val updatableStatuses = currentEffects.filterIsInstance<DurationStatus<T>>()
+        updatableStatuses.forEach { it.update(entity, currentState, delta) }
+        updatableStatuses.filter { it.isOver() }.forEach { currentEffects.remove(it) }
     }
 
     fun snapshot() = currentEffects.toList()
@@ -33,9 +39,11 @@ class StatusEffects<T : GameEntity> {
     }
 }
 
+interface StatusEffect<T : GameEntity>
+
 // TODO: Convert to use type object and composition instead of inheritance
 // TODO: Convert StatusEffects class into extension functions instead of wrapper class
-open class StatusEffect<T : GameEntity>(private var duration: Double) {
+open class DurationStatus<T : GameEntity>(private var duration: Double): StatusEffect<T> {
     fun update(entity: T, currentState: GameState, delta: Double) {
         duration -= delta
 
@@ -51,8 +59,16 @@ open class StatusEffect<T : GameEntity>(private var duration: Double) {
     }
 }
 
+open class StackableStatus<T : GameEntity>: StatusEffect<T> {
+    var stackSize = 1
+
+    override fun toString(): String {
+        return "${this.javaClass.canonicalName}(stackSize: $stackSize)"
+    }
+}
+
 class DamageOverTime(private val damagePerSecond: Double, duration: Double, private val ticksPerSecond: Double) :
-    StatusEffect<Enemy>(duration) {
+    DurationStatus<Enemy>(duration) {
     private var cooldown = 1 / ticksPerSecond
     override fun onUpdate(entity: Enemy, currentState: GameState, delta: Double) {
         cooldown -= delta
@@ -64,23 +80,25 @@ class DamageOverTime(private val damagePerSecond: Double, duration: Double, priv
     }
 }
 
-class SpeedChange(val speedScaling: Double, duration: Double) : StatusEffect<Enemy>(duration)
+class SpeedChange(val speedScaling: Double, duration: Double) : DurationStatus<Enemy>(duration)
 
-class RegenBuff(private val healthPerSecond: Double, duration: Double) : StatusEffect<Enemy>(duration) {
+class RegenBuff(private val healthPerSecond: Double, duration: Double) : DurationStatus<Enemy>(duration) {
     override fun onUpdate(entity: Enemy, currentState: GameState, delta: Double) {
         val regenAmount = healthPerSecond * delta
         entity.takeDamage(-regenAmount)
     }
 }
 
-class DamageTakenChange(val damageScaling: Double, duration: Double): StatusEffect<Enemy>(duration)
+class DamageTakenChange(val damageScaling: Double, duration: Double): DurationStatus<Enemy>(duration)
 
-class StunEnemyDebuff(duration: Double) : StatusEffect<Enemy>(duration)
+class StunEnemyDebuff(duration: Double) : DurationStatus<Enemy>(duration)
 
-class StunTowerDebuff(duration: Double) : StatusEffect<Tower>(duration)
+class ExplosionDebuff(val damagePerStack: Double) : StackableStatus<Enemy>()
 
-class BlindDebuff(duration: Double) : StatusEffect<Tower>(duration)
+class StunTowerDebuff(duration: Double) : DurationStatus<Tower>(duration)
 
-class DamageBoost(duration: Double, val boostPercentage: Double) : StatusEffect<Tower>(duration)
+class BlindDebuff(duration: Double) : DurationStatus<Tower>(duration)
 
-class AttackSpeedBoost(duration: Double, val boostPercentage: Double) : StatusEffect<Tower>(duration)
+class DamageBoost(duration: Double, val boostPercentage: Double) : DurationStatus<Tower>(duration)
+
+class AttackSpeedBoost(duration: Double, val boostPercentage: Double) : DurationStatus<Tower>(duration)

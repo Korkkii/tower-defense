@@ -2,8 +2,10 @@ package game.towers.projectiles
 
 import game.DamageOverTime
 import game.DamageTakenChange
+import game.ExplosionDebuff
 import game.GameState
 import game.NewProjectile
+import game.StatusEffect
 import game.StunEnemyDebuff
 import game.Vector
 import game.circle
@@ -30,7 +32,8 @@ class ProjectileType(
         val splashProjectile = ProjectileType(2.0, 100.0, ::drawProjectile, onSplashHit(3.0, 25.0))
         val lightProjectile = ProjectileType(0.5, 300.0, ::drawStraightLine, onSingleHit(2.0))
         val bounceProjectile = ProjectileType(1.3, 200.0, ::drawProjectile, onBounceHit(2.5, 25.0, 3))
-        val applyDoTProjectile = ProjectileType(2.0, 100.0, ::drawProjectile, onDoTHit(2.0, 5.0, 8.0))
+        val applyDoTProjectile =
+            ProjectileType(2.0, 100.0, ::drawProjectile, onDebuffHit(2.0) { DamageOverTime(5.0, 5.0, 8.0) })
         val damagePerCreepProjectile = ProjectileType(
             2.0,
             100.0,
@@ -53,13 +56,19 @@ class ProjectileType(
             2.0,
             100.0,
             ::drawProjectile,
-            onDebuffHit(1.0)
+            onDebuffHit(1.0) { DamageTakenChange(2.0, 2.0) }
         )
         val stunProjectile = ProjectileType(
             2.0,
             100.0,
             ::drawProjectile,
-            onStunHit(1.0, 1.0)
+            onDebuffHit(1.0) { StunEnemyDebuff(1.0) } // TODO: Add graphics that actually frozen or something?
+        )
+        val explosionProjectile = ProjectileType(
+            2.0,
+            100.0,
+            ::drawProjectile,
+            onDebuffHit(2.0) { ExplosionDebuff(3.0) }
         )
     }
 }
@@ -96,12 +105,6 @@ fun onBounceHit(damage: Double, bounceRange: Double, initialBounceAmount: Int) =
         GameState.notify(NewProjectile(bounceProjectile))
     }
 
-fun onDoTHit(initialDamage: Double, damagePerSecond: Double, ticksPerSecond: Double) =
-    { projectile: Projectile, target: Enemy, _: GameState ->
-        target.takeDamage(initialDamage, attackProperties = projectile.properties)
-        target.statusEffects += DamageOverTime(damagePerSecond, 5.0, ticksPerSecond)
-    }
-
 fun onScalingDamageHit(initialDamage: Double, scaling: Double) =
     { projectile: Projectile, target: Enemy, _: GameState ->
         val damageProperty = projectile.properties.find(IncreasedDamageProperty::class)
@@ -125,16 +128,10 @@ fun onEnemyMissingHpScaledHit(baseDamage: Double, maximumScaling: Double) =
         target.takeDamage(totalDamage, attackProperties = projectile.properties)
     }
 
-fun onDebuffHit(damage: Double) =
+fun onDebuffHit(damage: Double, debuffCreator: () -> StatusEffect<Enemy>) =
     { projectile: Projectile, target: Enemy, _: GameState ->
         target.takeDamage(damage, attackProperties = projectile.properties)
-        target.statusEffects += DamageTakenChange(2.0, 2.0)
-    }
-
-fun onStunHit(damage: Double, stunDuration: Double) =
-    { projectile: Projectile, target: Enemy, _: GameState ->
-        target.takeDamage(damage, attackProperties = projectile.properties)
-        target.statusEffects += StunEnemyDebuff(stunDuration)
+        target.statusEffects += debuffCreator() //DamageTakenChange(2.0, 2.0)
     }
 
 private fun enemiesWithinRange(enemies: List<Enemy>, position: Vector, range: Double): List<Enemy> {

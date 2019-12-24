@@ -145,6 +145,14 @@ data class TowerType(
             Color.BLUEVIOLET,
             ShootingComponent.with(ProjectileType.stunProjectile)
         )
+        private val explosion = TowerType(
+            "Explosion tower",
+            50,
+            30.0,
+            1.0,
+            Color.BLUEVIOLET,
+            ShootingComponent.with(ProjectileType.explosionProjectile)
+        )
         /*
         * Towers
         * - X Fire
@@ -184,7 +192,8 @@ data class TowerType(
             frostTower,
             photosynthesis,
             rust, // TODO: Prefer targets without debuff?
-            iceberg
+            iceberg,
+            explosion
         )
 
         /*
@@ -205,9 +214,9 @@ data class TowerType(
         *   - X Water + fire - Steam tower --> AoE damage
         *
         * TODO: triples
-        *   - Metal + water + wind - Rust -> add damage taken
-        *   - Wind + Light + Water - Iceberg -> Stun
-        *   - Fire + nature + metal - Explosion -> gather stacks to target which explode on target's death
+        *   - X Metal + water + wind - Rust -> add damage taken
+        *   - X Wind + Light + Water - Iceberg -> Stun
+        *   - X Fire + nature + metal - Explosion -> gather stacks to target which explode on target's death
         *   - Light + Fire + Nature - Gold -> Extra gold from kills
         *
         *

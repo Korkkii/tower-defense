@@ -57,8 +57,9 @@ class Upgrades : FlowPane() {
 class UpgradeButton(type: TowerType) : Button(type.name) {
     init {
         setOnMouseClicked {
-            // TODO: Add check for upgrade availability
-            GameState.notify(UpgradeClicked(type))
+            if (type.isAvailable()) {
+                GameState.notify(UpgradeClicked(type))
+            }
         }
     }
 }

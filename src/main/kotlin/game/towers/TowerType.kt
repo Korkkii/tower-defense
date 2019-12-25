@@ -15,7 +15,8 @@ data class TowerType(
     val range: Double,
     val baseFireRate: Double,
     val color: Color,
-    val physicsComponentConstructor: () -> PhysicsComponent<Tower>
+    val physicsComponentConstructor: () -> PhysicsComponent<Tower>,
+    val type: TypeEnum
 ) {
     val size = 10.0
     val graphicsComponent = TowerGraphicsComponent()
@@ -121,12 +122,13 @@ class TowerTypeBuilder {
     var baseFireRate by Delegates.notNull<Double>()
     lateinit var color: Color
     var physics by Delegates.notNull<() -> PhysicsComponent<Tower>>()
+    lateinit var enum: TypeEnum
 
     fun physics(block: TowerPhysicsComponentBuilder.() -> Unit) {
         physics = TowerPhysicsComponentBuilder().apply(block).build()
     }
 
-    fun build(): TowerType = TowerType(name, cost, range, baseFireRate, color, physics)
+    fun build(): TowerType = TowerType(name, cost, range, baseFireRate, color, physics, enum)
 
     fun with(block: TowerTypeBuilder.() -> Unit) = this.apply(block).build()
 }
@@ -142,10 +144,30 @@ class TowerPhysicsComponentBuilder {
 
     fun build(): () -> PhysicsComponent<Tower> {
         val hasProjectile = projectile != null
-        val resultComponentLambda = projectile?.let { { physicsComponentConstructor(it, onShootFunction)} }
+        val resultComponentLambda = projectile?.let { { physicsComponentConstructor(it, onShootFunction) } }
 
         return resultComponentLambda ?: throw IllegalStateException("Missing physics component for tower")
     }
 
     fun with(block: TowerPhysicsComponentBuilder.() -> Unit) = this.apply(block).build()
+}
+
+enum class TypeEnum {
+    BASIC,
+    LIGHT,
+    FIRE,
+    WIND,
+    WATER,
+    NATURE,
+    METAL,
+    BLACKSMITH,
+    QUICKSHOT,
+    CRIT,
+    STEAM,
+    FROST,
+    PHOTOSYNTHESIS,
+    RUST,
+    ICEBERG,
+    EXPLOSION,
+    GOLD
 }

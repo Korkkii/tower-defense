@@ -10,6 +10,7 @@ import game.StunEnemyDebuff
 import game.towers.AcceleratingShootingComponent
 import game.towers.AreaEffectComponent
 import game.towers.BuffOthersPhysicsComponent
+import game.towers.TypeEnum
 import game.towers.onShootMultiTarget
 import game.towers.projectiles.IncreasedDamageProperty
 import game.towers.projectiles.drawStraightLine
@@ -34,6 +35,7 @@ val baseProjectile = projectileBase {
 val basicBase = towerTypeBase {
     name = "Basic tower"
     color = Color.WHITE
+    enum = TypeEnum.BASIC
 }
 val basic = basicBase.with {
     cost = 10
@@ -57,6 +59,7 @@ val basic3 = basicBase.with {
 val waterBase = towerTypeBase {
     name = "Water tower"
     color = Color.NAVY
+    enum = TypeEnum.WATER
 }
 val water = waterBase.with {
     cost = 30
@@ -80,6 +83,7 @@ val water3 = waterBase.with {
 val lightBase = towerTypeBase {
     name = "Light tower"
     color = Color.ANTIQUEWHITE
+    enum = TypeEnum.LIGHT
 }
 val lightProjectile = projectileBase {
     radius = 0.5
@@ -123,6 +127,7 @@ val light3 = lightBase.with {
 val fireBase = towerTypeBase {
     name = "Fire tower"
     color = Color.ORANGERED
+    enum = TypeEnum.FIRE
 }
 val fire = fireBase.with {
     cost = 40
@@ -164,6 +169,7 @@ val fire3 = fireBase.with {
 val windBase = towerTypeBase {
     name = "Wind tower"
     color = Color.SILVER
+    enum = TypeEnum.WIND
 }
 val wind =
     windBase.with {
@@ -202,6 +208,7 @@ val wind3 =
 val natureBase = towerTypeBase {
     name = "Nature tower"
     color = Color.DARKSEAGREEN
+    enum = TypeEnum.NATURE
 }
 val nature = natureBase.with {
     cost = 30
@@ -244,6 +251,7 @@ val metalPhysics = towerPhysicsBase {
 val metalBase = towerTypeBase {
     name = "Metal tower"
     color = Color.DARKSEAGREEN
+    enum = TypeEnum.METAL
 }
 val metal = metalBase.with {
     cost = 20
@@ -273,6 +281,7 @@ val metal3 = metalBase.with {
 val blacksmithBase = towerTypeBase {
     name = "Blacksmith tower"
     color = Color.DARKRED
+    enum = TypeEnum.BLACKSMITH
 }
 val blacksmith = blacksmithBase.with {
     cost = 100
@@ -290,6 +299,7 @@ val blacksmith2 = blacksmithBase.with {
 val quickshotBase = towerTypeBase {
     name = "Quickshot tower"
     color = Color.LIGHTSKYBLUE
+    enum = TypeEnum.QUICKSHOT
 }
 val quickshot = quickshotBase.with {
     cost = 100
@@ -307,6 +317,7 @@ val quickshot2 = quickshotBase.with {
 val critTowerBase = towerTypeBase {
     name = "Critical strike tower"
     color = Color.DARKORANGE
+    enum = TypeEnum.CRIT
 }
 val critTower = critTowerBase.with {
     cost = 90
@@ -332,6 +343,7 @@ val critTower2 = critTowerBase.with {
 val steamTowerBase = towerTypeBase {
     name = "Steam tower"
     color = Color.WHITESMOKE
+    enum = TypeEnum.STEAM
 }
 val steamTower = steamTowerBase.with {
     cost = 100
@@ -349,6 +361,7 @@ val steamTower2 = steamTowerBase.with {
 val frostTowerBase = towerTypeBase {
     name = "Frost tower"
     color = Color.LIGHTSTEELBLUE
+    enum = TypeEnum.FROST
 }
 val frostTower = frostTowerBase.with {
     cost = 100
@@ -374,6 +387,7 @@ val frostTower2 = frostTowerBase.with {
 val photosynthesisBase = towerTypeBase {
     name = "Photosynthesis tower"
     color = Color.FORESTGREEN
+    enum = TypeEnum.PHOTOSYNTHESIS
 }
 val photosynthesis = photosynthesisBase.with {
     cost = 100
@@ -409,6 +423,7 @@ val rust = towerType {
             }
         }
     }
+    enum = TypeEnum.RUST
 }
 
 val iceberg = towerType {
@@ -422,6 +437,7 @@ val iceberg = towerType {
             onHit = onDebuffHit(1.0) { StunEnemyDebuff(1.0) }
         }
     }
+    enum = TypeEnum.ICEBERG
 }
 
 val explosion = towerType {
@@ -435,6 +451,7 @@ val explosion = towerType {
             onHit = onDebuffHit(2.0) { ExplosionDebuff(3.0) }
         }
     }
+    enum = TypeEnum.EXPLOSION
 }
 
 val gold = towerType {
@@ -448,4 +465,5 @@ val gold = towerType {
             onHit = onSingleHit(12.0)
         }
     }
+    enum = TypeEnum.GOLD
 }

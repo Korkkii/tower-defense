@@ -6,6 +6,7 @@ import game.enemies.BossType
 import game.enemies.Enemy
 import game.towers.Tower
 import game.towers.TowerType
+import game.towers.TypeEnum
 import game.towers.projectiles.Projectile
 import ui.MouseHandler
 import kotlin.reflect.KClass
@@ -62,7 +63,7 @@ class MutableGameState {
             is EnemyDefeated -> {
                 val type = event.enemy.type
                 val shooter = event.shooter
-                val priceModifier = if (shooter?.type == gold) 2 else 1
+                val priceModifier = if (shooter?.type?.type == TypeEnum.GOLD) 2 else 1
                 val price = priceModifier * type.enemyPrice
                 playerMoney += price
                 if (type is BossType) {

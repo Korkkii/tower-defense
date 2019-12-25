@@ -1,14 +1,13 @@
 package game.towers
 
-import game.AttackSpeedBoost
-import game.DamageBoost
 import game.GameState
 import game.PhysicsComponent
-import game.SpeedChange
 import game.board.BuildAreaSquare
-import game.enemies.BossType
+import game.data.GameData
 import game.towers.projectiles.ProjectileType
+import game.towers.projectiles.ProjectileTypeBuilder
 import javafx.scene.paint.Color
+import kotlin.properties.Delegates
 
 data class TowerType(
     val name: String,
@@ -24,143 +23,11 @@ data class TowerType(
     fun create(square: BuildAreaSquare) = Tower(square, this)
 
     fun isAvailable(): Boolean {
-        val requirement = requirements[this] ?: return true
-        return requirement in GameState.instance.defeatedBosses
+        val requirements = GameData.towerUpgradeRequirements[this] ?: return true
+        return requirements.all { it in GameState.instance.defeatedBosses }
     }
 
     companion object {
-        private val water = TowerType(
-            "Water tower",
-            30,
-            35.0,
-            1.0,
-            Color.NAVY,
-            ShootingComponent.with(ProjectileType.splashProjectile)
-        )
-        private val light = TowerType(
-            "Light tower",
-            40,
-            35.0,
-            1.0,
-            Color.ANTIQUEWHITE,
-            ShootingComponent.with(ProjectileType.lightProjectile, ::onShootMultiTarget)
-        )
-        private val fire = TowerType(
-            "Fire tower",
-            40,
-            30.0,
-            1.0,
-            Color.ORANGERED,
-            ShootingComponent.with(ProjectileType.applyDoTProjectile)
-        )
-        private val wind =
-            TowerType("Wind tower", 5, 35.0, 1.0, Color.SILVER, ShootingComponent.with(ProjectileType.bounceProjectile))
-        private val nature = TowerType(
-            "Nature tower",
-            10,
-            35.0,
-            1.0,
-            Color.DARKSEAGREEN,
-            physicsComponentConstructor = ShootingComponent.with(ProjectileType.damagePerCreepProjectile)
-        )
-        private val metal = TowerType(
-            "Metal tower",
-            10,
-            35.0,
-            1.5,
-            Color.DARKSEAGREEN,
-            physicsComponentConstructor = {
-                AcceleratingShootingComponent(
-                    ProjectileType.singleHitProjectile,
-                    ::onShootSingleTarget
-                )
-            }
-        )
-
-        private val blacksmith = TowerType(
-            "Blacksmith tower",
-            50,
-            30.0,
-            1.0,
-            Color.DARKRED,
-            physicsComponentConstructor = { BuffOthersPhysicsComponent { DamageBoost(5.0, 0.30) } }
-        )
-        private val quickshot = TowerType(
-            "Quickshot tower",
-            50,
-            30.0,
-            1.0,
-            Color.LIGHTSKYBLUE,
-            physicsComponentConstructor = { BuffOthersPhysicsComponent { AttackSpeedBoost(5.0, 0.30) } }
-        )
-        private val critTower = TowerType(
-            "Critical strike tower",
-            50,
-            30.0,
-            1.0,
-            Color.DARKORANGE,
-            ShootingComponent.with(ProjectileType.critProjectile)
-        )
-        private val steamTower = TowerType(
-            "Steam tower",
-            50,
-            30.0,
-            10.0,
-            Color.WHITESMOKE,
-            physicsComponentConstructor = { AreaEffectComponent(3.0, 6.0) }
-        )
-        private val frostTower = TowerType(
-            "Frost tower",
-            50,
-            30.0,
-            10.0,
-            Color.LIGHTSTEELBLUE,
-            physicsComponentConstructor = {
-                AreaEffectComponent(1.0, 6.0) { enemy ->
-                    enemy.statusEffects += SpeedChange(0.7, 2.0)
-                }
-            }
-        )
-        private val photosynthesis = TowerType(
-            "Photosynthesis tower",
-            50,
-            30.0,
-            1.0,
-            Color.FORESTGREEN,
-            ShootingComponent.with(ProjectileType.missingHpProjectile)
-        )
-        private val rust = TowerType(
-            "Rust tower",
-            50,
-            30.0,
-            1.0,
-            Color.FIREBRICK,
-            ShootingComponent.with(ProjectileType.damageTakenDebuffProjectile)
-        )
-        private val iceberg = TowerType(
-            "Iceberg tower",
-            50,
-            30.0,
-            1.0,
-            Color.BLUEVIOLET,
-            ShootingComponent.with(ProjectileType.stunProjectile)
-        )
-        private val explosion = TowerType(
-            "Explosion tower",
-            50,
-            30.0,
-            1.0,
-            Color.BLUEVIOLET,
-            ShootingComponent.with(ProjectileType.explosionProjectile)
-        )
-        val gold = TowerType(
-            "Gold tower",
-            50,
-            30.0,
-            0.33,
-            Color.BLUEVIOLET,
-            ShootingComponent.with(ProjectileType.goldProjectile)
-        )
         /*
         * Towers
         * - X Fire
@@ -186,24 +53,25 @@ data class TowerType(
         *   - Pierce through multiple
         *
         * */
-        val towerTypes = listOf(
-            light,
-            fire,
-            wind,
-            water,
-            nature,
-            metal,
-            blacksmith,
-            quickshot,
-            critTower,
-            steamTower,
-            frostTower,
-            photosynthesis,
-            rust, // TODO: Prefer targets without debuff?
-            iceberg,
-            explosion,
-            gold
-        )
+        // val towerTypes = listOf(
+        //     basic,
+        //     light,
+        //     fire,
+        //     wind,
+        //     water,
+        //     nature,
+        //     metal,
+        //     blacksmith,
+        //     quickshot,
+        //     critTower,
+        //     steamTower,
+        //     frostTower,
+        //     photosynthesis,
+        //     rust, // TODO: Prefer targets without debuff?
+        //     iceberg,
+        //     explosion,
+        //     gold // TODO: Prefer lowest HP targets?
+        // )
 
         /*
         * TODO:
@@ -239,17 +107,45 @@ data class TowerType(
         * - Quake - on hit causes shockwave which hits neighbours
         *
         * */
-
-        // val requirements = mapOf(light to EnemyType.boss)
-        // val requirements = mapOf(
-        //     light to lightBoss,
-        //     water to waterBoss,
-        //     fire to fireBoss,
-        //     wind to windBoss,
-        //     metal to metalBoss,
-        //     nature to natureBoss
-        // )
-        val requirements = mapOf<TowerType, BossType>()
-        val upgrades = mapOf<TowerType, List<TowerType>>()
     }
+}
+
+fun towerType(block: TowerTypeBuilder.() -> Unit) = TowerTypeBuilder().apply(block).build()
+fun towerTypeBase(block: TowerTypeBuilder.() -> Unit) = TowerTypeBuilder().apply(block)
+fun towerPhysicsBase(block: TowerPhysicsComponentBuilder.() -> Unit) = TowerPhysicsComponentBuilder().apply(block)
+
+class TowerTypeBuilder {
+    lateinit var name: String
+    var cost by Delegates.notNull<Int>()
+    var range by Delegates.notNull<Double>()
+    var baseFireRate by Delegates.notNull<Double>()
+    lateinit var color: Color
+    var physics by Delegates.notNull<() -> PhysicsComponent<Tower>>()
+
+    fun physics(block: TowerPhysicsComponentBuilder.() -> Unit) {
+        physics = TowerPhysicsComponentBuilder().apply(block).build()
+    }
+
+    fun build(): TowerType = TowerType(name, cost, range, baseFireRate, color, physics)
+
+    fun with(block: TowerTypeBuilder.() -> Unit) = this.apply(block).build()
+}
+
+class TowerPhysicsComponentBuilder {
+    var projectile: ProjectileType? = null
+    var onShootFunction: OnShootFunction = ::onShootSingleTarget
+    var physicsComponentConstructor: (ProjectileType, OnShootFunction) -> PhysicsComponent<Tower> = ::ShootingComponent
+
+    fun projectile(block: ProjectileTypeBuilder.() -> Unit) {
+        projectile = ProjectileTypeBuilder().apply(block).build()
+    }
+
+    fun build(): () -> PhysicsComponent<Tower> {
+        val hasProjectile = projectile != null
+        val resultComponentLambda = projectile?.let { { physicsComponentConstructor(it, onShootFunction)} }
+
+        return resultComponentLambda ?: throw IllegalStateException("Missing physics component for tower")
+    }
+
+    fun with(block: TowerPhysicsComponentBuilder.() -> Unit) = this.apply(block).build()
 }

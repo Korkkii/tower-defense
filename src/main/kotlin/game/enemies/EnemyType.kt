@@ -4,10 +4,11 @@ import game.AddEntity
 import game.BossStartEvent
 import game.GameState
 import game.PhysicsComponent
-import game.RegenBuff
 import game.SpeedChange
 import game.center
+import game.data.GameData
 import javafx.scene.paint.Color
+import kotlin.properties.Delegates
 import kotlin.random.Random
 
 interface EnemyInfo {
@@ -34,74 +35,11 @@ data class EnemyType(
     override val physicsComponentConstructor: () -> PhysicsComponent<Enemy> = { EnemyMovementComponent() }
 ) : EnemyInfo {
     companion object {
-        val enemy = EnemyType(5, 20.0, 10.0, 4.0, Color.RED, 35.0)
-        val fastEnemy = EnemyType(5, 10.0, 3.0, 4.0, Color.DEEPSKYBLUE.brighter(), 60.0)
-        val windBoss = BossType(
-            "Wind Elemental", EnemyType(
-                20,
-                80.0,
-                0.0,
-                6.0,
-                Color.SLATEGRAY,
-                35.0,
-                onDamage = ::onHitAddSpeedBuff
-            )
-        )
-        val metalBoss = BossType("Metal Elemental", EnemyType(20, 150.0, 0.0, 6.0, Color.DARKGRAY, 35.0))
-        val natureBoss = BossType(
-            "Nature Elemental", EnemyType(
-                20,
-                100.0,
-                0.0,
-                6.0,
-                Color.MEDIUMSEAGREEN,
-                35.0,
-                onCreate = {
-                    it.statusEffects += RegenBuff(3.0, 3600.0)
-                })
-        )
-        val fireBoss = BossType("Fire Elemental", EnemyType(
-            20,
-            100.0,
-            0.0,
-            7.0,
-            Color.FIREBRICK,
-            35.0,
-            physicsComponentConstructor = { BlastBossPhysicsComponent(20.0, 5.0, ::StunEffect) }
-        ))
-        val lightBoss = BossType("Light Elemental", EnemyType(
-            20,
-            100.0,
-            0.0,
-            7.0,
-            Color.WHITESMOKE,
-            35.0,
-            physicsComponentConstructor = { BlastBossPhysicsComponent(20.0, 5.0, ::FlashEffect) }
-        ))
-        val waterBoss = BossType(
-            "Water Elemental", EnemyType(
-                20,
-                80.0,
-                0.0,
-                7.0,
-                Color.NAVY.brighter(),
-                35.0,
-                onDamage = ::onHitSpawnClone
-            )
-        )
-        private val bosses = listOf(
-            windBoss,
-            metalBoss,
-            natureBoss,
-            fireBoss,
-            lightBoss,
-            waterBoss
-        )
         val bossLevels = mapOf<BossType, BossType>()
         fun getAvailableBosses(): List<BossType> {
             val defeated = GameState.instance.defeatedBosses
             val upgradesOfDefeated = defeated.mapNotNull { bossLevels[it] }
-            return bosses + upgradesOfDefeated - GameState.instance.defeatedBosses
+            return GameData.bosses + upgradesOfDefeated - GameState.instance.defeatedBosses
         }
     }
 }
@@ -132,3 +70,29 @@ data class BossType(
     val name: String,
     private val type: EnemyType
 ) : EnemyInfo by type
+
+fun enemyType(block: EnemyTypeBuilder.() -> Unit) = EnemyTypeBuilder().apply(block).build()
+
+class EnemyTypeBuilder {
+    var enemyPrice by Delegates.notNull<Int>()
+    var baseHealth by Delegates.notNull<Double>()
+    var healthPerLevel by Delegates.notNull<Double>()
+    var radius by Delegates.notNull<Double>()
+    lateinit var color: Color
+    var velocity by Delegates.notNull<Double>()
+    var onDamage: (Enemy, DamageType) -> Unit = { _, _ -> }
+    var onCreate: (Enemy) -> Unit = {}
+    var physicsComponentConstructor: () -> PhysicsComponent<Enemy> = { EnemyMovementComponent() }
+
+    fun build() = EnemyType(
+        enemyPrice,
+        baseHealth,
+        healthPerLevel,
+        radius,
+        color,
+        velocity,
+        onDamage,
+        onCreate,
+        physicsComponentConstructor
+    )
+}

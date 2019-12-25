@@ -1,8 +1,9 @@
 package game
 
+import game.data.gold
+import game.data.waterBoss
 import game.enemies.BossType
 import game.enemies.Enemy
-import game.enemies.EnemyType.Companion.waterBoss
 import game.towers.Tower
 import game.towers.TowerType
 import game.towers.projectiles.Projectile
@@ -61,10 +62,11 @@ class MutableGameState {
             is EnemyDefeated -> {
                 val type = event.enemy.type
                 val shooter = event.shooter
-                val priceModifier = if (shooter?.type == TowerType.gold) 2 else 1
+                val priceModifier = if (shooter?.type == gold) 2 else 1
                 val price = priceModifier * type.enemyPrice
                 playerMoney += price
                 if (type is BossType) {
+                    // TODO: Instead of reference check, make type contain enum and check that
                     val isWaterBoss = type == waterBoss
                     val waterBossesStillLeft = enemies.any { it.type == waterBoss }
                     if (isWaterBoss && waterBossesStillLeft) return
@@ -111,6 +113,7 @@ class MutableGameState {
     }
 
     fun commitUpdates() {
+        val shouldSendStateEvent = additionsList.filterIsInstance<Enemy>().isNotEmpty() && enemies.any { it.canBeDeleted }
         additionsList.forEach {
             when (it) {
                 is Enemy -> enemies += it
@@ -121,12 +124,13 @@ class MutableGameState {
         }
         deletionsList.forEach { miscEntities.remove(it) }
         additionsList.clear()
+        deletionsList.clear()
 
         projectiles.removeAll { it.canDelete() }
         enemies.removeAll { it.canBeDeleted }
         towers.removeAll { it.canBeDeleted }
 
-        publisher.publish(createStateEvent())
+        if (shouldSendStateEvent) publisher.publish(createStateEvent())
         if (enemies.count { !it.canBeDeleted } > maxEnemies) publisher.publish(GameEnded)
     }
 

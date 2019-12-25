@@ -3,6 +3,7 @@ package ui
 import game.GameState
 import game.GameStateChanged
 import game.UpgradeClicked
+import game.data.GameData
 import game.towers.TowerType
 import game.towers.calculateFireRate
 import javafx.geometry.Insets
@@ -46,7 +47,7 @@ class Upgrades : FlowPane() {
         GameState.subscribe(GameStateChanged::class) {
             val selectedTower = it.selectedTower
 
-            val upgradeTypes = selectedTower?.type?.let { type -> TowerType.upgrades[type] } ?: listOf()
+            val upgradeTypes = selectedTower?.type?.let { type -> GameData.possibleTowerUpgrades[type] } ?: listOf()
             children.clear()
             children += upgradeTypes.map { type -> UpgradeButton(type) }
         }
@@ -55,6 +56,9 @@ class Upgrades : FlowPane() {
 
 class UpgradeButton(type: TowerType) : Button(type.name) {
     init {
-        setOnMouseClicked { GameState.notify(UpgradeClicked(type)) }
+        setOnMouseClicked {
+            // TODO: Add check for upgrade availability
+            GameState.notify(UpgradeClicked(type))
+        }
     }
 }

@@ -3,6 +3,7 @@ package ui
 import game.BossDefeated
 import game.GameState
 import game.PlacingTowerEvent
+import game.data.GameData
 import game.towers.TowerType
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -22,7 +23,7 @@ import javafx.scene.text.Text
 
 class TowerButtons : FlowPane() {
     init {
-        val towerButtons = TowerType.towerTypes.map {
+        val towerButtons = GameData.towerTypes.map {
             TowerButton(it, it.name)
         }
 
@@ -39,6 +40,7 @@ class TowerButton(private val towerType: TowerType, name: String) : VBox() {
     private val text = Text(name)
 
     init {
+        // TODO: Make these properly sized
         prefWidth = 100.0
         border = Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii(2.0), BorderWidths(1.0)))
         alignment = Pos.CENTER
@@ -76,5 +78,6 @@ class TowerButton(private val towerType: TowerType, name: String) : VBox() {
     }
 
     private fun getRequirementText(towerType: TowerType) =
-        TowerType.requirements[towerType]?.let { "Requires ${it.name}" } ?: "No requirements"
+        GameData.towerUpgradeRequirements[towerType]?.let { "Requires ${it.joinToString(", ") { boss -> boss.name }}" }
+            ?: "No requirements"
 }

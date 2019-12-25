@@ -13,6 +13,8 @@ import javafx.scene.text.Text
 class Sidebar :
     VBox() {
     // TODO: Convert JavaFX to KotlinFX
+    // TODO: Make scrollable / buttons smaller so additional towers + bosses will fit
+    // Or alternative tabs?
     private val gameState = GameState.instance
     private val money = Text("Player money ${gameState.playerMoney}")
     private val enemies = Text("Enemies on the run ${gameState.enemies.count()}")

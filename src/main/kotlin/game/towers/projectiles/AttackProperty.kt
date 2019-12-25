@@ -5,7 +5,6 @@ import game.towers.Tower
 
 interface AttackProperty
 
-object NoProperty : AttackProperty
 data class BounceProperty(val bouncesLeft: Int) : AttackProperty
 data class IncreasedDamageProperty(val enemyCount: Int) : AttackProperty
 data class BlindedProperty(val missChance: Double) : AttackProperty

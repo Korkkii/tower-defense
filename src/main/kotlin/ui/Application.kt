@@ -3,7 +3,7 @@ package ui
 import game.Game
 import game.GameState
 import game.PlacingTowerEvent
-import game.towers.TowerType
+import game.data.GameData
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
@@ -32,7 +32,7 @@ class Main : Application() {
         val scene = Scene(group)
         scene.setOnKeyReleased {
             val type = when (it.code) {
-                KeyCode.Q -> TowerType.towerTypes[0]
+                KeyCode.Q -> GameData.towerTypes[0]
                 else -> null
             }
 

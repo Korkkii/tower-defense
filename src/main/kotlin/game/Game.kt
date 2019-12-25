@@ -11,10 +11,12 @@ import ui.rectangle
 class Game(width: Double, height: Double, val canvas: Canvas) {
     private val gameState = GameState.instance
     private val board = GameBoard(width, height)
-    private val waveGenerator = WaveGenerator(board)
     private val gameLoop = GameLoop(board, canvas, board.ratio)
     private val alertBoxSize = Vector(width * 0.15 / board.ratio, height * 0.125 / board.ratio)
     private val alertBoxLocation = Vector(width * 0.825 / board.ratio, height * 0.85 / board.ratio)
+    @Suppress("unused")
+    private val waveGenerator = WaveGenerator(board)
+    @Suppress("unused")
     private val alertHandler = AlertHandler(rectangle(alertBoxLocation, alertBoxSize))
 
     init {

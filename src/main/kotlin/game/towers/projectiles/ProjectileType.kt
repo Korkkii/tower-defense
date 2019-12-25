@@ -14,6 +14,7 @@ import game.enemies.Enemy
 import game.find
 import javafx.scene.canvas.GraphicsContext
 import kotlin.math.pow
+import kotlin.properties.Delegates
 import kotlin.random.Random
 
 typealias GraphicsFunction = (Projectile, GraphicsContext, GameState) -> Unit
@@ -23,7 +24,7 @@ class ProjectileType(
     val velocity: Double,
     val drawGraphics: GraphicsFunction,
     onHit: (Projectile, Enemy, GameState) -> Unit,
-    internal val propertyConstructor: (List<Enemy>) -> AttackProperty = { NoProperty }
+    internal val propertyConstructor: (List<Enemy>) -> AttackProperty? = { null }
 ) {
     val physicsComponent = ProjectilePhysicsComponent(onHit)
 
@@ -44,7 +45,7 @@ class ProjectileType(
             2.0,
             100.0,
             ::drawProjectile,
-            onCritProjectileHit(3.0, 0.2)
+            onCritProjectileHit(3.0, 0.2, 2.0)
         )
         val missingHpProjectile = ProjectileType(
             2.0,
@@ -114,10 +115,10 @@ fun onScalingDamageHit(initialDamage: Double, scaling: Double) =
         target.takeDamage(damage, attackProperties = projectile.properties)
     }
 
-fun onCritProjectileHit(baseDamage: Double, critChance: Double) =
+fun onCritProjectileHit(baseDamage: Double, critChance: Double, critMultiplier: Double) =
     { projectile: Projectile, target: Enemy, _: GameState ->
         val isCrit = Random.Default.nextDouble() < critChance
-        val critMultiplier = if (isCrit) CritProperty(2.0) else null
+        val critMultiplier = if (isCrit) CritProperty(critMultiplier) else null
         val properties = (projectile.properties + critMultiplier).filterNotNull()
         target.takeDamage(baseDamage, attackProperties = properties)
     }
@@ -139,3 +140,19 @@ private fun enemiesWithinRange(enemies: List<Enemy>, position: Vector, range: Do
     val rangeCircle = circle(position, range)
     return enemies.filter { rangeCircle.contains(it.position) && !it.canBeDeleted }
 }
+
+fun projectile(block: ProjectileTypeBuilder.() -> Unit) = ProjectileTypeBuilder().apply(block).build()
+fun projectileBase(block: ProjectileTypeBuilder.() -> Unit) = ProjectileTypeBuilder().apply(block)
+
+class ProjectileTypeBuilder {
+    var radius by Delegates.notNull<Double>()
+    var velocity by Delegates.notNull<Double>()
+    var drawGraphics: GraphicsFunction = ::drawProjectile
+    lateinit var onHit: (Projectile, Enemy, GameState) -> Unit
+    var propertyConstructor: (List<Enemy>) -> AttackProperty? = { null }
+
+    fun build(): ProjectileType = ProjectileType(radius, velocity, drawGraphics, onHit, propertyConstructor)
+
+    fun with(block: ProjectileTypeBuilder.() -> Unit) = this.apply(block).build()
+}
+

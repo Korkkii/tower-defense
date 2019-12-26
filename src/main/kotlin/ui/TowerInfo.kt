@@ -81,6 +81,7 @@ class Upgrades : FlowPane() {
                     padding = Insets(4.0)
 
                     setOnMouseClicked {
+                        // TODO: When not available, send alert box with required bosses
                         if (type.isAvailable()) {
                             GameState.notify(UpgradeClicked(type))
                         }

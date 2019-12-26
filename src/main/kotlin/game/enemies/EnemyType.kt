@@ -62,7 +62,7 @@ fun onHitSpawnClone(enemy: Enemy, damageType: DamageType) {
     val spawnChance = 0.1
     val randomDouble = Random.nextDouble()
 
-    if (randomDouble < spawnChance) {
+    if (damageType != OverTimeDamage && randomDouble < spawnChance) {
         val bossHealthPercent = enemy.health / enemy.maxHealth
         val type = enemy.type as BossType
         val animationEntity = SpawnEffectEntity(enemy.position, enemy.target.waypoint.center(), enemy.type.radius) {

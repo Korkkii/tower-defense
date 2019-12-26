@@ -11,7 +11,7 @@ import javafx.scene.paint.Color
 import kotlin.math.PI
 import kotlin.math.sin
 
-class SpawnEffectEntity(position: Vector, endPosition: Vector, val endRadius: Double, val onEnd: (Vector) -> Unit) : GameEntity(position) {
+class SpawnEffectEntity(position: Vector, endPosition: Vector, private val endRadius: Double, val onEnd: (Vector) -> Unit) : GameEntity(position) {
     private val animationTime = 1.0
     private val direction = (endPosition - position).unitVector()
     private val speed = (endPosition - position).length / animationTime

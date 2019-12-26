@@ -142,6 +142,8 @@ class MutableGameState {
         towers.removeAll { it.canBeDeleted }
 
         if (shouldSendStateEvent) publisher.publish(createStateEvent())
+        // TODO: Create end screen after game ends 
+        // With e.g. how many enemies killed, how many waves survived
         if (enemies.count { !it.canBeDeleted } > maxEnemies) publisher.publish(GameEnded)
     }
 

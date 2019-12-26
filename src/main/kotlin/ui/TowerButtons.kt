@@ -77,7 +77,9 @@ class TowerButton(private val towerType: TowerType, name: String) : VBox() {
         return listOf(content, text)
     }
 
-    private fun getRequirementText(towerType: TowerType) =
-        GameData.towerUpgradeRequirements[towerType]?.let { "Requires ${it.joinToString(", ") { boss -> boss.name }}" }
+    private fun getRequirementText(towerType: TowerType): String {
+        val pair = Pair(towerType.type, towerType.level)
+        return GameData.towerUpgradeRequirements[pair]?.let { "Requires ${it.joinToString(", ") { boss -> boss.name }}" }
             ?: "No requirements"
+    }
 }

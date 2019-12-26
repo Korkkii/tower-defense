@@ -4,6 +4,7 @@ import game.GameState
 import game.PhysicsComponent
 import game.board.BuildAreaSquare
 import game.data.GameData
+import game.data.wind
 import game.towers.projectiles.ProjectileType
 import game.towers.projectiles.ProjectileTypeBuilder
 import javafx.scene.paint.Color
@@ -16,7 +17,8 @@ data class TowerType(
     val baseFireRate: Double,
     val color: Color,
     val physicsComponentConstructor: () -> PhysicsComponent<Tower>,
-    val type: TypeEnum
+    val type: TypeEnum,
+    val level: Int
 ) {
     val size = 10.0
     val graphicsComponent = TowerGraphicsComponent()
@@ -24,7 +26,12 @@ data class TowerType(
     fun create(square: BuildAreaSquare) = Tower(square, this)
 
     fun isAvailable(): Boolean {
-        val requirements = GameData.towerUpgradeRequirements[this] ?: return true
+        val pair = Pair(type, level)
+        println(pair)
+        println(GameData.towerUpgradeRequirements[pair])
+        val requirements = GameData.towerUpgradeRequirements[pair] ?: return true
+        println(requirements)
+        println(GameState.instance.defeatedBosses)
         return requirements.all { it in GameState.instance.defeatedBosses }
     }
 
@@ -123,12 +130,13 @@ class TowerTypeBuilder {
     lateinit var color: Color
     var physics by Delegates.notNull<() -> PhysicsComponent<Tower>>()
     lateinit var enum: TypeEnum
+    var level by Delegates.notNull<Int>()
 
     fun physics(block: TowerPhysicsComponentBuilder.() -> Unit) {
         physics = TowerPhysicsComponentBuilder().apply(block).build()
     }
 
-    fun build(): TowerType = TowerType(name, cost, range, baseFireRate, color, physics, enum)
+    fun build(): TowerType = TowerType(name, cost, range, baseFireRate, color, physics, enum, level)
 
     fun with(block: TowerTypeBuilder.() -> Unit) = this.apply(block).build()
 }

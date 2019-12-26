@@ -72,6 +72,7 @@ data class BossType(
 ) : EnemyInfo by type
 
 fun enemyType(block: EnemyTypeBuilder.() -> Unit) = EnemyTypeBuilder().apply(block).build()
+fun enemyTypeBase(block: EnemyTypeBuilder.() -> Unit) = EnemyTypeBuilder().apply(block)
 
 class EnemyTypeBuilder {
     var enemyPrice by Delegates.notNull<Int>()
@@ -95,4 +96,6 @@ class EnemyTypeBuilder {
         onCreate,
         physicsComponentConstructor
     )
+
+    fun with(block: EnemyTypeBuilder.() -> Unit) = this.apply(block).build()
 }

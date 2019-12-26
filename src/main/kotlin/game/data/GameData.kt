@@ -1,24 +1,26 @@
 package game.data
 
+import game.towers.TypeEnum
+
 object GameData {
     val towerTypes = listOf(
-        basic,
-        light,
-        fire,
-        wind,
-        water,
-        nature,
-        metal,
-        blacksmith,
-        quickshot,
-        critTower,
-        steamTower,
-        frostTower,
-        photosynthesis,
-        rust,
-        iceberg,
-        explosion,
-        gold
+        basic
+        // light,
+        // fire,
+        // wind,
+        // water,
+        // nature,
+        // metal,
+        // blacksmith,
+        // quickshot,
+        // critTower,
+        // steamTower,
+        // frostTower,
+        // photosynthesis,
+        // rust,
+        // iceberg,
+        // explosion,
+        // gold
     )
     val bosses = listOf(
         windBoss,
@@ -29,22 +31,40 @@ object GameData {
         waterBoss
     )
     val towerUpgradeRequirements = mapOf(
-        light to listOf(lightBoss),
-        water to listOf(waterBoss),
-        fire to listOf(fireBoss),
-        wind to listOf(windBoss),
-        metal to listOf(metalBoss),
-        nature to listOf(natureBoss),
-        blacksmith to listOf(fireBoss, metalBoss),
-        quickshot to listOf(windBoss, lightBoss),
-        critTower to listOf(natureBoss, metalBoss),
-        steamTower to listOf(waterBoss, fireBoss),
-        frostTower to listOf(waterBoss, windBoss),
-        photosynthesis to listOf(natureBoss, lightBoss),
-        rust to listOf(metalBoss, windBoss, waterBoss),
-        iceberg to listOf(windBoss, lightBoss, waterBoss),
-        explosion to listOf(fireBoss, natureBoss, metalBoss),
-        gold to listOf(lightBoss, fireBoss, natureBoss)
+        Pair(TypeEnum.LIGHT, 1) to listOf(lightBoss),
+        Pair(TypeEnum.WATER, 1) to listOf(waterBoss),
+        Pair(TypeEnum.FIRE, 1) to listOf(fireBoss),
+        Pair(TypeEnum.WIND, 1) to listOf(windBoss),
+        Pair(TypeEnum.METAL, 1) to listOf(metalBoss),
+        Pair(TypeEnum.NATURE, 1) to listOf(natureBoss),
+        Pair(TypeEnum.BLACKSMITH, 1) to listOf(fireBoss2, metalBoss2),
+        Pair(TypeEnum.QUICKSHOT, 1) to listOf(windBoss2, lightBoss2),
+        Pair(TypeEnum.CRIT, 1) to listOf(natureBoss2, metalBoss2),
+        Pair(TypeEnum.STEAM, 1) to listOf(waterBoss2, fireBoss2),
+        Pair(TypeEnum.FROST, 1) to listOf(waterBoss2, windBoss2),
+        Pair(TypeEnum.PHOTOSYNTHESIS, 1) to listOf(natureBoss2, lightBoss2),
+        Pair(TypeEnum.RUST, 1) to listOf(metalBoss3, windBoss3, waterBoss3),
+        Pair(TypeEnum.ICEBERG, 1) to listOf(windBoss3, lightBoss3, waterBoss3),
+        Pair(TypeEnum.EXPLOSION, 1) to listOf(fireBoss3, natureBoss3, metalBoss3),
+        Pair(TypeEnum.GOLD, 1) to listOf(lightBoss3, fireBoss3, natureBoss3),
+        Pair(TypeEnum.LIGHT, 2) to listOf(lightBoss2),
+        Pair(TypeEnum.WATER, 2) to listOf(waterBoss2),
+        Pair(TypeEnum.FIRE, 2) to listOf(fireBoss2),
+        Pair(TypeEnum.WIND, 2) to listOf(windBoss2),
+        Pair(TypeEnum.METAL, 2) to listOf(metalBoss2),
+        Pair(TypeEnum.NATURE, 2) to listOf(natureBoss2),
+        Pair(TypeEnum.LIGHT, 3) to listOf(lightBoss3),
+        Pair(TypeEnum.WATER, 3) to listOf(waterBoss3),
+        Pair(TypeEnum.FIRE, 3) to listOf(fireBoss3),
+        Pair(TypeEnum.WIND, 3) to listOf(windBoss3),
+        Pair(TypeEnum.METAL, 3) to listOf(metalBoss3),
+        Pair(TypeEnum.NATURE, 3) to listOf(natureBoss3),
+        Pair(TypeEnum.BLACKSMITH, 2) to listOf(fireBoss3, metalBoss3),
+        Pair(TypeEnum.QUICKSHOT, 2) to listOf(windBoss3, lightBoss3),
+        Pair(TypeEnum.CRIT, 2) to listOf(natureBoss3, metalBoss3),
+        Pair(TypeEnum.STEAM, 2) to listOf(waterBoss3, fireBoss3),
+        Pair(TypeEnum.FROST, 2) to listOf(waterBoss3, windBoss3),
+        Pair(TypeEnum.PHOTOSYNTHESIS, 2) to listOf(natureBoss3, lightBoss3)
     )
     val possibleTowerUpgrades = mapOf(
         basic to listOf(

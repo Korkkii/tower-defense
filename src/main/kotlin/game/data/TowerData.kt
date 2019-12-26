@@ -42,18 +42,21 @@ val basic = basicBase.with {
     range = 20.0
     baseFireRate = 1.0
     physics { projectile = baseProjectile.with { onHit = onSingleHit(3.0) } }
+    level = 1
 }
 val basic2 = basicBase.with {
     cost = 30
     range = 25.0
     baseFireRate = 1.3
     physics { projectile = baseProjectile.with { onHit = onSingleHit(4.0) } }
+    level = 2
 }
 val basic3 = basicBase.with {
     cost = 100
     range = 35.0
     baseFireRate = 2.0
     physics { projectile = baseProjectile.with { onHit = onSingleHit(6.0) } }
+    level = 3
 }
 
 val waterBase = towerTypeBase {
@@ -66,18 +69,21 @@ val water = waterBase.with {
     range = 35.0
     baseFireRate = 1.0
     physics { projectile = baseProjectile.with { onHit = onSplashHit(6.0, 25.0) } }
+    level = 1
 }
 val water2 = waterBase.with {
     cost = 60
     range = 35.0
     baseFireRate = 1.2
     physics { projectile = baseProjectile.with { onHit = onSplashHit(10.0, 40.0) } }
+    level = 2
 }
 val water3 = waterBase.with {
     cost = 120
     range = 35.0
     baseFireRate = 1.5
     physics { projectile = baseProjectile.with { onHit = onSplashHit(20.0, 60.0) } }
+    level = 3
 }
 
 val lightBase = towerTypeBase {
@@ -102,6 +108,7 @@ val light = lightBase.with {
             onHit = onSingleHit(2.0)
         }
     }
+    level = 1
 }
 val light2 = lightBase.with {
     cost = 80
@@ -112,6 +119,7 @@ val light2 = lightBase.with {
             onHit = onSingleHit(2.5)
         }
     }
+    level = 2
 }
 val light3 = lightBase.with {
     cost = 160
@@ -122,6 +130,7 @@ val light3 = lightBase.with {
             onHit = onSingleHit(3.0)
         }
     }
+    level = 3
 }
 
 val fireBase = towerTypeBase {
@@ -140,6 +149,7 @@ val fire = fireBase.with {
             }
         }
     }
+    level = 1
 }
 val fire2 = fireBase.with {
     cost = 80
@@ -152,6 +162,7 @@ val fire2 = fireBase.with {
             }
         }
     }
+    level = 2
 }
 val fire3 = fireBase.with {
     cost = 160
@@ -164,6 +175,7 @@ val fire3 = fireBase.with {
             }
         }
     }
+    level = 3
 }
 
 val windBase = towerTypeBase {
@@ -181,6 +193,7 @@ val wind =
                 onHit = onBounceHit(2.5, 25.0, 3)
             }
         }
+        level = 1
     }
 val wind2 =
     windBase.with {
@@ -192,17 +205,19 @@ val wind2 =
                 onHit = onBounceHit(3.2, 25.0, 5)
             }
         }
+        level = 2
     }
 val wind3 =
     windBase.with {
-        cost = 5
-        range = 170.0
+        cost = 150
+        range = 70.0
         baseFireRate = 1.4
         physics {
             projectile = baseProjectile.with{
                 onHit = onBounceHit(5.0, 30.0, 10)
             }
         }
+        level = 3
     }
 
 val natureBase = towerTypeBase {
@@ -220,6 +235,7 @@ val nature = natureBase.with {
             propertyConstructor = { IncreasedDamageProperty(it.size) }
         }
     }
+    level = 1
 }
 val nature2 = natureBase.with {
     cost = 60
@@ -231,6 +247,7 @@ val nature2 = natureBase.with {
             propertyConstructor = { IncreasedDamageProperty(it.size) }
         }
     }
+    level = 2
 }
 val nature3 = natureBase.with {
     cost = 120
@@ -242,6 +259,7 @@ val nature3 = natureBase.with {
             propertyConstructor = { IncreasedDamageProperty(it.size) }
         }
     }
+    level = 3
 }
 
 val metalPhysics = towerPhysicsBase {
@@ -260,6 +278,7 @@ val metal = metalBase.with {
     physics = metalPhysics.with {
         projectile = baseProjectile.with { onHit = onSingleHit(3.0) }
     }
+    level = 1
 }
 val metal2 = metalBase.with {
     cost = 50
@@ -268,6 +287,7 @@ val metal2 = metalBase.with {
     physics = metalPhysics.with {
         projectile = baseProjectile.with { onHit = onSingleHit(4.0) }
     }
+    level = 2
 }
 val metal3 = metalBase.with {
     cost = 100
@@ -276,6 +296,7 @@ val metal3 = metalBase.with {
     physics = metalPhysics.with {
         projectile = baseProjectile.with { onHit = onSingleHit(6.0) }
     }
+    level = 3
 }
 
 val blacksmithBase = towerTypeBase {
@@ -288,12 +309,14 @@ val blacksmith = blacksmithBase.with {
     range = 30.0
     baseFireRate = 1.0
     physics = { BuffOthersPhysicsComponent { DamageBoost(5.0, 0.50) } }
+    level = 1
 }
 val blacksmith2 = blacksmithBase.with {
     cost = 250
     range = 35.0
     baseFireRate = 1.0
     physics = { BuffOthersPhysicsComponent { DamageBoost(5.0, 1.00) } }
+    level = 2
 }
 
 val quickshotBase = towerTypeBase {
@@ -306,12 +329,14 @@ val quickshot = quickshotBase.with {
     range = 30.0
     baseFireRate = 1.0
     physics = { BuffOthersPhysicsComponent { AttackSpeedBoost(5.0, 0.50) } }
+    level = 1
 }
 val quickshot2 = quickshotBase.with {
     cost = 250
     range = 35.0
     baseFireRate = 1.0
     physics = { BuffOthersPhysicsComponent { AttackSpeedBoost(5.0, 1.00) } }
+    level = 2
 }
 
 val critTowerBase = towerTypeBase {
@@ -328,6 +353,7 @@ val critTower = critTowerBase.with {
             onHit = onCritProjectileHit(3.0, 0.2, 2.0)
         }
     }
+    level = 1
 }
 val critTower2 = critTowerBase.with {
     cost = 200
@@ -338,6 +364,7 @@ val critTower2 = critTowerBase.with {
             onHit = onCritProjectileHit(5.0, 0.3, 3.0)
         }
     }
+    level = 2
 }
 
 val steamTowerBase = towerTypeBase {
@@ -350,12 +377,14 @@ val steamTower = steamTowerBase.with {
     range = 30.0
     baseFireRate = 10.0
     physics = { AreaEffectComponent(3.0, 6.0) }
+    level = 1
 }
 val steamTower2 = steamTowerBase.with {
     cost = 220
     range = 35.0
     baseFireRate = 10.0
     physics = { AreaEffectComponent(9.0, 6.0) }
+    level = 2
 }
 
 val frostTowerBase = towerTypeBase {
@@ -372,6 +401,7 @@ val frostTower = frostTowerBase.with {
             enemy.statusEffects += SpeedChange(0.7, 2.0)
         }
     }
+    level = 1
 }
 val frostTower2 = frostTowerBase.with {
     cost = 250
@@ -382,6 +412,7 @@ val frostTower2 = frostTowerBase.with {
             enemy.statusEffects += SpeedChange(0.4, 2.0)
         }
     }
+    level = 2
 }
 
 val photosynthesisBase = towerTypeBase {
@@ -398,6 +429,7 @@ val photosynthesis = photosynthesisBase.with {
             onHit = onEnemyMissingHpScaledHit(3.0, 2.0)
         }
     }
+    level = 1
 }
 val photosynthesis2 = photosynthesisBase.with {
     cost = 250
@@ -408,6 +440,7 @@ val photosynthesis2 = photosynthesisBase.with {
             onHit = onEnemyMissingHpScaledHit(6.0, 3.0)
         }
     }
+    level = 2
 }
 
 val rust = towerType {
@@ -424,6 +457,7 @@ val rust = towerType {
         }
     }
     enum = TypeEnum.RUST
+    level = 1
 }
 
 val iceberg = towerType {
@@ -438,6 +472,7 @@ val iceberg = towerType {
         }
     }
     enum = TypeEnum.ICEBERG
+    level = 1
 }
 
 val explosion = towerType {
@@ -452,6 +487,7 @@ val explosion = towerType {
         }
     }
     enum = TypeEnum.EXPLOSION
+    level = 1
 }
 
 val gold = towerType {
@@ -466,4 +502,5 @@ val gold = towerType {
         }
     }
     enum = TypeEnum.GOLD
+    level = 1
 }

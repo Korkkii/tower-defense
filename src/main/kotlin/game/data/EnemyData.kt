@@ -29,11 +29,11 @@ val fastEnemy = enemyType {
     velocity = 60.0
 }
 
-val bossBase = enemyTypeBase {
+fun bossBase() = enemyTypeBase {
     healthPerLevel = 0.0
 }
 
-val windBossBase = bossBase.apply {
+val windBossBase = bossBase().apply {
     healthPerLevel = 0.0
     radius = 6.0
     color = Color.SLATEGRAY
@@ -59,7 +59,7 @@ val windBoss3 = BossType(
     }
 )
 
-val metalBossBase = bossBase.apply {
+val metalBossBase = bossBase().apply {
     radius = 6.0
     color = Color.DARKGRAY
     velocity = 35.0
@@ -77,7 +77,7 @@ val metalBoss3 = BossType("Metal Elemental", metalBossBase.with {
     baseHealth = 1600.0
 })
 
-val natureBossBase = bossBase.apply {
+val natureBossBase = bossBase().apply {
     radius = 6.0
     color = Color.MEDIUMSEAGREEN
     velocity = 35.0
@@ -110,7 +110,7 @@ val natureBoss3 = BossType(
     }
 )
 
-val fireBossBase = bossBase.apply {
+val fireBossBase = bossBase().apply {
     radius = 7.0
     color = Color.FIREBRICK
     velocity = 35.0
@@ -129,7 +129,7 @@ val fireBoss3 = BossType("Fire Elemental", fireBossBase.with {
     baseHealth = 1000.0
 })
 
-val lightBossBase = bossBase.apply {
+val lightBossBase = bossBase().apply {
     radius = 7.0
     color = Color.WHITESMOKE
     velocity = 35.0
@@ -148,7 +148,7 @@ val lightBoss3 = BossType("Light Elemental", lightBossBase.with {
     baseHealth = 1000.0
 })
 
-val waterBossBase = bossBase.apply {
+val waterBossBase = bossBase().apply {
     radius = 7.0
     color = Color.NAVY.brighter()
     velocity = 35.0

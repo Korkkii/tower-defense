@@ -7,6 +7,7 @@ import game.PhysicsComponent
 import game.SpeedChange
 import game.center
 import game.data.GameData
+import game.towers.TypeEnum
 import javafx.scene.paint.Color
 import kotlin.properties.Delegates
 import kotlin.random.Random
@@ -18,6 +19,7 @@ interface EnemyInfo {
     val radius: Double
     val color: Color
     val velocity: Double
+    val type: TypeEnum
     val onDamage: (Enemy, DamageType) -> Unit
     val onCreate: (Enemy) -> Unit
     val physicsComponentConstructor: () -> PhysicsComponent<Enemy>
@@ -30,15 +32,20 @@ data class EnemyType(
     override val radius: Double,
     override val color: Color,
     override val velocity: Double,
+    override val type: TypeEnum,
     override val onDamage: (Enemy, DamageType) -> Unit = { _, _ -> },
     override val onCreate: (Enemy) -> Unit = {},
     override val physicsComponentConstructor: () -> PhysicsComponent<Enemy> = { EnemyMovementComponent() }
 ) : EnemyInfo {
     companion object {
-        val bossLevels = mapOf<BossType, BossType>()
         fun getAvailableBosses(): List<BossType> {
             val defeated = GameState.instance.defeatedBosses
-            val upgradesOfDefeated = defeated.mapNotNull { bossLevels[it] }
+            val upgradesOfDefeated = defeated.mapNotNull { boss ->
+                val type = boss.type
+                val bossSeries = GameData.bossLevels[type]
+                val defeatedBossesInSeries = defeated.filter { it.type == type }
+                bossSeries?.let { (it.toList() - defeatedBossesInSeries).first() }
+            }
             return GameData.bosses + upgradesOfDefeated - GameState.instance.defeatedBosses
         }
     }
@@ -68,8 +75,8 @@ fun onHitSpawnClone(enemy: Enemy, damageType: DamageType) {
 
 data class BossType(
     val name: String,
-    private val type: EnemyType
-) : EnemyInfo by type
+    private val typeInfo: EnemyType
+) : EnemyInfo by typeInfo
 
 fun enemyType(block: EnemyTypeBuilder.() -> Unit) = EnemyTypeBuilder().apply(block).build()
 fun enemyTypeBase(block: EnemyTypeBuilder.() -> Unit) = EnemyTypeBuilder().apply(block)
@@ -81,6 +88,7 @@ class EnemyTypeBuilder {
     var radius by Delegates.notNull<Double>()
     lateinit var color: Color
     var velocity by Delegates.notNull<Double>()
+    lateinit var type: TypeEnum
     var onDamage: (Enemy, DamageType) -> Unit = { _, _ -> }
     var onCreate: (Enemy) -> Unit = {}
     var physicsComponentConstructor: () -> PhysicsComponent<Enemy> = { EnemyMovementComponent() }
@@ -92,6 +100,7 @@ class EnemyTypeBuilder {
         radius,
         color,
         velocity,
+        type,
         onDamage,
         onCreate,
         physicsComponentConstructor

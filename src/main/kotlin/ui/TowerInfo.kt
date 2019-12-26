@@ -58,10 +58,7 @@ class Upgrades : FlowPane() {
 class UpgradeButton(type: TowerType) : Button(type.name) {
     init {
         setOnMouseClicked {
-            println(type)
-            println(type.isAvailable())
             if (type.isAvailable()) {
-                // TODO: Bug, upgrade tower basic -> basic2, and then allows upgrade to whatever
                 GameState.notify(UpgradeClicked(type))
             }
         }

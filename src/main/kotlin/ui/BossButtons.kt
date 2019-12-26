@@ -5,6 +5,7 @@ import game.BossStartEvent
 import game.enemies.BossType
 import game.enemies.EnemyType
 import game.GameState
+import game.data.GameData
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Button
@@ -29,8 +30,11 @@ class BossButtons : FlowPane() {
         val nodeIndex = children.indexOfFirst { (it as? BossButton)?.type == type }
         if (nodeIndex == -1) return
 
-        val nextType = EnemyType.bossLevels[type]
-        if (nextType != null) children[nodeIndex] = BossButton(nextType)
+        val bossSeries = GameData.bossLevels[type.type] ?: return
+        val nextUpgradeIndex = bossSeries.indexOfFirst { it == type } + 1
+        val nextUpgrade = bossSeries.getOrNull(nextUpgradeIndex)
+
+        if (nextUpgrade != null) children[nodeIndex] = BossButton(nextUpgrade)
         else children.removeAll(children[nodeIndex])
     }
 }

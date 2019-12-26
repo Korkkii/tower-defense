@@ -3,13 +3,13 @@ package game.data
 import game.RegenBuff
 import game.enemies.BlastBossPhysicsComponent
 import game.enemies.BossType
-import game.enemies.EnemyType
 import game.enemies.FlashEffect
 import game.enemies.StunEffect
 import game.enemies.enemyType
 import game.enemies.enemyTypeBase
 import game.enemies.onHitAddSpeedBuff
 import game.enemies.onHitSpawnClone
+import game.towers.TypeEnum
 import javafx.scene.paint.Color
 
 val enemy = enemyType {
@@ -19,6 +19,7 @@ val enemy = enemyType {
     radius = 4.0
     color = Color.RED
     velocity = 35.0
+    type = TypeEnum.BASIC
 }
 val fastEnemy = enemyType {
     enemyPrice = 5
@@ -27,6 +28,7 @@ val fastEnemy = enemyType {
     radius = 4.0
     color = Color.DEEPSKYBLUE.brighter()
     velocity = 60.0
+    type = TypeEnum.BASIC
 }
 
 fun bossBase() = enemyTypeBase {
@@ -39,6 +41,7 @@ val windBossBase = bossBase().apply {
     color = Color.SLATEGRAY
     velocity = 35.0
     onDamage = ::onHitAddSpeedBuff
+    type = TypeEnum.WIND
 }
 val windBoss = BossType(
     "Wind Elemental", windBossBase.with {
@@ -47,13 +50,13 @@ val windBoss = BossType(
     }
 )
 val windBoss2 = BossType(
-    "Wind Elemental",  windBossBase.with {
+    "Wind Elemental", windBossBase.with {
         enemyPrice = 40
         baseHealth = 300.0
     }
 )
 val windBoss3 = BossType(
-    "Wind Elemental",  windBossBase.with {
+    "Wind Elemental", windBossBase.with {
         enemyPrice = 80
         baseHealth = 800.0
     }
@@ -63,6 +66,7 @@ val metalBossBase = bossBase().apply {
     radius = 6.0
     color = Color.DARKGRAY
     velocity = 35.0
+    type = TypeEnum.METAL
 }
 val metalBoss = BossType("Metal Elemental", metalBossBase.with {
     enemyPrice = 20
@@ -81,6 +85,7 @@ val natureBossBase = bossBase().apply {
     radius = 6.0
     color = Color.MEDIUMSEAGREEN
     velocity = 35.0
+    type = TypeEnum.NATURE
 }
 val natureBoss = BossType(
     "Nature Elemental", natureBossBase.with {
@@ -115,6 +120,7 @@ val fireBossBase = bossBase().apply {
     color = Color.FIREBRICK
     velocity = 35.0
     physicsComponentConstructor = { BlastBossPhysicsComponent(20.0, 5.0, ::StunEffect) }
+    type = TypeEnum.FIRE
 }
 val fireBoss = BossType("Fire Elemental", fireBossBase.with {
     enemyPrice = 20
@@ -134,6 +140,7 @@ val lightBossBase = bossBase().apply {
     color = Color.WHITESMOKE
     velocity = 35.0
     physicsComponentConstructor = { BlastBossPhysicsComponent(20.0, 5.0, ::FlashEffect) }
+    type = TypeEnum.LIGHT
 }
 val lightBoss = BossType("Light Elemental", lightBossBase.with {
     enemyPrice = 20
@@ -153,6 +160,7 @@ val waterBossBase = bossBase().apply {
     color = Color.NAVY.brighter()
     velocity = 35.0
     onDamage = ::onHitSpawnClone
+    type = TypeEnum.WATER
 }
 val waterBoss = BossType(
     "Water Elemental", waterBossBase.with {

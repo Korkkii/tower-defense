@@ -123,4 +123,12 @@ object GameData {
         frostTower2 to listOf(iceberg),
         photosynthesis2 to listOf(gold)
     )
+    val bossLevels = mapOf(
+        TypeEnum.LIGHT to listOf(lightBoss, lightBoss2, lightBoss3),
+        TypeEnum.FIRE to listOf(fireBoss, fireBoss2, fireBoss3),
+        TypeEnum.WIND to listOf(windBoss, windBoss2, windBoss3),
+        TypeEnum.WATER to listOf(waterBoss, waterBoss2, waterBoss3),
+        TypeEnum.NATURE to listOf(natureBoss, natureBoss2, natureBoss3),
+        TypeEnum.METAL to listOf(metalBoss, metalBoss2, metalBoss3)
+    )
 }

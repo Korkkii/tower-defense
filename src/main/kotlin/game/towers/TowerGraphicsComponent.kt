@@ -22,8 +22,10 @@ class TowerGraphicsComponent : GraphicsComponent<Tower> {
         )
         val stateT = state.state
 
-        if (stateT is TowerSelected && stateT.tower == entity)
+        if (stateT is TowerSelected && stateT.tower == entity) {
+            graphics.stroke = Color.BLACK
             graphics.strokeCircle(entity.rangeCircle)
+        }
 
         if (entity.statusEffects.has(StunTowerDebuff::class)) {
             graphics.stroke = Color.BLUEVIOLET

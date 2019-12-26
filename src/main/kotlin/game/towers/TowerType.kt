@@ -27,11 +27,7 @@ data class TowerType(
 
     fun isAvailable(): Boolean {
         val pair = Pair(type, level)
-        println(pair)
-        println(GameData.towerUpgradeRequirements[pair])
         val requirements = GameData.towerUpgradeRequirements[pair] ?: return true
-        println(requirements)
-        println(GameState.instance.defeatedBosses)
         return requirements.all { it in GameState.instance.defeatedBosses }
     }
 

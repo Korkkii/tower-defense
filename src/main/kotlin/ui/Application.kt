@@ -30,15 +30,7 @@ class Main : Application() {
         group.prefWidth = width
 
         val scene = Scene(group)
-        scene.setOnKeyReleased {
-            val type = when (it.code) {
-                KeyCode.Q -> GameData.towerTypes[0]
-                else -> null
-            }
-
-
-            type?.let { towerType -> if (towerType.isAvailable()) GameState.notify(PlacingTowerEvent(towerType)) }
-        }
+        scene.setOnKeyReleased(::handleInput)
 
         primaryStage?.scene = scene
         game.start()

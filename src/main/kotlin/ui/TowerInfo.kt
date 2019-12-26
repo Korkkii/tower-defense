@@ -2,6 +2,7 @@ package ui
 
 import game.GameState
 import game.GameStateChanged
+import game.SellTower
 import game.UpgradeClicked
 import game.data.GameData
 import game.towers.TowerType
@@ -19,8 +20,12 @@ import javafx.scene.paint.Color
 class TowerInfo : VBox() {
     private val range = Label("Tower range")
     private val upgrade = Upgrades()
+    private val sellButton = GameButton("Sell tower") {
+        setOnMouseClicked {
+            GameState.notify(SellTower)
+        }
+    }
 
-    // TODO: Sell tower
     init {
         GameState.subscribe(GameStateChanged::class) {
             // TODO: Better status info instead of class names
@@ -34,9 +39,18 @@ class TowerInfo : VBox() {
                 }
                     ?: "No tower selected"
             range.text = text
+
+            val missingSellButton = !children.contains(sellButton)
+
+            if (it.selectedTower != null && missingSellButton) {
+                children += sellButton
+            } else if (it.selectedTower == null && !missingSellButton) {
+                children -= sellButton
+            }
         }
         background = Background(BackgroundFill(Color.GRAY.brighter(), CornerRadii(2.0), Insets.EMPTY))
         padding = Insets(5.0)
+
         children += listOf(range, upgrade)
     }
 }
@@ -50,17 +64,21 @@ class Upgrades : FlowPane() {
 
             val upgradeTypes = selectedTower?.type?.let { type -> GameData.possibleTowerUpgrades[type] } ?: listOf()
             children.clear()
-            children += upgradeTypes.map { type -> UpgradeButton(type) }
+            children += upgradeTypes.map { type ->
+                GameButton(type.name) {
+                    setOnMouseClicked {
+                        if (type.isAvailable()) {
+                            GameState.notify(UpgradeClicked(type))
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
-class UpgradeButton(type: TowerType) : Button(type.name) {
+class GameButton(name: String, block: Button.() -> Unit) : Button(name) {
     init {
-        setOnMouseClicked {
-            if (type.isAvailable()) {
-                GameState.notify(UpgradeClicked(type))
-            }
-        }
+        this.apply(block)
     }
 }

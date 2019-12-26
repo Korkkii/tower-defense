@@ -34,3 +34,4 @@ object WaveComplete : Event
 object EmptyClick : Event
 object GameEnded : Event
 object NotEnoughMoney: Event
+object SellTower : Event

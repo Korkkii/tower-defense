@@ -1,7 +1,5 @@
 package game
 
-import game.data.gold
-import game.data.waterBoss
 import game.enemies.BossType
 import game.enemies.Enemy
 import game.towers.Tower
@@ -9,6 +7,7 @@ import game.towers.TowerType
 import game.towers.TypeEnum
 import game.towers.projectiles.Projectile
 import ui.MouseHandler
+import kotlin.math.roundToInt
 import kotlin.reflect.KClass
 
 class MutableGameState {
@@ -52,6 +51,7 @@ class MutableGameState {
 
                 playerMoney -= towerType.cost
                 additionsList += tower
+                publisher.publish(createStateEvent())
             }
             is SelectTowerEvent -> {
                 state = TowerSelected(event.tower)
@@ -67,9 +67,8 @@ class MutableGameState {
                 val price = priceModifier * type.enemyPrice
                 playerMoney += price
                 if (type is BossType) {
-                    // TODO: Instead of reference check, make type contain enum and check that
-                    val isWaterBoss = type == waterBoss
-                    val waterBossesStillLeft = enemies.any { it.type == waterBoss }
+                    val isWaterBoss = type.type == TypeEnum.WATER
+                    val waterBossesStillLeft = enemies.any { it.type.type == TypeEnum.WATER }
                     if (isWaterBoss && waterBossesStillLeft) return
 
                     defeatedBosses += type
@@ -108,13 +107,24 @@ class MutableGameState {
             is DeleteEntity -> {
                 deletionsList += event.entity
             }
+            is SellTower -> {
+                val currentTower = (state as? TowerSelected)?.tower ?: return
+                val sellPrice = (currentTower.type.cost * 0.7).roundToInt()
+
+                playerMoney += sellPrice
+                currentTower.deleteTower()
+
+                state = Idle
+                publisher.publish(createStateEvent())
+            }
             else -> {
             }
         }
     }
 
     fun commitUpdates() {
-        val shouldSendStateEvent = additionsList.filterIsInstance<Enemy>().isNotEmpty() && enemies.any { it.canBeDeleted }
+        val shouldSendStateEvent =
+            additionsList.filterIsInstance<Enemy>().isNotEmpty() && enemies.any { it.canBeDeleted }
         additionsList.forEach {
             when (it) {
                 is Enemy -> enemies += it

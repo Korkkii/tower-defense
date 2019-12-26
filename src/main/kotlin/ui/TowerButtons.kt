@@ -40,7 +40,6 @@ class TowerButton(private val towerType: TowerType, name: String) : VBox() {
     private val text = Text(name)
 
     init {
-        // TODO: Make these properly sized
         prefWidth = 100.0
         border = Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii(2.0), BorderWidths(1.0)))
         alignment = Pos.CENTER

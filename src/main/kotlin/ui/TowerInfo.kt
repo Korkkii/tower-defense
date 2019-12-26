@@ -5,13 +5,17 @@ import game.GameStateChanged
 import game.SellTower
 import game.UpgradeClicked
 import game.data.GameData
-import game.towers.TowerType
 import game.towers.calculateFireRate
 import javafx.geometry.Insets
+import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
+import javafx.scene.layout.Border
+import javafx.scene.layout.BorderStroke
+import javafx.scene.layout.BorderStrokeStyle
+import javafx.scene.layout.BorderWidths
 import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.FlowPane
 import javafx.scene.layout.VBox
@@ -59,6 +63,11 @@ private fun Double.toExactString() = this.toBigDecimal().toPlainString()
 
 class Upgrades : FlowPane() {
     init {
+        hgap = 10.0
+        vgap = 10.0
+        padding = Insets(10.0, 20.0, 10.0, 20.0)
+        alignment = Pos.CENTER
+
         GameState.subscribe(GameStateChanged::class) {
             val selectedTower = it.selectedTower
 
@@ -66,6 +75,11 @@ class Upgrades : FlowPane() {
             children.clear()
             children += upgradeTypes.map { type ->
                 GameButton(type.name) {
+                    prefWidth = 100.0
+                    border = Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii(2.0), BorderWidths(1.0)))
+                    alignment = Pos.CENTER
+                    padding = Insets(4.0)
+
                     setOnMouseClicked {
                         if (type.isAvailable()) {
                             GameState.notify(UpgradeClicked(type))
